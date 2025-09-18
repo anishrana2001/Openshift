@@ -276,22 +276,49 @@ status:
 	
 
 ```
-[student@workstation ~]$ mkdir test
-[student@workstation ~]$ cd test/
-[student@workstation test]$ git clone https://git.ocp4.example.com/developer/gitops-admin.git
-Cloning into 'gitops-admin'...
-remote: Enumerating objects: 3, done.
-remote: Counting objects: 100% (3/3), done.
-remote: Compressing objects: 100% (2/2), done.
-remote: Total 3 (delta 0), reused 0 (delta 0), pack-reused 0
-Receiving objects: 100% (3/3), done.
-[student@workstation test]$ ls -ltr
-total 0
-drwxr-xr-x. 3 student student 35 Aug 31 04:04 gitops-admin
-[student@workstation test]$ cd gitops-admin/
-[student@workstation gitops-admin]$ ls -ltr
-total 8
--rw-r--r--. 1 student student 6200 Aug 31 04:04 README.md
-[student@workstation gitops-admin]$ 
+[student@workstation ~]$ cat devopswala.txt 
+Enjoy the content of Openshift 
+[student@workstation ~]$ cat devopswala.txt  | base64 -w0 ; echo
+RW5qb3kgdGhlIGNvbnRlbnQgb2YgT3BlbnNoaWZ0IAo=
+[student@workstation ~]$ 
 
+
+oc get mc 99-master-chrony-conf-override -o yaml > 61-master-swissre.yaml
+vi 61-master-swissre.yaml 
+
+
+[student@workstation ex380]$ cat 61-master-swissre.yaml 
+apiVersion: machineconfiguration.openshift.io/v1
+kind: MachineConfig
+metadata:
+  labels:
+    machineconfiguration.openshift.io/role: master
+  name: 61-master-swissre.yaml 
+spec:
+  config:
+    ignition:
+      version: 3.2.0
+    storage:
+      files:
+      - contents:
+          source: data:;base64,RW5qb3kgdGhlIGNvbnRlbnQgb2YgT3BlbnNoaWZ0IAo=
+        mode: 0444
+        overwrite: true
+        path: /etc/swissre-master
+        filesystem: root
+        overwrite: true
+[student@workstation ex380]$ 
+
+
+
+
+git clone  https://git.ocp4.example.com/developer/machineconfig.git
+cd machineconfig/
+cp ../61-master-swissre.yaml .
+cd ex380/
+cp ../61-master-swissre.yaml .
+ls -ltr
+git add 61-master-swissre.yaml 
+git commit -m "hi"
+git push 
 ```
