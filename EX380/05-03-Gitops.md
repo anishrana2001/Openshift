@@ -13,34 +13,44 @@
 ### The Git repository `https://git.ocp4.example.com/developer/machineconfig.git` contains `four` MachineConfig resources as follows:
 
 ### A file called 61-datacenter-swissre.yaml which uses the latest ignition version with the following configuration:
-- A path exists called /etc/datacenter-swissre
+- A path exists called `/etc/datacenter-swissre`
 - The filesystem is `root`
 - The overwrite policy is `true`
 - The object is applied only on the nodes marked with machineconfiguration.openshift.io/role: datacenter
--  Sets the permission on /etc/datacenter-swissre on all nodes to rwx rw r - -
+-  Sets the permission on /etc/datacenter-swissre on all nodes to `rwx rw r - -`
+-  The content of text file `devopswala.txt` must be visible on file `/etc/datacenter-swissre`
+-  You can download this file from below URL.
+  `https://raw.githubusercontent.com/anishrana2001/Openshift/refs/heads/main/README.md`
 
 ### A file called 61-cloud-swissre.yaml which uses the latest ignition version with the following configuration
-  - A path exists called /etc/cloud-swissre
-  - The filesystem is root
-  - The overwrite policy is true
+  - A path exists called `/etc/cloud-swissre`
+  - The filesystem is `root`
+  - The overwrite policy is `true`
   - The object is applied only on the nodes marked with machineconfiguration.openshift.io/role: cloud
   - Sets the permission on /etc/cloud-swissre on all nodes to rw - rw - r - -
+-  The content of text file `devopswala.txt` must be visible on file `/etc/cloud-swissre`
+-  You can download this file from below URL.
+  `https://raw.githubusercontent.com/anishrana2001/Openshift/refs/heads/main/README.md`
 
 ### A file called 61-master-swissre.yaml which uses the latest ignition version with the following configuration:
-- A path exists called /etc/master-swissre
+- A path exists called `/etc/master-swissre`
 - The filesystem is `root`
 - The overwrite policy is `true`
 - The object is applied only on the nodes marked with machineconfiguration.openshift.io/role: master
- - Sets the permission on /etc/master-swissre on all nodes to r- - r- - r - -
-  
+- Sets the permission on /etc/master-swissre on all nodes to `r- - r- - r - -`
+-  The content of text file `devopswala.txt` must be visible on file `/etc/master-swissre`
+-  You can download this file from below URL.
+  `https://raw.githubusercontent.com/anishrana2001/Openshift/refs/heads/main/README.md`  
  
 ### A file called 61-worker-swissre.yaml which uses the latest ignition version with the following configuration
-  - A path exists called /etc/worker-swissre
-  - The filesystem is root
-  - The overwrite policy is true
+  - A path exists called `/etc/worker-swissre`
+  - The filesystem is `root`
+  - The overwrite policy is `true`
   - The object is applied only on the nodes marked with machineconfiguration.openshift.io/role: worker
-  - Sets the permission on /etc/worker-swissre on all nodes to r- - r- - r - -
-
+  - Sets the permission on `/etc/worker-swissre` on all nodes to `r- - r- - r - -`
+-  The content of text file `devopswala.txt` must be visible on file `/etc/worker-swissre`
+-  You can download this file from below URL.
+  `https://raw.githubusercontent.com/anishrana2001/Openshift/refs/heads/main/README.md`
 
 ---
 
