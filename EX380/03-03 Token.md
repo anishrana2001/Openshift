@@ -15,8 +15,9 @@ For this, you need to create a client certificate that allows the user to examin
 - The client certificate must be able to view all pods in the cluster
 
 
-## You can download the dummy csr file from below link.
-https://raw.githubusercontent.com/anishrana2001/Openshift/refs/heads/main/EX380/dummy-csr-0303-token.yaml
+## Yuo can use the below command to generate the key and CSR.
+`openssl req -newkey rsa:4096 -keyout monitoing.key -nodes -subj "/O=cluster-monitoring-app/CN=mon-punit"  -out mon.csr`
+
 ---
 ## Solution:
 
