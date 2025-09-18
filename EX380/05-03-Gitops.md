@@ -17,14 +17,14 @@
 - The filesystem is `root`
 - The overwrite policy is `true`
 - The object is applied only on the nodes marked with machineconfiguration.openshift.io/role: datacenter
--  Sets the permission on /etc/datacenter-swissre on all odes to r- - r- - r - -
+-  Sets the permission on /etc/datacenter-swissre on all odes to rwx rw r - -
 
 ### A file called 61-cloud-swissre.yaml.yaml which uses the latest ignition version with the following configuration
   - A path exists called /etc/cloud-swissre
   - The filesystem is root
   - The overwrite policy is true
   - The object is applied only on the nodes marked with machineconfiguration.openshift.io/role: cloud
-  - Sets the permission on /etc/cloud-swissre on all odes to r- - r- - r - -
+  - Sets the permission on /etc/cloud-swissre on all odes to rw - rw - r - -
 
 ### A file called 61-master-swissre.yaml which uses the latest ignition version with the following configuration:
 - A path exists called /etc/master-swissre
@@ -34,7 +34,7 @@
  - Sets the permission on /etc/master-swissre on all odes to r- - r- - r - -
   
  
-### A file called 61-worker-swissre.yaml.yaml which uses the latest ignition version with the following configuration
+### A file called 61-worker-swissre.yaml which uses the latest ignition version with the following configuration
   - A path exists called /etc/worker-swissre
   - The filesystem is root
   - The overwrite policy is true
