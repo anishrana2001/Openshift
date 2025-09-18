@@ -322,3 +322,11 @@ git add 61-master-swissre.yaml
 git commit -m "hi"
 git push 
 ```
+
+### Create an application in the ArgoCD.
+## After sometime check the machineconfig.
+```
+[student@workstation ~]$ oc get mc | grep 61-master-swissre.yaml 
+61-master-swissre.yaml                                                                        3.2.0             7m38s
+[student@workstation ~]$
+```
