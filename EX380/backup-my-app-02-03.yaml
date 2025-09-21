@@ -1,0 +1,21 @@
+apiVersion: velero.io/v1
+kind: Backup
+metadata:
+  name: my-app
+  namespace: openshift-adp
+spec:
+  includedNamespaces:
+  - chapter1
+  orLabelSelectors:
+  - matchLabels:
+      app: my-app
+  - matchLabels:
+      kubernetes.io/metadata.name: chapter1
+  includedResources:
+  - namespace
+  - deployments
+  - configmaps
+  - secrets
+  - pvc
+  - pv
+  - services
