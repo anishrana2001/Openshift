@@ -16,15 +16,28 @@ spec:
     spec:
       containers:
       - name: my-container
-        image: nginx:latest
+        image: registry.ocp4.example.com:8443/redhattraining/hello-world-nginx:v1.0
         ports:
         - containerPort: 80
         securityContext:
           allowPrivilegeEscalation: false
           readOnlyRootFilesystem: true
           runAsNonRoot: true
-          # Update this value to be within the specified range from the error
           runAsUser: 1000710000
           capabilities:
             drop:
             - ALL
+        volumeMounts:
+        - name: nginx-logs
+          mountPath: "/var/log/nginx"
+        - name: nginx-tmp
+          mountPath: "/var/lib/nginx/tmp"
+        - name: nginx-run
+          mountPath: "/run"
+      volumes:
+      - name: nginx-logs
+        emptyDir: {}
+      - name: nginx-tmp
+        emptyDir: {}
+      - name: nginx-run
+        emptyDir: {}
