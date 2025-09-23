@@ -1,7 +1,3 @@
-## Prepare the lab.
-```
-
-```
 
 
 # Question: You need to give ReadOnly access of your OpenShift Container Platform (OCP) cluster to user so that user can monitor all the resources.
