@@ -10,10 +10,6 @@ For this, you need to create a client certificate that allows the user to examin
 - The client certificate must not be able to create or delete projects
 - The client certificate must be able to view all pods in the cluster
 
-
-## Yuo can use the below command to generate the key and CSR.
-`openssl req -newkey rsa:4096 -keyout monitoing.key -nodes -subj "/O=cluster-monitoring-app/CN=mon-punit"  -out mon.csr`
-
 ---
 ## Solution:
 
