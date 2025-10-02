@@ -21,6 +21,10 @@
 */8 * * * * logger "Devops-wala Youtube channel"
 ```
 
+### Post checks.
+```
+sudo tail -f /var/log/syslog | grep -i logger
+```
 
 
 ### * * * * * command to be executed
@@ -74,7 +78,10 @@ cronjob -ue harry
 ```
 cronjob -u harry -l
 ```
-
+## 6. How to check the logs of cronjob?
+```
+sudo tail -f /var/log/syslog | grep -i cron
+```
 
 ## Cron Daemon Options
 
