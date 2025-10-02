@@ -17,11 +17,41 @@
 
 ## Special characters can be used to define specific time intervals:
 
-### *: Any value
+### * : Any value
 
-### ,: Separate multiple values (e.g., 1,5,10)
+### , : Separate multiple values (e.g., 1,5,10)
 
-### -: Range of values (e.g., 1-5)
+### - : Range of values (e.g., 1-5)
 
-### /: Skip values (e.g., */5 means every 5 minutes)
+### / : Skip values (e.g., */5 means every 5 minutes)
 ---
+
+## 1. Editing the Cron File
+## crontab -e
+## 2. Add a entry and save the file, just like vi editor. 
+## Below cronjob execute the command `/home/student/backup.sh` at 17:30 every day. 
+```
+30 17 * * * /home/student/backup.sh  
+```
+## 3. How to list the cronjob?
+```
+crontab -l
+```
+
+## 4. How to add the cronjob by user `harry`?
+```
+cronjob -ue harry
+```
+## 5. How to list the user cronjob?
+```
+cronjob -u harry -l
+```
+
+
+## Cron Daemon Options
+
+- The cron daemon can be started, stopped, or restarted using the following commands:
+
+- Start: sudo /etc/init.d/cron start
+- Stop: sudo /etc/init.d/cron stop
+- Restart: sudo /etc/init.d/cron restart
