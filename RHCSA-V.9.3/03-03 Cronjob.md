@@ -51,8 +51,11 @@
 ### / : Skip values (e.g., */5 means every 5 minutes)
 ---
 
+
 ## 1. Editing the Cron File
-## crontab -e
+```
+crontab -e
+```
 ## 2. Add a entry and save the file, just like vi editor. 
 ## Below cronjob execute the command `/home/student/backup.sh` at 17:30 every day. 
 ```
