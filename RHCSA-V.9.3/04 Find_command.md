@@ -1,4 +1,9 @@
+## Prepare the lab for this question.
+```
+
+```
 # Find Command.
+
 
 ## Prepare the lab for this question.
 ```
@@ -19,7 +24,11 @@
 
 ```
 
-## Question 4. Locate all the files which are owned by user `punit` and copy it under `/data/question4-files`.
+## Question 4. Locate all the files which are owned by user `punit` and copy it under `/data/question4-files/flower`.
 ```
+mkdir -p /data/question4-files/flower 
+find / -user punit 
+find / -user punit -exec cp -rvf {} /data/question4-files/flower/ \;
+ls -latr /data/question4-files/flower/
 
 ```
