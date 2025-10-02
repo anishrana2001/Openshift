@@ -1,3 +1,29 @@
+# Cron Job
+
+## Create a user named punit1
+## Create a user named rajesh with UID 1238
+## Users must have password `devops-wala`
+
+## User `punit1` create a cronjob with `logger "Devops-wala Youtube channel"` and it must execute every 8 minutes. 
+---
+
+### Solution:
+```
+[root@servera ~]# useradd -u 1238 punit1
+[root@servera ~]# passwd punit1
+```
+### Syntax of command.
+```
+* * * * * command to be executed
+```
+
+### Let's modify it.
+```
+*/8 * * * * logger "Devops-wala Youtube channel"
+```
+
+
+
 ### * * * * * command to be executed
 ### 
 ### - - - - -
@@ -55,3 +81,6 @@ cronjob -u harry -l
 - Start: sudo /etc/init.d/cron start
 - Stop: sudo /etc/init.d/cron stop
 - Restart: sudo /etc/init.d/cron restart
+
+
+
