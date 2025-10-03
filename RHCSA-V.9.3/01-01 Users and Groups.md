@@ -1,4 +1,4 @@
-# Question 1: You are the adminstrator of devops-wala company and you need to perform below tasks.
+# Question 1: You are the adminstrator of devops-wala company and you need to perform below tasks on `servera`
 
 - Create a two groups called `admin` and `devops`
 - Creata a users
@@ -18,7 +18,19 @@
     - User `peter` should have login shell `/bin/sh`
 - Create a user `mon_ocp` and this user should have non=interactive shell and it should not the part of `devops` and `admin` groups
 - All users must have password `devops-wala`.
+---
+### Solution:
 
+
+### Login to `servera`
+```
+ssh root@servera
+```
+### Let's add the group first.
+```
+groupadd admin
+groupadd devops
+```
 
 # Question 2: You need to set the password should be expired after `17 days` on server `servera`.
 
