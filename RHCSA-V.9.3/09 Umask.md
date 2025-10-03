@@ -4,10 +4,10 @@
 ---
 
 ### Solution:
-
+```
 Default Permission for Files is     : 666
 Default Permission for Directory is : 777
-
+```
 #### For file: 
 #### The permissions -rw- rw- --- correspond to 660 in numeric form.
 #### Umask = (File Permission - Default permission)
@@ -15,16 +15,16 @@ Default Permission for Directory is : 777
 #### umask = 006
 #### Explanation:
 
- -    rwx (7) for the owner: read, write, execute
- -    r-x (5) for the group: read, execute
+ -    rw- (6) for the owner: read, write, execute
+ -    rw- (6) for the group: read, execute
  -    --- (0) for others: no permissions
 
-#### Directory permission: 750
+#### Directory permission: 775
 
 #### This permission setting allows:
 
   -  The owner to fully access and modify the directory.
-  -  The group to read and traverse the directory.
+  -  The group to fully access and modify the directory.
   -  Others to have no access.
 
 ### Soution:
