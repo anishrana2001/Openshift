@@ -56,7 +56,7 @@ ls -ld dir/
 
 ### For your references.
 ```
-student@workstation:~$ cat .bash_profile 
+rajan@workstation:~$ cat .bash_profile 
 # .bash_profile
 
 # Get the aliases and functions
@@ -66,17 +66,17 @@ fi
 
 # User specific environment and startup programs
  umask 006    ### 🤖 ✅ Added this line only
-student@workstation:~$
+rajan@workstation:~$
 
-student@workstation:~$ touch file9
-student@workstation:~$ ls -ltr file9
--rw-rw----. 1 student student 0 Oct  3 09:58 file9
-student@workstation:~$
+rajan@workstation:~$ touch file9
+rajan@workstation:~$ ls -ltr file9
+-rw-rw----. 1 rajan rajan 0 Oct  3 09:58 file9
+rajan@workstation:~$
 
-student@workstation:~$ mkdir dir
-student@workstation:~$ ls -ld dir/
-drwxrwx--x. 2 student student 6 Oct  3 09:58 dir/
-student@workstation:~$
+rajan@workstation:~$ mkdir dir
+rajan@workstation:~$ ls -ld dir/
+drwxrwx--x. 2 rajan rajan 6 Oct  3 09:58 dir/
+rajan@workstation:~$
 
 ```
 
@@ -92,14 +92,17 @@ student@workstation:~$
 ```
 vi .bash_profile
 ```
-
-
+```
+source .bash_profile
+touch file1 ; ls -l file1
+mkdir dir1; ls -ld dir1
+```
 
 ### For your reference.
 ```
-student@workstation:~$ vi .bash_profile
+rajan@workstation:~$ vi .bash_profile
 
-student@workstation:~$ cat .bash_profile 
+rajan@workstation:~$ cat .bash_profile 
 # .bash_profile
 
 # Get the aliases and functions
@@ -109,15 +112,58 @@ fi
 
 # User specific environment and startup programs
  umask 226   ### 🤖 ✅ Added this line only
-student@workstation:~$
+rajan@workstation:~$
 
 
-student@workstation:~$ source .bash_profile 
+rajan@workstation:~$ source .bash_profile 
 
-student@workstation:~$ touch file1 ; ls -l file1
--r--r-----. 1 student student 0 Oct  3 13:57 file1
+rajan@workstation:~$ touch file1 ; ls -l file1
+-r--r-----. 1 rajan rajan 0 Oct  3 13:57 file1
 
-student@workstation:~$ mkdir dir1; ls -ld dir1
-dr-xr-x--x. 2 student student 6 Oct  3 13:57 dir1
-student@workstation:~$
+rajan@workstation:~$ mkdir dir1; ls -ld dir1
+dr-xr-x--x. 2 rajan rajan 6 Oct  3 13:57 dir1
+rajan@workstation:~$
+```
+
+
+
+# Task 3. Your taks are 
+- a) All new creating files for user `rajan` as -r-- --- --- as default permission.
+- b) All new creating directories for user `rajan` as dr-x --x --x as default permission.
+---
+
+### Solution:
+### Edit the file `.bash_profile` with umask 266
+```
+vi .bash_profile
+```
+```
+source .bash_profile
+touch file2 ; ls -l file2
+mkdir dir2; ls -ld dir2
+```
+### For your references.
+
+```
+rajan@workstation:~$ vi .bash_profile 
+
+rajan@workstation:~$ mkdir dir2; ls -ld dir2
+dr-x--x--x. 2 rajan rajan 6 Oct  3 14:02 dir2
+rajan@workstation:~$ cat .bash_profile
+# .bash_profile
+
+# Get the aliases and functions
+if [ -f ~/.bashrc ]; then
+    . ~/.bashrc
+fi
+
+# User specific environment and startup programs
+ umask 266   ### 🤖 ✅ Added this line only
+rajan@workstation:~$
+
+rajan@workstation:~$ source .bash_profile 
+
+rajan@workstation:~$ touch file2 ; ls -l file2
+-r--------. 1 rajan rajan 0 Oct  3 14:01 file2
+
 ```
