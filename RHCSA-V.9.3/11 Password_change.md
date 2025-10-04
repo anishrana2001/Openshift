@@ -50,3 +50,9 @@ Login incorrect
 - Step 8. The system runs an SELinux relabel operation, and then reboots automatically. Wait for the servera machine to boot. `exec /sbin/init`.
 - See the below print screen.
 <img width="895" height="292" alt="Screenshot 2025-10-04 at 9 09 41 PM" src="https://github.com/user-attachments/assets/00d800dc-35e9-4449-a7a0-308ca8e4358b" />
+
+
+- Step 9 Post check!
+  ```
+  servea login: root
+  Password: redhat
