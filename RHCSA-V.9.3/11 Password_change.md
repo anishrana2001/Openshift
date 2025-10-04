@@ -33,12 +33,14 @@ Login incorrect
 
 ---
 
-## Step 2. 
+## Step 2. Use the cursor keys to select the kernel entry and then press `e` to edit the current entry.
 <img width="783" height="524" alt="Screenshot 2025-10-04 at 9 23 02 PM" src="https://github.com/user-attachments/assets/b5ff5287-4970-48f6-bd70-5d3413b48c62" />
 
 
 
-# Step 3 and Step 4
+# Step 3 & Step 4 
+# Move the cursor to the line that starts with the `linux` text.
+# Remove any console= option from the line.
 <img width="783" height="524" alt="Screenshot 2025-10-04 at 9 25 06 PM" src="https://github.com/user-attachments/assets/524fe092-afaf-4e3e-b86a-a2ba0e8e2425" />
 
 
