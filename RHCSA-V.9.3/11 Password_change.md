@@ -23,17 +23,22 @@ Login incorrect
 
 <img width="1476" height="225" alt="Screenshot 2025-10-04 at 9 16 27 PM" src="https://github.com/user-attachments/assets/0f0eb51c-8f2d-4be3-927b-84548eab3832" />
 
+# 
+# 
+---
+- Step 1. When the boot-loader menu appears, press Esc to interrupt the countdown.
+- Step 2. Use the cursor keys to select the kernel entry and then press `e` to edit the current entry.
+- Step 3. Move the cursor to the line that starts with the `linux` text.
+- Step 4. Remove any console= option from the line.
 
-- When the boot-loader menu appears, press Esc to interrupt the countdown.
-- Use the cursor keys to select the kernel entry and then press `e` to edit the current entry.
-- Move the cursor to the line that starts with the `linux` text.
-- Remove any console= option from the line.
+---
 
+## Step 2. 
 <img width="783" height="524" alt="Screenshot 2025-10-04 at 9 23 02 PM" src="https://github.com/user-attachments/assets/b5ff5287-4970-48f6-bd70-5d3413b48c62" />
 
 
 
-
+# Step 3 and Step 4
 <img width="783" height="524" alt="Screenshot 2025-10-04 at 9 25 06 PM" src="https://github.com/user-attachments/assets/524fe092-afaf-4e3e-b86a-a2ba0e8e2425" />
 
 
