@@ -29,7 +29,8 @@ Login incorrect
 - Step 1. When the boot-loader menu appears, press Esc to interrupt the countdown.
 - Step 2. Use the cursor keys to select the kernel entry and then press `e` to edit the current entry.
 - Step 3. Move the cursor to the line that starts with the `linux` text.
-- Step 4. Remove any console= option from the line.
+- Step 4. Remove any `console=` option from the line and then
+- Step 5. Append a space followed by the `rw init=/bin/bash` option to the end of the line and then Press Ctrl+X to boot by using the modified configuration.
 
 ---
 
@@ -40,8 +41,12 @@ Login incorrect
 
 # Step 3 & Step 4 
 # Move the cursor to the line that starts with the `linux` text.
-# Remove any console= option from the line.
+# Remove any `console= option` from the line.
 <img width="783" height="524" alt="Screenshot 2025-10-04 at 9 25 06 PM" src="https://github.com/user-attachments/assets/524fe092-afaf-4e3e-b86a-a2ba0e8e2425" />
 
-
+- Step 5. Append a space followed by the `rw init=/bin/bash` option to the end of the line and then Press Ctrl+X to boot by using the modified configuration.
+- Step 6. change the password.
+- Step 7. Configure the system to automatically perform a full SELinux relabeling after booting. This step is necessary because the passwd command recreates the /etc/shadow file without an SELinux context. `touch /.autorelabel`
+- Step 8. The system runs an SELinux relabel operation, and then reboots automatically. Wait for the servera machine to boot. `exec /sbin/init`.
+- See the below print screen.
 <img width="895" height="292" alt="Screenshot 2025-10-04 at 9 09 41 PM" src="https://github.com/user-attachments/assets/00d800dc-35e9-4449-a7a0-308ca8e4358b" />
