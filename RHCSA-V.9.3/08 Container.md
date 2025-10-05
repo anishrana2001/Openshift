@@ -76,5 +76,10 @@ student@workstation:~/.config/systemd/user$
 ```
 ```
 systemctl --user daemon-reload 
-systemctl --user daemon-reload container-mycontainer12.service
+
+```
+```
+systemctl --user enable container-mycontainer12.service
+systemctl --user start container-mycontainer12.service
+systemctl --user status container-mycontainer12.service
 ```
