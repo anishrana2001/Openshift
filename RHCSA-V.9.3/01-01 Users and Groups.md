@@ -39,13 +39,13 @@ root@servera yum.repos.d]# groupadd devops-wala
 
 ### Create punit user.
 ```
-[root@servera yum.repos.d]# useradd -G admin  -u 1234 -s /bin/bash -d /home/ocp-cluster punit
+useradd -G admin  -u 1234 -s /bin/bash -d /home/ocp-cluster -c "For OCP Cluster"  punit
 ```
 
 ### Post checks for `punit` user.
 ```
 [root@servera yum.repos.d]# cat /etc/passwd | grep punit
-punit:x:1234:1234::/home/ocp-cluster:/bin/bash
+punit:x:1234:1234:For OCP Cluster:/home/ocp-cluster:/bin/bash
 [root@servera yum.repos.d]# cat /etc/group | grep punit
 admin:x:1003:punit
 punit:x:1234:
@@ -55,20 +55,33 @@ punit:x:1234:
 
 ### Create a user `harry`.
 ```
-[root@servera yum.repos.d]# useradd -G devops-wala -u 1334 -d /home/harry -s /bin/bash harry
+useradd -G devops-wala -u 1334 -d /home/harry -s /bin/bash -c "For OCP Cluster" harry
 ```
 
 ### Post checks for `harry` user.
 
 ```
-[root@servera yum.repos.d]# cat /etc/passwd | grep harry
-harry:x:1334:1334::/home/harry:/bin/bash
-[root@servera yum.repos.d]# cat /etc/group | grep harry
+[root@servera ~]# cat /etc/passwd | grep harry
+harry:x:1334:1334:For OCP Cluster:/home/harry:/bin/bash
+[root@servera ~]# cat /etc/group | grep harry
 devops-wala:x:1235:harry
 harry:x:1334:
 [root@servera yum.repos.d]# 
 ```
+### Create a user `peter`.
+```
+useradd -G devops-wala -u 1335 -d /home/peter -s /bin/sh -c "For Database Cluster" peter
+```
 
+### Post checks for `peter` user.
+```
+[root@servera ~]# cat /etc/passwd | grep peter
+peter:x:1335:1335:For Database Cluster:/home/peter:/bin/sh
+[root@servera ~]# cat /etc/group | grep peter
+devops-wala:x:1235:harry,peter
+peter:x:1335:
+[root@servera ~]#
+```
 
 ### Create a user `mon_ocp` with no interactive shell.
 ```
