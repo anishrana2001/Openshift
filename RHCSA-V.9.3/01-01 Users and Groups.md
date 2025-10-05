@@ -70,6 +70,21 @@ harry:x:1334:
 ```
 
 
+### Create a user `mon_ocp` with no interactive shell.
+```
+[root@servera yum.repos.d]# cat /etc/passwd | grep no | head -n 1
+bin:x:1:1:bin:/bin:/usr/sbin/nologin
+
+[root@servera yum.repos.d]# useradd -s /usr/sbin/nologin mon_ocp 
+```
+
+### Post checks.
+```
+[root@servera yum.repos.d]# cat /etc/passwd | grep mon_ocp
+mon_ocp:x:1336:1336::/home/mon_ocp:/usr/sbin/nologin
+[root@servera yum.repos.d]#
+```
+
 # Question 2: You need to set the password should be expired after `17 days` on server `servera`.
 
 ### Solutions:
