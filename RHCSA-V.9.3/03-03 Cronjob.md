@@ -3,7 +3,7 @@
 - Create a user named punit1
 - Create a user named rajesh with UID 1238
 - Users must have password `devops-wala`
-- User `punit1` create a cronjob with `logger "Devops-wala Youtube channel"` and it must execute every 8 minutes. 
+- User `punit1` create a cronjob with `logger "Devops-wala Youtube channel` and it must execute every 8 minutes. 
 ---
 
 ### Solution:
