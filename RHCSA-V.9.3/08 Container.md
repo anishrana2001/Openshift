@@ -1,30 +1,59 @@
-# Qeustion 1: Create an image named `my_image:1.0` from user `student`. You can use below link 
+# Qeustion 1: The user `student` should create an image named `my_image:1.0` from the URL `https://raw.githubusercontent.com/anishrana2001/Openshift/refs/heads/main/RHCSA-V.9.3/image_08-01.yaml`
 
 - Registry URL: registry.lab.example.com:5000
 - podman credentials are
 - user name : `student` and password is `redhat`
 
-# Question 1: Configure a container 
-- a) Create the container as `student` user with `mywebserverpod1`
-- b) Run the container by using image `registry.lab.example.com:5000/rhel10/httpd-24`
+
+### Solution, this question must be done on workernode in RedHat lab, if you are using.
+
+```
+ssh student@127.0.0.1
+```
+```
+podman login registry.lab.example.com:5000
+```
+```
+user: student
+password: redhat
+```
+### download the file.
+```
+wget https://raw.githubusercontent.com/anishrana2001/Openshift/refs/heads/main/RHCSA-V.9.3/image_08-01.yaml
+```
+
+### Create an image.
+```
+podman build -t my_image:1.0 -f image_08-01.yaml
+```
+
+### Post check
+```
+podman images
+```
+
+
+# Question 2: Configure a container 
+- a) Create the container named `mywebserverpod1` from user `student`.
+- b) Run the container by using image that you created in question 1.
 - c) Identify the IP address of this container and paste in the file /opt/container/question1.txt
 ---
-# Question 2: Configure a container.
-- a) Create the container as `student` user user with `mywebserverpod2`
+# Question 3: Configure a container.
+- a) Create the container `mywebserverpod3` as user `student`.
 - b) Run the container by using image `registry.lab.example.com:5000/rhel10/httpd-24`
 - c) The local directory /opt/dir11 should be persistently mount on container's /opt/audio1 directory.
 - d) The local directory /opt/dir22 should be persistently mount on container's /opt/video2 directory.
 ---
 
-# Question 3: Configure the Rootless container as a system start-up service and mount volumes persistently
-- a) Create the container name `mycontainer12` as `student` user.
-- b) Run the container by using image `registry.lab.example.com:5000/rhel10/httpd-24`
+# Question 4: Configure the Rootless container as a system start-up service and mount volumes persistently
+- a) Create the container name `mycontainer2` as `student` user.
+- b) Run the container by using image that you created in question1.
 - c) The local directory /opt/dir10 should be persistently mount on container's /opt/audio directory.
 - d) The local directory /opt/dir20 should be persistently mount on container's /opt/video directory.
 - e) Make sure container will restart if node goes rebooted.
 - f) The system service name should be `mywebserverpod-srv`.
 ---
-### Solution 3: 
+### Solution 4: 
 ```
 lab start containers-podman
 ```
