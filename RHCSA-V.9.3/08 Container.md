@@ -38,7 +38,13 @@ chmod 777 /opt/dir10 /opt/dir20
 ```
 loginctl enable-linger student
 ```
-
+---
+### The command loginctl enable-linger student enables user lingering for the user student. By default, systemd terminates all user processes when the user logs out. Enabling lingering changes this behavior for a specified user. 
+- What does this command do?
+- Keeps user services running: It allows the user's background services and processes to continue running even after the user has logged out.
+- Starts user manager at boot: With lingering enabled, a systemd --user instance is started for the user at boot time. This manager is responsible for running the user's services.
+- Permits long-running tasks: This is useful for running services that need to operate continuously, such as a personal web server, database, or other background tasks, without requiring the user to be logged in.
+---
 ### Make sure container will restart if node goes rebooted.
 
 
