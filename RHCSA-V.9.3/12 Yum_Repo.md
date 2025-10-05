@@ -1,5 +1,5 @@
 ## You are the admin of `devops-wala` company and you need to install the `httpd` package on `servera`.
-## You can use the below URLs:  content.example.com/rhel10.0/x86_64/dvd/BaseOS & content.example.com/rhel10.0/x86_64/dvd/AppStream
+## You can use the below URLs:  `http://content.example.com/rhel10.0/x86_64/dvd/BaseOS` & `http://content.example.com/rhel10.0/x86_64/dvd/AppStream`
 
 ## Solution:
 
