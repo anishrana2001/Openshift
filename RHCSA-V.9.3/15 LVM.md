@@ -143,7 +143,7 @@ mkfs.fat 4.2 (2021-01-31)
 [root@servera ~]# vi /etc/fstab 
 ```
 
-<span style="font-family: sans-serif; font-size: 24px; color: green;">
+<span style="font-family: courier new; font-size: 24px; color: green;">
 [root@servera ~]# cat /etc/fstab 
 UUID=15507695-22bb-4c65-94e6-a438e095983f       /       xfs     defaults        0       0
 UUID=7B77-95E7  /boot/efi       vfat    defaults,uid=0,gid=0,umask=077,shortname=winnt  0       2
