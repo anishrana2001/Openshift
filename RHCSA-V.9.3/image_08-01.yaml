@@ -1,0 +1,5 @@
+# Set the base image
+FROM registry.lab.example.com:5000/ubi8/ubi
+
+# Print a message to standard output
+CMD echo "This container uses the ubi8/ubi image"
