@@ -116,26 +116,48 @@ student@workstation:~$ ssh student@servera
 
 [student@servera ~]$ sudo -i
 [sudo] password for student: 
+```
 
-[root@servera ~]# vi /etc/login.defs 
 
-[root@servera ~]# cat /etc/login.defs  | grep PASS_
-#       PASS_MAX_DAYS   Maximum number of days a password may be used.
-#       PASS_MIN_DAYS   Minimum number of days allowed between password changes.
-#       PASS_MIN_LEN    Minimum acceptable password length.
-#       PASS_WARN_AGE   Number of days warning given before a password expires.
-PASS_MAX_DAYS   99999
+### You can exclude the lines with are start by "#", we can use "^# and also remove the blank lines =(^$)
+```
+[root@servera ~]# cat /etc/login.defs | grep -v "^#" | grep -v "^$"
+MAIL_DIR        /var/spool/mail
+UMASK           022
+HOME_MODE       0700
+PASS_MAX_DAYS   99999   ## ✅  This line we need to modify
 PASS_MIN_DAYS   0
 PASS_MIN_LEN    8
 PASS_WARN_AGE   7
+UID_MIN                  1000
+UID_MAX                 60000
+SYS_UID_MIN               201
+SYS_UID_MAX               999
+SUB_UID_MIN                524288
+SUB_UID_MAX             600100000
+SUB_UID_COUNT               65536
+GID_MIN                  1000
+GID_MAX                 60000
+SYS_GID_MIN               201
+SYS_GID_MAX               999
+SUB_GID_MIN                524288
+SUB_GID_MAX             600100000
+SUB_GID_COUNT               65536
 PASS_CHANGE_TRIES       5
 PASS_ALWAYS_WARN        yes
-#PASS_MAX_LEN           8
-[root@servera ~]#
+ENCRYPT_METHOD YESCRYPT
+USERGROUPS_ENAB yes
+CREATE_HOME     yes
+HMAC_CRYPTO_ALGO SHA512
+
 
 [root@servera ~]# vi /etc/login.defs 
-[root@servera ~]# cat /etc/login.defs  | grep PASS_MAX_DAYS
+
+[root@servera ~]# cat /etc/login.defs | grep "PASS_MAX_DAYS"
 #       PASS_MAX_DAYS   Maximum number of days a password may be used.
-PASS_MAX_DAYS   17     ## ✅  Line modified
-[root@servera ~]#
+PASS_MAX_DAYS   17  ## ✅  Line modified
+[root@servera ~]# 
+
+
+
 ```
