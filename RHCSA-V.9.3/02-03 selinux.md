@@ -1,6 +1,7 @@
 ## Prepare the lab. 
 ```
 dnf install httpd -y
+sed -i 's/Listen 80/Listen 85/' /etc/httpd/conf/httpd.conf | grep Listen
 
 ```
 
