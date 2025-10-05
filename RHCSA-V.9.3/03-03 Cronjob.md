@@ -18,9 +18,17 @@
 
 ### Let's modify it.
 ```
+[root@servera ~]# crontab -eu punit1
+```
+```
 */8 * * * * logger "Devops-wala Youtube channel"
 ```
 
+```
+[root@servera ~]# crontab -lu punit1 
+*/8 * * * * logger "Devops-wala Youtube channel
+[root@servera ~]#
+```
 ### Post checks.
 ```
 sudo tail -f /var/log/syslog | grep -i logger
