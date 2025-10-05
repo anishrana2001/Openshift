@@ -71,3 +71,33 @@ question5-find.sh
 ```
 cat /root/question5-find-output.txt
 ```
+
+
+
+
+## Qestion 6. Create a script named question6-find.sh under /usr/local/bin directory and this script must locate all the regular files which are less than 1M and more than 30K under /var directory and save the searched file paths under /root/question6-find-output.
+- Set the sgid permission for this directory.
+
+### Solution.
+
+### Create a directory.
+```
+mdkir -p /root/question6-find-output
+```
+
+```
+echo "find /var -type f -size +30k -size -50k -exec cp -rpf {} /root/d1 \;" > /usr/bin/question6-find.sh
+```
+
+### Giving execute permission.
+```
+chmod +x /usr/bin/question6-find.sh
+```
+
+### Set the sgid permission for this directory
+```
+chmod g+s /usr/bin/question6-find.sh
+```
+
+
+
