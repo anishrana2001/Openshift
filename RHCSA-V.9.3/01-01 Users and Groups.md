@@ -31,7 +31,20 @@ ssh root@servera
 groupadd admin
 groupadd devops
 ```
+### Create punit user.
+```
+[root@servera yum.repos.d]# useradd -G admin  -u 1234 -s /bin/bash -d /home/ocp-cluster punit
+```
 
+### Post checks for `punit` user.
+```
+[root@servera yum.repos.d]# cat /etc/passwd | grep punit
+punit:x:1234:1234::/home/ocp-cluster:/bin/bash
+[root@servera yum.repos.d]# cat /etc/group | grep punit
+admin:x:1003:punit
+punit:x:1234:
+[root@servera yum.repos.d]#
+```
 # Question 2: You need to set the password should be expired after `17 days` on server `servera`.
 
 ### Solutions:
