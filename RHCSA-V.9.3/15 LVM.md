@@ -152,7 +152,7 @@ UUID=41d00f9f-d91f-492e-bbfe-0ec212a85829       swap         swap    defaults 0 
 [root@servera ~]# 
 ```
 
-
+```
 [root@servera ~]# mount -a
 mount: (hint) your fstab has been modified, but systemd still uses
        the old version; use 'systemctl daemon-reload' to reload.
