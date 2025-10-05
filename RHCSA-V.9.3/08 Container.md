@@ -1,3 +1,9 @@
+# Qeustion 1: Create an image named `my_image:1.0` from user `student`. You can use below link 
+
+- Registry URL: registry.lab.example.com:5000
+- podman credentials are
+- user name : `student` and password is `redhat`
+
 # Question 1: Configure a container 
 - a) Create the container as `student` user with `mywebserverpod1`
 - b) Run the container by using image `registry.lab.example.com:5000/rhel10/httpd-24`
