@@ -98,6 +98,19 @@ mon_ocp:x:1336:1336::/home/mon_ocp:/usr/sbin/nologin
 [root@servera yum.repos.d]#
 ```
 
+### To set the password `devops-wala` to all users. 
+```
+[root@servera ~]# echo "devops-wala" | passwd --stdin punit
+[root@servera ~]# echo "devops-wala" | passwd --stdin harry
+[root@servera ~]# echo "devops-wala" | passwd --stdin peter
+[root@servera ~]# 
+
+```
+## OR you can use this command, but you have to manually copy and paste again and again. 
+```
+passwd punit
+```
+
 # Question 2: You need to set the password should be expired after `17 days` on server `servera`.
 
 ### Solutions:
