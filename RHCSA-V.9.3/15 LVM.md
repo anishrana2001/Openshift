@@ -1,12 +1,18 @@
-### You task is to create a VolumeGroup (vg) named `vg_video` and then create a LVM named `lv_video` from the VG (vg_video). Please make sure, below parameters must be achived.
+### Question 1 :You task is to create a VolumeGroup (vg) named `vg_video` and then create a LVM named `lv_video` from the VG (vg_video). Please make sure, below parameters must be achived.
 - Please make sure you should have Physical extent 16M and you must use 30 extent for LVM.
 - Filesystem should be vfat
 - Mount point should be /mnt/video
+- You should use partition `/dev/sdc`
 ---
 
 ### Solution:
+### FYI ... In order to create a LVM, we need 3 things. 
 
-### First, execute the command `lsblk -fp` to know which partition is free. In this question, it is not mentioned.
+- pv (Physical Volume - Disk)
+- vg (volume group -- can add multiple pvs )
+- lv (Can create multiple lvm {logical volume groups})
+
+### First, let's execute the command `lsblk -fp` to know the current status of this partition.
 ```
 [root@servera ~]# lsblk -fp
 NAME        FSTYPE  FSVER            LABEL    UUID                                 FSAVAIL FSUSE% MOUNTPOINTS
@@ -50,6 +56,8 @@ Hex code or alias (type L to list all): L  👈👈👈👈
 00 Empty            27 Hidden NTFS Win  82 Linux swap / So  c1 DRDOS/sec (FAT-
 01 FAT12            39 Plan 9           83 Linux            c4 DRDOS/sec (FAT-
 ```
+
+
 ```
 [root@servera ~]# lsblk -fp
 NAME        FSTYPE  FSVER            LABEL    UUID                                 FSAVAIL FSUSE% MOUNTPOINTS
@@ -60,13 +68,18 @@ NAME        FSTYPE  FSVER            LABEL    UUID                              
 /dev/sdb                                                                                          
 └─/dev/sdb1 swap    1                         41d00f9f-d91f-492e-bbfe-0ec212a85829                [SWAP]
 /dev/sdc                                                                                          
-└─/dev/sdc1                                                                                       
+└─/dev/sdc1    👈👈👈👈 👈👈👈👈 👈👈👈👈                                                                                    
 /dev/sdd                                                                                          
 /dev/sr0    iso9660 Joliet Extension config-2 2025-10-05-13-34-41-00                              
-
+```
+### Create a PVC
+```
 [root@servera ~]# pvcreate /dev/sdc 
   Cannot use /dev/sdc: device is partitioned
+```
 
+### we can see the details of this PVC
+```
 [root@servera ~]# pvdisplay 
   "/dev/sdc1" is a new physical volume of "1.00 GiB"
   --- NEW Physical volume ---
@@ -79,11 +92,16 @@ NAME        FSTYPE  FSVER            LABEL    UUID                              
   Free PE               0
   Allocated PE          0
   PV UUID               6KzyCe-3Ycj-UywB-HehY-WiuK-U8QD-v1XYva
-   
+```
+
+### Its time to create a VG (Volume Group) `vg_video`. In question, it is asked us, we must select PE (physical extent) to 16M. Thus, we use (-s 16M)
+```
 [root@servera ~]# vgcreate -s 16M vg_video /dev/sdc1 
   Volume group "vg_video" successfully created
+```
 
-
+### Let's check the details of our newly created PV.
+```
 [root@servera ~]# vgdisplay vg_video 
   --- Volume group ---
   VG Name               vg_video
@@ -106,8 +124,12 @@ NAME        FSTYPE  FSVER            LABEL    UUID                              
   Free  PE / Size       63 / 1008.00 MiB
   VG UUID               B3LSRE-Cx5t-zNR3-rheb-78ei-2Daa-7NvEs4
 [root@servera ~]# 
+```
 
-
+### Next, we need to create a LVM. In question "you must use 30 extent for LVM."
+- -n : name of LVM
+- -l : for extent (30 *16 MiB) = 480 MiB
+```
 [root@servera ~]# lvcreate -n lv_video -l +30 vg_video /dev/sdc1 
   Logical volume "lv_video" created.
 [root@servera ~]# lvdisplay 
@@ -120,7 +142,7 @@ NAME        FSTYPE  FSVER            LABEL    UUID                              
   LV Creation host, time servera, 2025-10-05 14:03:39 +0000
   LV Status              available
   # open                 0
-  LV Size                480.00 MiB
+  LV Size                480.00 MiB  👈👈👈👈 ✅✅✅✅✅✅
   Current LE             30    👈👈👈👈 ✅✅✅✅✅✅
   Segments               1
   Allocation             inherit
@@ -178,4 +200,16 @@ NAME                              FSTYPE      FSVER            LABEL    UUID    
 /dev/sdd                                                                                                                      
 /dev/sr0                          iso9660     Joliet Extension config-2 2025-10-05-13-34-41-00                                
 [root@servera ~]#
+```
+
+
+## Qestion 2: You task is to extent the LVM `lv_video` by 500MiB. It can be the range between 900 Mib to 1100 Mib.
+
+
+```
+lvs lv_video
+lsblk
+lvextend -r -L 500M /dev/vg_video/lv_video
+lsblk  ## for verify
+df -hT ## (for verify)
 ```
