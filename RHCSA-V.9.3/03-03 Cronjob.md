@@ -11,6 +11,36 @@
 [root@servera ~]# useradd -u 1238 punit1
 [root@servera ~]# passwd punit1
 ```
+```
+[root@servera ~]# cat /etc/crontab 
+SHELL=/bin/bash
+PATH=/sbin:/bin:/usr/sbin:/usr/bin
+MAILTO=root
+
+# For details see man 4 crontabs
+
+# Example of job definition:
+# .---------------- minute (0 - 59)
+# |  .------------- hour (0 - 23)
+# |  |  .---------- day of month (1 - 31)
+# |  |  |  .------- month (1 - 12) OR jan,feb,mar,apr ...
+# |  |  |  |  .---- day of week (0 - 6) (Sunday=0 or 7) OR sun,mon,tue,wed,thu,fri,sat
+# |  |  |  |  |
+# *  *  *  *  * user-name  command to be executed
+```
+
+## Special characters can be used to define specific time intervals:
+
+### * : Any value
+
+### , : Separate multiple values (e.g., 1,5,10)
+
+### - : Range of values (e.g., 1-5)
+
+### / : Skip values (e.g., */5 means every 5 minutes)
+---
+
+```
 ### Syntax of command.
 ```
 * * * * * command to be executed
@@ -35,33 +65,9 @@ sudo tail -f /var/log/syslog | grep -i logger
 ```
 
 
-### * * * * * command to be executed
-### 
-### - - - - -
 
-### | | | | |
 
-### | | | | +----- day of the week (0 - 6) (Sunday=0)
 
-### | | | +------- month (1 - 12)
-
-### | | +--------- day of the month (1 - 31)
-
-### | +----------- hour (0 - 23)
-
-### +------------- min (0 - 59)
----
-
-## Special characters can be used to define specific time intervals:
-
-### * : Any value
-
-### , : Separate multiple values (e.g., 1,5,10)
-
-### - : Range of values (e.g., 1-5)
-
-### / : Skip values (e.g., */5 means every 5 minutes)
----
 
 
 ## 1. Editing the Cron File
