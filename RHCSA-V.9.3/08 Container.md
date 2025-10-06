@@ -31,7 +31,54 @@ podman build -t my_image:1.0 -f image_08-01.yaml
 ```
 podman images
 ```
+### For your references.
+```
+student@workstation:~$ ssh student@localhost
+Web console: https://workstation.lab.example.com:9090/ or https://172.25.250.9:9090/
 
+
+student@workstation:~$ wget https://raw.githubusercontent.com/anishrana2001/Openshift/refs/heads/main/RHCSA-V.9.3/image_08-01.yaml
+--2025-10-06 04:29:58--  https://raw.githubusercontent.com/anishrana2001/Openshift/refs/heads/main/RHCSA-V.9.3/image_08-01.yaml
+Resolving raw.githubusercontent.com (raw.githubusercontent.com)... 185.199.108.133, 185.199.110.133, 185.199.109.133, ...
+Connecting to raw.githubusercontent.com (raw.githubusercontent.com)|185.199.108.133|:443... connected.
+HTTP request sent, awaiting response... 200 OK
+Length: 153 [text/plain]
+Saving to: ‘image_08-01.yaml’
+
+image_08-01.yaml                                        100%[============================================================================================================================>]     153  --.-KB/s    in 0s      
+
+2025-10-06 04:29:59 (2.59 MB/s) - ‘image_08-01.yaml’ saved [153/153]
+
+
+
+
+student@workstation:~$ podman login registry.lab.example.com:5000
+Username: student
+Password: 
+Login Succeeded!
+
+
+student@workstation:~$ podman build -t my_image:1.0 -f image_08-01.yaml
+STEP 1/2: FROM registry.lab.example.com:5000/ubi8/ubi
+Trying to pull registry.lab.example.com:5000/ubi8/ubi:latest...
+Getting image source signatures
+Copying blob a07f1c23e503 done   | 
+Copying blob b21c13c5f3fd done   | 
+Copying config fca12da1dc done   | 
+Writing manifest to image destination
+STEP 2/2: CMD echo "This container uses the ubi8/ubi image"
+COMMIT my_image:1.0
+--> a2756d7e4a40
+Successfully tagged localhost/my_image:1.0
+a2756d7e4a407e3e6aba75d60cabab49dab6f53464360ed777b9a848770e1fd4
+
+
+student@workstation:~$ podman images
+REPOSITORY                              TAG         IMAGE ID      CREATED         SIZE
+localhost/my_image                      1.0         a2756d7e4a40  11 seconds ago  235 MB
+registry.lab.example.com:5000/ubi8/ubi  latest      fca12da1dc30  3 years ago     235 MB
+student@workstation:~$
+```
 
 # Question 2: Configure a container 
 - a) Create the container named `mywebserverpod1` from user `student`.
