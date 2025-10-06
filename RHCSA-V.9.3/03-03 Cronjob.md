@@ -84,13 +84,13 @@ crontab -e
 crontab -l
 ```
 
-## 4. How to add the cronjob by user `harry`?
+## 4. How to add the cronjob by user `punit1`?
 ```
-cronjob -ue harry
+cronjob -ue punit1
 ```
 ## 5. How to list the user cronjob?
 ```
-cronjob -u harry -l
+cronjob -u punit1 -l
 ```
 ## 6. How to check the logs of cronjob?
 ```
@@ -104,6 +104,7 @@ sudo tail -f /var/log/syslog | grep -i cron
 - Start: sudo /etc/init.d/cron start
 - Stop: sudo /etc/init.d/cron stop
 - Restart: sudo /etc/init.d/cron restart
+
 
 
 
