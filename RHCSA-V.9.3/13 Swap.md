@@ -6,7 +6,14 @@
 
 <img width="937" height="876" alt="Screenshot 2025-10-05 at 12 33 40 PM" src="https://github.com/user-attachments/assets/7b23c22c-b66e-4c18-bed5-8c4c8937c9f0" />
 
+### Format the partition.
+```
+[root@servera ~]# mkswap /dev/sdb1
+Setting up swapspace version 1, size = MiB (536866816 bytes)
+no label, UUID=41d00f9f-d91f-492e-bbfe-0ec212a85829
+[root@servera ~]#
 
+```
 ```
 [root@servera ~]# vi /etc/fstab 
 [root@servera ~]# cat /etc/fstab 
