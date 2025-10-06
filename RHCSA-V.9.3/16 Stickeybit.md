@@ -21,6 +21,11 @@
 drwxr-xr-x. root admin Oct  16:27 /home/shared-dir/
 ```
 ### Member of `admin` group should have all rigths (rwx),  however other should not have a single rights.
+
+```
+chmod 770 /home/shared-dir
+```
+## Or you can run below command.
 ```
 [root@servera ~]# chmod g+rwx,o-rwx /home/shared-dir/
 ```
