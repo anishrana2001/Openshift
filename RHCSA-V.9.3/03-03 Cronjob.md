@@ -40,7 +40,7 @@ MAILTO=root
 ### / : Skip values (e.g., */5 means every 5 minutes)
 ---
 
-```
+
 ### Syntax of command.
 ```
 * * * * * command to be executed
