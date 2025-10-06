@@ -128,7 +128,8 @@ NAME        FSTYPE  FSVER            LABEL    UUID                              
 
 ### Next, we need to create a LVM. In question "you must use 30 extent for LVM."
 - -n : name of LVM
-- -l : for extent (30 *16 MiB) = 480 MiB
+- -l : for extent (30)
+- lvm size = (30 *16 MiB) = 480 MiB
 ```
 [root@servera ~]# lvcreate -n lv_video -l +30 vg_video /dev/sdc1 
   Logical volume "lv_video" created.
