@@ -75,7 +75,7 @@ cat /root/question5-find-output.txt
 
 
 
-## Qestion 6. Create a script named question6-find.sh under /usr/local/bin directory and this script must locate all the regular files which are less than 900k and more than 30K under /var directory and save the searched file paths under /root/question6-find-output.
+## Qestion 6. Create a script named `question6-find.sh` under `/usr/local/bin` directory and this script must locate all the regular files which are less than `900k` and more than `30K` under `/var` directory and save the searched file paths under `/root/question6-find-output`.
 - Set the sgid permission for this directory.
 
 ### Solution.
@@ -86,7 +86,7 @@ mdkir -p /root/question6-find-output
 ```
 
 ```
-echo "find /var -type f -size +30k -size -900k -exec cp -rpf {} /root/d1 \;" > /usr/bin/question6-find.sh
+echo "find /var -type f -size +30k -size -900k > /root/question6-find-output" > /usr/bin/question6-find.sh
 ```
 
 ### Giving execute permission.
@@ -99,5 +99,45 @@ chmod +x /usr/bin/question6-find.sh
 chmod g+s /usr/bin/question6-find.sh
 ```
 
+## Post checks
+```
+cat /root/question6-find-output
+```
 
+```
+[root@servera ~]# cat question6-find-output 
+/var/cache/swcatalog/cache/C-local-metainfo.xb
+/var/cache/dnf/packages.db
+/var/cache/dnf/BaseOs-9e7683640d492933/repodata/9c5fdcf39b56c9ac62d42deaf7ee8adba1a8590fc7294da57b0cdd1e90d1b753-comps-BaseOS.x86_64.xml.gz
+/var/cache/dnf/Apps-b8b87d9e3b38f394/repodata/c5d38adcebf7c0b655635a4994297303244516b2e01120811ca4e0d23330a036-comps-AppStream.x86_64.xml.gz
+/var/cache/fwupd/quirks.xmlb
+/var/lib/fwupd/pending.db
+/var/lib/systemd/catalog/database
+/var/lib/PackageKit/transactions.db
+/var/lib/selinux/targeted/active/file_contexts
+/var/lib/selinux/targeted/active/modules/100/unprivuser/hll
+/var/lib/selinux/targeted/active/modules/100/init/hll
+/var/lib/selinux/targeted/active/modules/100/staff/hll
+/var/lib/selinux/targeted/active/modules/100/virt/cil
+/var/lib/selinux/targeted/active/modules/100/virt/hll
+/var/lib/selinux/targeted/active/modules/100/sysadm/cil
+/var/lib/selinux/targeted/active/modules/100/sysadm/hll
+/var/lib/selinux/targeted/active/modules/100/xserver/hll
+/var/lib/selinux/targeted/active/modules/100/base/cil
+/var/lib/selinux/targeted/active/modules/100/base/hll
+/var/lib/dnf/history.sqlite
+/var/lib/dnf/history.sqlite-shm
+/var/log/wtmp
+/var/log/lastlog
+/var/log/dnf.log
+/var/log/dnf.librepo.log
+/var/log/cloud-init.log
+/var/log/boot.log-20251006
+/var/log/messages-20251006
+/var/log/messages
+/var/log/secure-20251006
+[root@servera ~]# cat /usr/local/bin/question6-find.sh 
+find /var -type f -size +30k -size -900k > /root/question6-find-output
+[root@servera ~]# 
+```
 
