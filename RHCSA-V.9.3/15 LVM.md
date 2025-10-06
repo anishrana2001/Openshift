@@ -1,4 +1,4 @@
-# You task is to create a VolumeGroup (vg) named `vg_video` and then create a LVM named `lv_video` from the VG (vg_video).
+### You task is to create a VolumeGroup (vg) named `vg_video` and then create a LVM named `lv_video` from the VG (vg_video).
 - Please make sure you should have Physical extent 16M and you must use 30 extent for LVM.
 - Filesystem should be vfat
 - Mount point should be /mnt/video
