@@ -94,7 +94,7 @@ student@workstation:~$
 
 # Question 4: Configure the Rootless container as a system start-up service and mount volumes persistently
 - a) Create the container name `mycontainer2` as `student` user.
-- b) Run the container by using image that you created in question1.
+- b) Run the container by using image `registry.lab.example.com:5000/rhel10/httpd-24`
 - c) The local directory /opt/dir10 should be persistently mount on container's /opt/audio directory.
 - d) The local directory /opt/dir20 should be persistently mount on container's /opt/video directory.
 - e) Make sure container will restart if node goes rebooted.
