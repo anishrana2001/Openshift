@@ -75,8 +75,8 @@ cat /root/question5-find-output.txt
 
 
 
-## Qestion 6. Create a script named `question6-find.sh` under `/usr/local/bin` directory and this script must locate all the regular files which are less than `900k` and more than `30K` under `/var` directory and save the searched file paths under `/root/question6-find-output`.
-- Set the sgid permission for this directory.
+## Qestion 6. Create a script named `question6-find.sh` under `/usr/local/bin` directory and this script must locate all the regular files which are less than `900k` and more than `30K` under `/var` directory and these files must set SUID permission. You need to save the searched file paths under `/root/question6-find-output`.
+
 
 ### Solution.
 
@@ -86,7 +86,7 @@ mdkir -p /root/question6-find-output
 ```
 
 ```
-echo "find /var -type f -size +30k -size -900k > /root/question6-find-output" > /usr/bin/question6-find.sh
+echo "find /var -type f -size +30k -size -900k -perm -u+s > /root/question6-find-output" > /usr/bin/question6-find.sh
 ```
 
 ### Giving execute permission.
@@ -94,10 +94,6 @@ echo "find /var -type f -size +30k -size -900k > /root/question6-find-output" > 
 chmod +x /usr/bin/question6-find.sh
 ```
 
-### Set the sgid permission for this directory
-```
-chmod g+s /usr/bin/question6-find.sh
-```
 
 ## Post checks
 ```
