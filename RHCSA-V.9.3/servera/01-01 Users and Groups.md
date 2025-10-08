@@ -9,14 +9,14 @@
     - User `rajan` shoudl have `1235` UID and Add the comment `For Database Cluster`
     - User `rajan` shoudl have home directory `/home/database-cluster`
     - User `rajan` should have login shell `/bin/sh`
-     - `harry` users must be the part of `devops-wala` group. Or you can say that Add `devops` group as a seconday group of these users.
+     - `harry` users must be the part of `devops-wala` group. Or you can say that Add `devops-wala` group as a seconday group of these users.
     - User `harry` should have `1334` UID and Add the comment `For OCP Cluster`
     - User `harry` should have home directory `/home/harry/`.
     - User `harry` should have login shell `/bin/bash`
     - User `peter` shoudl have `1335` UID and Add the comment `For Database Cluster`
     - User `peter` shoudl have home directory `/home/peter`
     - User `peter` should have login shell `/bin/sh`
-- Create a user `mon_ocp` and this user should have non=interactive shell and it should not the part of `devops` and `admin` groups
+- Create a user `mon_ocp` and this user should have non=interactive shell and it should not the part of `devops-wala` and `admin` groups
 - All users must have password `devops-wala`.
 ---
 ### Solution:
