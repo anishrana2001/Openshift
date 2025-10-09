@@ -1,7 +1,11 @@
 
 ### Classroom Machines
 
-|Machine name	|IP addresses	| Role |
+| Attempt | #1    | #2    |
+| :---:   | :---: | :---: |
+| Seconds | 301   | 283   |
+
+|Machine name	               |IP addresses	 | Role |
 |:---------------------- ----|:-------------:|------:|
 |bastion.lab.example.com	 |172.25.250.254	|Gateway system to connect student private network to classroom server (must always be running)|
 |utility.lab.example.com	 |172.25.250.8	|System with utility services required for the classroom|
