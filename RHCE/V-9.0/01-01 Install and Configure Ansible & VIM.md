@@ -1,0 +1,12 @@
+## Q.1. Installation and configuring Ansible and vim for yaml files on `workstation` node. 
+- a)	Install required packages
+- b)	Create inventory file -> /home/student/ansible/inventory
+	- i)	`servera` member of `lab` host group.
+	- ii)	`serverb` member of `pre-prod` host group.
+	- iii)	`serverc` and `serverd` are the members of `production` host group.
+	- iv)	`serverd` should also be the member of `database` host group.
+	- v)	`production` group mem of `webserver` host group.
+- c)	Create an ansible.cfg file -> /home/student/ansible/ansible.cfg
+	- i)	Specify inventory file 
+	- ii)	Specify Roles directory
+	- iii)	privilege escalation
