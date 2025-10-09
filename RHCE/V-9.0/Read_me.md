@@ -3,7 +3,8 @@
 
 ### Classroom Machines
 
-|:Machine name	:|:IP addresses	:|:Role:|
+|:Machine name	|:IP addresses	:| Role :|
+|:---------------|:-------------:|------:|
 |:bastion.lab.example.com	:|:172.25.250.254	:|:Gateway system to connect student private network to classroom server (must always be running):|
 |:utility.lab.example.com	:|:172.25.250.8	:|:System with utility services required for the classroom:|
 |:workstation.lab.example.com	|:172.25.250.9	:|:Graphical workstation used for system administration:|
