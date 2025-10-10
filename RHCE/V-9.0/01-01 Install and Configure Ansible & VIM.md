@@ -8,7 +8,7 @@
 	- v)	`production` and  `myprod` groups should  be the member of `webserver` host group.
 - c)	Create an ansible.cfg file -> `/home/student/ansible/ansible.cfg`
 	- i)	Specify inventory file -> `/home/student/ansible/inventory`
-	- ii)	Specify Roles directory -> `/home/student/ansible/my-role`
+	- ii)	Specify Roles directory -> `/home/student/ansible/my-roles`
 	- iii)	privilege escalation
 	- iv)   Specify collection    -> `/home/student/ansible/my-collection`
 --- 
@@ -43,7 +43,7 @@ autocmd FileType yaml setlocal ts=2 sts=2 sw=2 expandtab
 ```
 [defaults]
 inventory = /home/student/ansible/inventory
-role_path = /home/student/ansible/my-role:/usr/share/ansible/roles
+role_path = /home/student/ansible/my-roles:/usr/share/ansible/roles
 collections_path:./my-collection/:.ansible/collections:/usr/share/ansible/collections
 remote_user = student
 host_key_checking = False
@@ -112,3 +112,82 @@ myprod
 
 
 
+```
+[student@workstation ansible]$ ansible all -m ping 
+serverb | SUCCESS => {
+    "ansible_facts": {
+        "discovered_interpreter_python": "/usr/bin/python3"
+    },
+    "changed": false,
+    "ping": "pong"
+}
+serverc | SUCCESS => {
+    "ansible_facts": {
+        "discovered_interpreter_python": "/usr/bin/python3"
+    },
+    "changed": false,
+    "ping": "pong"
+}
+servera | SUCCESS => {
+    "ansible_facts": {
+        "discovered_interpreter_python": "/usr/bin/python3"
+    },
+    "changed": false,
+    "ping": "pong"
+}
+serverd | SUCCESS => {
+    "ansible_facts": {
+        "discovered_interpreter_python": "/usr/bin/python3"
+    },
+    "changed": false,
+    "ping": "pong"
+}
+```
+
+```
+[student@workstation ansible]$ ansible-galaxy list
+# /home/student/ansible/my-roles
+# /usr/share/ansible/roles
+- linux-system-roles.certificate, (unknown version)
+- linux-system-roles.cockpit, (unknown version)
+- linux-system-roles.crypto_policies, (unknown version)
+- linux-system-roles.firewall, (unknown version)
+- linux-system-roles.ha_cluster, (unknown version)
+- linux-system-roles.kdump, (unknown version)
+- linux-system-roles.kernel_settings, (unknown version)
+- linux-system-roles.logging, (unknown version)
+- linux-system-roles.metrics, (unknown version)
+- linux-system-roles.nbde_client, (unknown version)
+- linux-system-roles.nbde_server, (unknown version)
+- linux-system-roles.network, (unknown version)
+- linux-system-roles.postfix, (unknown version)
+- linux-system-roles.selinux, (unknown version)
+- linux-system-roles.ssh, (unknown version)
+- linux-system-roles.sshd, (unknown version)
+- linux-system-roles.storage, (unknown version)
+- linux-system-roles.timesync, (unknown version)
+- linux-system-roles.tlog, (unknown version)
+- linux-system-roles.vpn, (unknown version)
+- rhel-system-roles.certificate, (unknown version)
+- rhel-system-roles.cockpit, (unknown version)
+- rhel-system-roles.crypto_policies, (unknown version)
+- rhel-system-roles.firewall, (unknown version)
+- rhel-system-roles.ha_cluster, (unknown version)
+- rhel-system-roles.kdump, (unknown version)
+- rhel-system-roles.kernel_settings, (unknown version)
+- rhel-system-roles.logging, (unknown version)
+- rhel-system-roles.metrics, (unknown version)
+- rhel-system-roles.nbde_client, (unknown version)
+- rhel-system-roles.nbde_server, (unknown version)
+- rhel-system-roles.network, (unknown version)
+- rhel-system-roles.postfix, (unknown version)
+- rhel-system-roles.selinux, (unknown version)
+- rhel-system-roles.ssh, (unknown version)
+- rhel-system-roles.sshd, (unknown version)
+- rhel-system-roles.storage, (unknown version)
+- rhel-system-roles.timesync, (unknown version)
+- rhel-system-roles.tlog, (unknown version)
+- rhel-system-roles.vpn, (unknown version)
+# /etc/ansible/roles
+[student@workstation ansible]$ 
+```
