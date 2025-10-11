@@ -30,6 +30,7 @@ sudo dnf install -y ansible-core python3-pip vim ansible-automation-platform-com
 ```
 mkdir -p /home/student/ansible/my-role
 mkdir /home/student/ansible/my-collection
+cd /home/student/ansible/
 ```
 
 ### Configure the `vim`.
@@ -40,16 +41,34 @@ autocmd FileType yaml setlocal ts=2 sts=2 sw=2 expandtab
 
 ### Step 4. Configure the `ansible.cfg` file.
 
+#### a. copy the ansible.cfg file.
 ```
-[defaults]
-inventory = /home/student/ansible/inventory
-role_path = /home/student/ansible/my-roles:/usr/share/ansible/roles
-collections_path:./my-collection/:.ansible/collections:/usr/share/ansible/collections
-remote_user = student
-host_key_checking = False
+ansible-config init --disable > /home/student/ansible/ansible.cfg
+```
 
+### From the above command, a `ansible.cfg` file will be created. We just need to modify it as per the question demands.
+```
+[student@workstation ~]$ cat /home/student/ansible/ansible.cfg | egrep -v "^;|^#|^$" 
+[defaults]
+collections_path=./my-collection:/usr/share/ansible/collections
+inventory=./inventory
+remote_user=student
+roles_path=./my-roles:/usr/share/ansible/roles:/etc/ansible/roles
+host_key_checking=False
 [privilege_escalation]
-become = true
+become=True
+[persistent_connection]
+[connection]
+[colors]
+[selinux]
+[diff]
+[galaxy]
+[inventory]
+[netconf_connection]
+[paramiko_connection]
+[jinja2]
+[tags]
+[student@workstation ~]$
 ```
 
 ### See the below file content for your references. 
