@@ -29,49 +29,65 @@ EXAMPLES:
 ### Let's create our own ansible playbook.
 ```
 ---
-- name: Install php and http
-  hosts: myprod   ### Groups name added.
+- name: Managed Node Setup
+  hosts: serverd
+  become: true
+
   tasks:
-  - name: Install the latest version of nginx
-    ansible.builtin.yum:
-      name: nginx
-      state: latest
-  - name: Upgrade all packages, excluding kernel & foo related packages
-    ansible.builtin.yum:
-      name: '*'
-      state: latest
-  - name: Install the 'Development tools' package group
-    ansible.builtin.yum:
-      name: "@Development tools"
-      state: present
-  - name: Create a group called 'devops-wala'
-    ansible.builtin.group:
-        name: devops-wala
-        state: present # Ensures the group exists
-  - name: Create user 'rajan' and add to 'devops-wala' group
-    ansible.builtin.user:
-        name: rajan
-        comment: "OCP cluster"
-        password: "{{ 'anishrana2001' | password_hash('sha512') }}" # Hash the password securely
-        groups: devops-wala
-        append: true # Add to the group without removing from others
+    # First, fix the dependency issue
+    - name: Install/Upgrade PyOpenSSL and Cryptography to compatible versions
+      ansible.builtin.pip:
+        name:
+          - "pyopenssl==23.2.0"
+          - "cryptography==41.0.7"
         state: present
-        uid: 1330
-        shell: /bin/bash # Specify the default shell
-  - name: Create user 'mon_ocp' 
-    ansible.builtin.user:
-        name: mon_ocp
-        password: "{{ 'anishrana2001' | password_hash('sha512') }}" # Hash the password securely
+        executable: pip3
+- name: Install httpd,update,development tools,users and group
+  hosts: myprod   ### Groups name added.
+  become: yes
+  tasks:
+    - name: Install the latest version of nginx
+      ansible.builtin.yum:
+        name: nginx
+        state: latest
+    - name: Upgrade all packages, excluding kernel & foo related packages
+      ansible.builtin.yum:
+        name: '*'
+        state: latest
+    - name: Install the 'Development tools' package group
+      ansible.builtin.yum:
+        name: "@RPM Development Tools"
         state: present
-        shell: /sbin/nologin # Specify the default shell
+    - name: Create a group called 'devops-wala'
+      ansible.builtin.group:
+          name: devops-wala
+          state: present # Ensures the group exists
+    - name: Create user 'rajan' and add to 'devops-wala' group
+      ansible.builtin.user:
+          name: rajan
+          comment: "OCP cluster"
+          password: "{{ 'anishrana2001' | password_hash('sha512') }}" # Hash the password securely
+          groups: devops-wala
+          append: true # Add to the group without removing from others
+          state: present
+          uid: 1330
+          shell: /bin/bash # Specify the default shell
+    - name: Create user 'mon_ocp' 
+      ansible.builtin.user:
+          name: mon_ocp
+          password: "{{ 'anishrana2001' | password_hash('sha512') }}" # Hash the password securely
+          state: present
+          shell: /sbin/nologin # Specify the default shell
 
 
 - name: Install php and http
   hosts: lab,preprod,production   ### Groups name separated by comma(,).
+  become: yes
   tasks:
-  - name: Install the latest version of Apache
-    ansible.builtin.yum:
-      name:
-        - nginx
-        - http
-      state: present
+    - name: Install the latest version of Apache
+      ansible.builtin.yum:
+        name:
+          - nginx
+          - httpd
+        state: present
+```
