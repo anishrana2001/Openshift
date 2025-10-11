@@ -29,6 +29,7 @@ EXAMPLES:
 ### Let's create our own ansible playbook.
 ```
 ---
+---
 - name: Managed Node Setup
   hosts: serverd
   become: true
@@ -82,7 +83,6 @@ EXAMPLES:
 
 - name: Install php and http
   hosts: lab,preprod,production   ### Groups name separated by comma(,).
-  become: yes
   tasks:
     - name: Install the latest version of Apache
       ansible.builtin.yum:
@@ -90,4 +90,74 @@ EXAMPLES:
           - php
           - httpd
         state: present
+```
+
+### Run the below command to apply this.
+```
+ansible-navigator run apps1.yaml -m stdout -i /home/student/ansible/inventory
+```
+
+### Post checks!!
+
+### Check the php and httpd pacakges are installed or not ?
+
+```
+ansible lab,preprod,production -a 'rpm -q php httpd' -i ../ansible/inventory
+```
+
+```
+[student@workstation playbook-manage]$ ansible lab,preprod,production -a 'rpm -q php httpd' -i ../ansible/inventory 
+servera | CHANGED | rc=0 >>
+php-8.0.13-1.el9.x86_64
+httpd-2.4.51-7.el9_0.x86_64
+serverc | CHANGED | rc=0 >>
+php-8.0.13-1.el9.x86_64
+httpd-2.4.51-7.el9_0.x86_64
+serverd | CHANGED | rc=0 >>
+php-8.0.13-1.el9.x86_64
+httpd-2.4.51-7.el9_0.x86_64
+serverb | CHANGED | rc=0 >>
+php-8.0.13-1.el9.x86_64
+httpd-2.4.51-7.el9_0.x86_64
+[student@workstation playbook-manage]$ 
+
+```
+
+
+####  Checking for RPM Depolyment Tools.
+```
+ansible myprod -a 'yum grouplist' -i ../ansible/inventory
+```
+
+```
+[student@workstation playbook-manage]$ ansible myprod -a 'yum grouplist' -i ../ansible/inventory 
+serverd | CHANGED | rc=0 >>
+Red Hat Ansible Automation Platform 2.2 for RHE 8.3 MB/s | 379 kB     00:00    
+Red Hat Enterprise Linux 9 for x86_64 - BaseOS  1.7 MB/s |  36 kB     00:00    
+Red Hat Enterprise Linux 9 for x86_64 - AppStre 8.7 MB/s | 422 kB     00:00    
+Red Hat Enterprise Linux 9 for x86_64 - BaseOS   19 MB/s | 1.7 MB     00:00    
+Red Hat Enterprise Linux 9 for x86_64 - AppStre  12 MB/s | 5.8 MB     00:00    
+Available Environment Groups:
+   Server with GUI
+   Server
+   Minimal Install
+   Workstation
+   Custom Operating System
+   Virtualization Host
+Installed Groups:
+   RPM Development Tools
+Available Groups:
+   Legacy UNIX Compatibility
+   Console Internet Tools
+   Container Management
+   Development Tools
+   .NET Development
+   Graphical Administration Tools
+   Headless Management
+   Network Servers
+   Scientific Support
+   Security Tools
+   Smart Card Support
+   System Tools
+[student@workstation playbook-manage]$
 ```
