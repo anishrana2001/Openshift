@@ -44,12 +44,12 @@ EXAMPLES:
     ansible.builtin.yum:
       name: "@Development tools"
       state: present
-   - name: Create a group called 'devops-wala'
-     ansible.builtin.group:
+  - name: Create a group called 'devops-wala'
+    ansible.builtin.group:
         name: devops-wala
         state: present # Ensures the group exists
-   - name: Create user 'rajan' and add to 'devops-wala' group
-     ansible.builtin.user:
+  - name: Create user 'rajan' and add to 'devops-wala' group
+    ansible.builtin.user:
         name: rajan
         comment: "OCP cluster"
         password: "{{ 'anishrana2001' | password_hash('sha512') }}" # Hash the password securely
@@ -58,8 +58,8 @@ EXAMPLES:
         state: present
         uid: 1330
         shell: /bin/bash # Specify the default shell
-   - name: Create user 'mon_ocp' 
-     ansible.builtin.user:
+  - name: Create user 'mon_ocp' 
+    ansible.builtin.user:
         name: mon_ocp
         password: "{{ 'anishrana2001' | password_hash('sha512') }}" # Hash the password securely
         state: present
