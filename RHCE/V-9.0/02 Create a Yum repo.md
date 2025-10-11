@@ -14,3 +14,20 @@ yum_repository                                 Add or remove YUM repositori...
 [student@workstation ~]$ ansible-doc yum_repository  
 
 ```
+
+
+### Lets' create our own ansible playbook.
+```
+---
+- name: Config yum repo
+  hosts: all
+  tasks:
+  - name: first repo
+    ansible.builtin.yum_repository:
+       name: rpmforge
+       description: RPMforge YUM repo
+       file: external_repos
+       baseurl: http://content.example.com/rhel9.0/x86_64/dvd/BaseOS
+       enabled: yes
+       gpgcheck: no
+```
