@@ -87,7 +87,7 @@ EXAMPLES:
     - name: Install the latest version of Apache
       ansible.builtin.yum:
         name:
-          - nginx
+          - php
           - httpd
         state: present
 ```
