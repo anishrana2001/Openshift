@@ -28,7 +28,7 @@ EXAMPLES:
 
 ### Let's create our own ansible playbook.
 ```
----
+
 ---
 - name: Managed Node Setup
   hosts: serverd
@@ -161,3 +161,51 @@ Available Groups:
    System Tools
 [student@workstation playbook-manage]$
 ```
+
+
+### Solution
+
+```
+[student@workstation ansible]$ ansible-navigator run apps1.yaml -m stdout --syntax-check
+playbook: /home/student/ansible/apps1.yaml
+[student@workstation ansible]$ ansible-navigator run apps1.yaml -m stdout --check
+
+PLAY [Apps installation on multiple nodes.] ************************************
+
+TASK [Gathering Facts] *********************************************************
+ok: [serverd]
+ok: [servera]
+ok: [serverb]
+ok: [serverc]
+
+TASK [Install packages php and httpd] ******************************************
+changed: [servera]
+changed: [serverc]
+changed: [serverd]
+changed: [serverb]
+
+PLAY [NGINX Apps installation on myprod] ***************************************
+
+TASK [Gathering Facts] *********************************************************
+ok: [serverd]
+
+TASK [Install packages nginx] **************************************************
+changed: [serverd]
+
+TASK [Upgrade all packages] ****************************************************
+changed: [serverd]
+
+TASK [Install the 'Development tools' package group] ***************************
+changed: [serverd]
+
+TASK [Added a consultant whose account you want to expire] *********************
+changed: [serverd]
+
+PLAY RECAP *********************************************************************
+servera                    : ok=2    changed=1    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
+serverb                    : ok=2    changed=1    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
+serverc                    : ok=2    changed=1    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
+serverd                    : ok=7    changed=5    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
+[student@workstation ansible]$ ansible-navigator run apps1.yaml -m stdout 
+
+
