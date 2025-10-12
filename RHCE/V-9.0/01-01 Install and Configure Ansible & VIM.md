@@ -23,7 +23,11 @@ ssh student@workstation
 
 ### Step 2. Install the `ansible-core` ,`ansible-automation-platform-common`,  `python3-pip` & `vim` packages. 
 ```
-sudo dnf install -y ansible-core python3-pip vim ansible-automation-platform-common
+sudo dnf install -y ansible-core python3-pip vim ansible-automation-platform-common ansible-navigator
+```
+### ansible-vavigator uses container images and these images are hosted at a container Image Registry (CIR). For this RHCE course, CIR is configured on "utility.lab.example.com".
+```
+podman login -u admin -p redhat  utility.lab.example.com
 ```
 
 ### Step 3. Create the mentioned directories.
