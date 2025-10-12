@@ -92,82 +92,15 @@ EXAMPLES:
         state: present
 ```
 
-### Run the below command to apply this.
-```
-ansible-navigator run apps1.yaml -m stdout -i /home/student/ansible/inventory
-```
-
-### Post checks!!
-
-### Check the php and httpd pacakges are installed or not ?
-
-```
-ansible lab,preprod,production -a 'rpm -q php httpd' -i ../ansible/inventory
-```
-
-```
-[student@workstation playbook-manage]$ ansible lab,preprod,production -a 'rpm -q php httpd' -i ../ansible/inventory 
-servera | CHANGED | rc=0 >>
-php-8.0.13-1.el9.x86_64
-httpd-2.4.51-7.el9_0.x86_64
-serverc | CHANGED | rc=0 >>
-php-8.0.13-1.el9.x86_64
-httpd-2.4.51-7.el9_0.x86_64
-serverd | CHANGED | rc=0 >>
-php-8.0.13-1.el9.x86_64
-httpd-2.4.51-7.el9_0.x86_64
-serverb | CHANGED | rc=0 >>
-php-8.0.13-1.el9.x86_64
-httpd-2.4.51-7.el9_0.x86_64
-[student@workstation playbook-manage]$ 
-
-```
-
-
-####  Checking for RPM Depolyment Tools.
-```
-ansible myprod -a 'yum grouplist' -i ../ansible/inventory
-```
-
-```
-[student@workstation playbook-manage]$ ansible myprod -a 'yum grouplist' -i ../ansible/inventory 
-serverd | CHANGED | rc=0 >>
-Red Hat Ansible Automation Platform 2.2 for RHE 8.3 MB/s | 379 kB     00:00    
-Red Hat Enterprise Linux 9 for x86_64 - BaseOS  1.7 MB/s |  36 kB     00:00    
-Red Hat Enterprise Linux 9 for x86_64 - AppStre 8.7 MB/s | 422 kB     00:00    
-Red Hat Enterprise Linux 9 for x86_64 - BaseOS   19 MB/s | 1.7 MB     00:00    
-Red Hat Enterprise Linux 9 for x86_64 - AppStre  12 MB/s | 5.8 MB     00:00    
-Available Environment Groups:
-   Server with GUI
-   Server
-   Minimal Install
-   Workstation
-   Custom Operating System
-   Virtualization Host
-Installed Groups:
-   RPM Development Tools
-Available Groups:
-   Legacy UNIX Compatibility
-   Console Internet Tools
-   Container Management
-   Development Tools
-   .NET Development
-   Graphical Administration Tools
-   Headless Management
-   Network Servers
-   Scientific Support
-   Security Tools
-   Smart Card Support
-   System Tools
-[student@workstation playbook-manage]$
-```
-
-
-### Solution
-
+### You can check the syntax error on this playbook.
 ```
 [student@workstation ansible]$ ansible-navigator run apps1.yaml -m stdout --syntax-check
 playbook: /home/student/ansible/apps1.yaml
+```
+
+
+### Dry-run 
+```
 [student@workstation ansible]$ ansible-navigator run apps1.yaml -m stdout --check
 
 PLAY [Apps installation on multiple nodes.] ************************************
@@ -207,5 +140,73 @@ serverb                    : ok=2    changed=1    unreachable=0    failed=0    s
 serverc                    : ok=2    changed=1    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
 serverd                    : ok=7    changed=5    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
 [student@workstation ansible]$ ansible-navigator run apps1.yaml -m stdout 
+```
+
+### Run the below command to apply this playbook.
+```
+ansible-navigator run apps1.yaml -m stdout
+```
+
+
+### Post checks!!
+
+### Check the php and httpd pacakges are installed or not ?
+
+```
+ansible lab,preprod,production -a 'rpm -q php httpd' 
+```
+
+```
+[student@workstation ansible]$ ansible lab,preprod,production -a 'rpm -q php httpd'
+servera | CHANGED | rc=0 >>
+php-8.0.13-1.el9.x86_64
+httpd-2.4.51-7.el9_0.x86_64
+serverd | CHANGED | rc=0 >>
+php-8.0.13-1.el9.x86_64
+httpd-2.4.51-7.el9_0.x86_64
+serverc | CHANGED | rc=0 >>
+php-8.0.13-1.el9.x86_64
+httpd-2.4.51-7.el9_0.x86_64
+serverb | CHANGED | rc=0 >>
+php-8.0.13-1.el9.x86_64
+httpd-2.4.51-7.el9_0.x86_64
+[student@workstation ansible]$ 
+
+```
+
+
+####  Checking for RPM Depolyment Tools.
+```
+ansible myprod -a 'yum grouplist'
+```
+
+```
+[student@workstation ansible]$ ansible myprod -a 'yum grouplist'
+serverd | CHANGED | rc=0 >>
+Last metadata expiration check: 0:20:58 ago on Sun 12 Oct 2025 02:27:46 AM EDT.
+Available Environment Groups:
+   Server with GUI
+   Server
+   Minimal Install
+   Workstation
+   Custom Operating System
+   Virtualization Host
+Installed Groups:
+   RPM Development Tools
+Available Groups:
+   Legacy UNIX Compatibility
+   Console Internet Tools
+   Container Management
+   Development Tools
+   .NET Development
+   Graphical Administration Tools
+   Headless Management
+   Network Servers
+   Scientific Support
+   Security Tools
+   Smart Card Support
+   System Tools
+[student@workstation ansible]$ 
+```
 
 
