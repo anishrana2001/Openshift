@@ -1,4 +1,4 @@
-## Question: Install RHEL role and create a playbook for ntp server with name `ntp-ploybook1.yaml`
+# Question: Install RHEL role and create a playbook for ntp server with name `ntp-ploybook1.yaml`
 - ntp should be installed on all the nodes
 - timesync role should be used.
 - ntp IP should be used `0.rhel.pool.ntp.org`
@@ -63,7 +63,7 @@ pool 0.rhel.pool.ntp.org iburst
 [student@workstation ansible]$
 ```
 
-## Question 2: Install RHEL role and create a playbook for ntp server with name `ntp-ploybook2.yaml`
+# Question 2: Install RHEL role and create a playbook for ntp server with name `ntp-ploybook2.yaml`
 - ntp should be installed only on the lab group.
 - timesync role should be used.
 - ntp IP should be used `0.rhel.pool.ntp.org` , `1.rhel.pool.ntp.org` and `2.rhel.pool.ntp.org`
