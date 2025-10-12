@@ -10,3 +10,7 @@
 |serverb.lab.example.com  	 |172.25.250.11	    |Host managed with Ansible|
 |serverc.lab.example.com  	 |172.25.250.12	    |Host managed with Ansible|
 |serverd.lab.example.com  	 |172.25.250.13	    |Host managed with Ansible|
+
+
+### create a playbook as `student` user and remote user name is `devops` 
+### All node root password is `redhat` and login as `student` user
