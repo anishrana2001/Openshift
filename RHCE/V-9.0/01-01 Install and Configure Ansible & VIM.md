@@ -214,3 +214,16 @@ serverd | SUCCESS => {
 # /etc/ansible/roles
 [student@workstation ansible]$ 
 ```
+
+### ansible-navigator will be insalled and we already login into our registory in step 2.
+
+```
+podman login -u admin -p redhat  utility.lab.example.com
+```
+
+```
+ansible-navigator collections
+```
+```
+ansible-navigator images
+```
