@@ -60,8 +60,8 @@ student@workstation ~]$ cd ansible/
 ### Pre-checks.
 
 [student@workstation ansible]$ ansible-galaxy role list | head
-# /home/student/ansible/my-roles
-# /usr/share/ansible/roles
+# /home/student/ansible/my-roles   ⬅️ ⬅️ 👈👈👈👈 
+# /usr/share/ansible/roles        ⬅️ ⬅️ 👈👈👈👈 
 - linux-system-roles.certificate, (unknown version)
 - linux-system-roles.cockpit, (unknown version)
 - linux-system-roles.crypto_policies, (unknown version)
@@ -90,8 +90,8 @@ Starting galaxy role install process
 
 [student@workstation my-roles]$ ansible-galaxy role list | head
 # /home/student/.ansible/roles
-- zabbix-anish, (unknown version)
-- openafs-devops-wala, (unknown version)
+- zabbix-anish, (unknown version)         ⬅️ ⬅️ 👈👈👈👈 
+- openafs-devops-wala, (unknown version)  ⬅️ ⬅️ 👈👈👈👈 
 # /usr/share/ansible/roles
 - linux-system-roles.certificate, (unknown version)
 - linux-system-roles.cockpit, (unknown version)
