@@ -2,7 +2,7 @@
 - ntp should be installed on all the nodes
 - timesync role should be used.
 - ntp IP should be used `0.rhel.pool.ntp.org`
-
+---
 
 
 ### Solution: 
@@ -62,6 +62,11 @@ servera | CHANGED | rc=0 >>
 pool 0.rhel.pool.ntp.org iburst
 [student@workstation ansible]$
 ```
+---
+
+---
+
+---
 
 # Question 2: Install RHEL role and create a playbook for ntp server with name `ntp-ploybook2.yaml`
 - ntp should be installed only on the lab group.
