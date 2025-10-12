@@ -39,10 +39,29 @@ vi ntp-ploybook1.yaml
     - rhel-system-roles.timesync
 [student@workstation playbook-manage]$
 ```
+### Roles installed via RPM packages should be executed using ansible-playbook. while roles installed as collections should be executed using-navigator.
+```
+ansible-playbook ntp-ploybook1.yaml
+```
 
+### Post checks.....
+```
+ansible all -m shell -a 'grep 0.rhel.pool.ntp.org /etc/chrony.conf'
+```
 
-
-
+### For your references.
+```
+[student@workstation ansible]$ ansible all -m shell -a 'grep 0.rhel.pool.ntp.org /etc/chrony.conf'
+serverc | CHANGED | rc=0 >>
+pool 0.rhel.pool.ntp.org iburst
+serverd | CHANGED | rc=0 >>
+pool 0.rhel.pool.ntp.org iburst
+serverb | CHANGED | rc=0 >>
+pool 0.rhel.pool.ntp.org iburst
+servera | CHANGED | rc=0 >>
+pool 0.rhel.pool.ntp.org iburst
+[student@workstation ansible]$
+```
 
 ## Question 2: Install RHEL role and create a playbook for ntp server with name `ntp-ploybook2.yaml`
 - ntp should be installed only on the lab group.
@@ -85,3 +104,13 @@ vi ntp-ploybook2.yaml
 [student@workstation playbook-manage]$
 ```
 
+
+### Roles installed via RPM packages should be executed using ansible-playbook. while roles installed as collections should be executed using-navigator.
+```
+ansible-playbook ntp-ploybook2.yaml
+```
+
+### Post checks.....
+```
+ansible all -m shell -a 'grep 0.rhel.pool.ntp.org /etc/chrony.conf'
+```
