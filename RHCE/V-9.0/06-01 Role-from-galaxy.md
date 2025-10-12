@@ -1,6 +1,8 @@
 
-
-
+# Question: You need to install 2 roles from `Ansible Galaxy` and these roles must be in the file `/home/student/ansible/my-roles/role-from-galaxy.yaml`
+- Download the file `https://galaxy.ansible.com/download/zabbix-zabbix-1.0.6.tar.gz` and name it `zabbix-anish`
+- Download the file `https://galaxy.ansible.com/download/openafs_contrib-openafs-1.9.0.tar.gz` and name it `openafs-devops-wala`
+---
 
 
 ### Solution:
@@ -10,12 +12,12 @@
 ansible-galaxy role list | head
 ```
 
-### Check the directory.
+### change the directory.
 ```
- cd /home/student/ansible/my-roles/
+cd /home/student/ansible/my-roles/
 ```
 
-### Create a file with anyname 
+### Create a file with `role-from-galaxy.yaml`. 
 ```
 cat role-from-galaxy.yaml 
 ---
