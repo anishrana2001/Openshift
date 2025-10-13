@@ -11,6 +11,7 @@
 ### Solution: 
 
 [student@workstation ansible]$ cat webserver.yaml 
+```
 ---
 - name: Creating directory
   hosts: all
@@ -106,3 +107,4 @@ drwxrwsr-x. 2 root root 24 Oct 13 10:02 /webserver/
 [student@workstation ansible]$ curl http://172.25.250.13/webserver/index.html ; echo
 Welcome to devops-wala
 [student@workstation ansible]$
+```
