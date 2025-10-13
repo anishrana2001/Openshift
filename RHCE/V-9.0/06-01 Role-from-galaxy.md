@@ -7,8 +7,7 @@
 - Download the file `https://galaxy.ansible.com/download/openafs_contrib-openafs-1.9.0.tar.gz` and name it `openafs-devops-wala`
 - Download the file `https://galaxy.ansible.com/downlaod/mafalb-squid-0.2.0.tar.gz` and name it `squid-anish`
 
-### Task 2. 
-### Create a playbook called `/home/student/ansible/ansible-galaxy-role1.yaml`
+### Task 2. Create a playbook called `/home/student/ansible/ansible-galaxy-role1.yaml`
  1. The playbook contains a play which run on `lab` host group and use the role `zabbix-anish`
  
     A Zabbix server is the core component of Zabbix, an open-source, enterprise-class monitoring system that tracks the performance and availability of various IT resources, including servers, network devices, virtual machines, and cloud services. 
