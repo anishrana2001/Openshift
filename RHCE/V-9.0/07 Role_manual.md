@@ -107,6 +107,13 @@ ansible-navigator run mywebserver.yaml -m stdout
 ansible webserver -m shell -a 'cat /var/www/html/index.html'
 ```
 
+```
+ansible webserver - a 'systemctl status httpd'
+ansible webserver - a 'firewall -cmd --list-all'
+ansible webserver  --list -hosts
+curl http://serverc
+curl http://serverd
+```
 ### For your refrences.
 ```
 ansible-galaxy role init --init-path . mywebserver
