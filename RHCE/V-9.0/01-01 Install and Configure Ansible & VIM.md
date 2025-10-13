@@ -53,7 +53,7 @@ ansible-config init --disable > /home/student/ansible/ansible.cfg
 ### From the above command, a `ansible.cfg` file will be created. We just need to modify it as per the question demands.
 ### Please read the `Read_me.md` file, where it is mentioned that remote user should be `devops`
 ```
-[student@workstation ansible]$ cat /home/student/ansible/ansible.cfg | egrep -v "^;|^#|^$" 
+[student@workstation ansible]$ cat ansible.cfg | egrep -v "^;|^$|^#"
 [defaults]
 collections_path=./my-collection:/usr/share/ansible/collections
 inventory=./inventory
@@ -84,14 +84,16 @@ become_user=root
 ```
 [student@workstation ansible]$ cat ansible.cfg 
 [defaults]
-inventory = /home/student/ansible/inventory
-role_path = /home/student/ansible/my-role:/usr/share/ansible/roles
-collections_path:./my-collection/:.ansible/collections:/usr/share/ansible/collections
-remote_user = student
-host_key_checking = False
-
+collections_path=./my-collection:/usr/share/ansible/collections
+inventory=./inventory
+remote_user=devops
+roles_path=./my-roles:/usr/share/ansible/roles:/etc/ansible/roles
+host_key_checking=False
 [privilege_escalation]
-become = true
+become=True
+become_ask_pass=False
+become_method=sudo
+become_user=root
 ```
 
 ### Now, create inventory file.
