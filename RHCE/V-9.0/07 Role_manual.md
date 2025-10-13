@@ -1,6 +1,6 @@
 # Question: Your task is to create a role named `mywebserver` and this role must complet the below jobs.
-1. Install and start the httpd web server.
-2. Make sure firewall is `enabled` and firewall should allow to listing web traffic.
+1. `Install` and `start` the `httpd` web server.
+2. Make sure `firewall` is `enabled` and `firewall should allow to listing web traffic.`
 3. create a `index.html` file with below content under `/var/www/html/` directory on `webserver` host group.
     - Welcome to devops-wala web page hosted on `HOSTNAME` having ip `IP` and runing on OS `OS NAME` with architecture `Architecture details`
     - HOSTNAME = Managed node fully qulified domain name.
@@ -14,7 +14,7 @@
   
 
 
-#### As we know that we can create a role from `ansible-galaxy` command. The dot "." is for current directory.
+#### As we know that we can create a role from `ansible-galaxy` command. The dot "." is for current directory. `mywebserver` is the role name.
 ```
 ansible-galaxy role init --init-path . mywebserver
 ```
