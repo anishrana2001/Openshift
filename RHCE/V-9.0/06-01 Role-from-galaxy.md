@@ -5,7 +5,7 @@
 ### Task 1. You need to install 3 roles from `Ansible Galaxy` and these roles must be in the file `/home/student/ansible/my-roles/role-from-galaxy.yaml`
 - Download the file `https://galaxy.ansible.com/download/zabbix-zabbix-1.0.6.tar.gz` and name it `zabbix-anish`
 - Download the file `https://galaxy.ansible.com/download/openafs_contrib-openafs-1.9.0.tar.gz` and name it `openafs-devops-wala`
-- Download the file `https://galaxy.ansible.com/downlaod/mafalb-squid-0.2.0.tar.gz` and name it `squid-anish`
+- Download the file `https://github.com/vcc-caeit/ansible-role.squid/archive/1.2.1.tar.gz` and name it `squid-anish`
 
 ### Task 2. Create a playbook called `/home/student/ansible/ansible-galaxy-role1.yaml`
  1. The playbook contains a play which run on `lab` host group and use the role `zabbix-anish`
@@ -102,7 +102,7 @@ student@workstation ~]$ cd ansible/
   name: zabbix-anish
 - src: https://galaxy.ansible.com/download/openafs_contrib-openafs-1.9.0.tar.gz
   name: openafs-devops-wala
-- src: https://galaxy.ansible.com/downlaod/mafalb-squid-0.2.0.tar.gz
+- src: https://github.com/vcc-caeit/ansible-role.squid/archive/1.2.1.tar.gz
   name: squid-anish
 [student@workstation my-roles]$
 
