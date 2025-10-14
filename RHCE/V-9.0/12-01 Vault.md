@@ -1,0 +1,39 @@
+### Question 1: Write a playbook named `myvault.yaml` that creates the `anishrana2001` & `punit` users. It must do so as follows:
+	- You must set the password for the `anishrana2001` has the password `devops-wala` in the `pass-vault.yml` file under `/home/student/ansible/` directory. Which is encrypted with Ansible Vault. 
+	- The password for the `punit` user has the password `vtyshshbash` in the `pass-vault.yml` file under `/home/student/ansible/` directory, which is encrypted with Ansible Vault.
+	- The password for Encrypt and decrypt the vault is `ThisisaStrongpassword` and store in the `mysecret.txt` file under `/home/student/ansible/` directory.
+---
+	
+### Solution:
+
+### The password for Encrypt and decrypt the vault is `ThisisaStrongpassword` and store in the `mysecret.txt` file under `/home/student/ansible/` directory.
+```
+echo "ThisisaStrongpassword" > /home/student/ansible/mysecret.txt
+```
+
+### Update the ansible.cfg file with the new vault file location.
+```
+vault_password_file=/home/student/ansible/mysecret.txt
+```
+
+### Now, create a file which has users' information.
+```
+ansible-vault create /home/student/ansible/pass-vault.yml
+```
+---
+### .
+### .
+---
+---
+
+### Question 2 : Your task is to update vault password from `ThisisaStrongpassword` to `aalotchale` of file `/home/student/ansible/mysecret.txt`
+
+### Solution: 
+```
+ansible-vault rekey --ask-vault-pass /home/student/ansible/mysecret.txt
+```
+
+### Post checks!!
+```
+ansible-vault view --ask-vault-pass  /home/student/ansible/mysecret.txt
+```
