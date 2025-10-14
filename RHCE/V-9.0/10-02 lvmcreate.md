@@ -17,6 +17,7 @@
 ```
 ansible-doc community.general.lvol
 ansible-doc community.general.filesystem
+ansible-doc debug    <----- For debug the message.
 ```
 
 
