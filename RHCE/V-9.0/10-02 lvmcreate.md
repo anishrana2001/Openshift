@@ -49,30 +49,145 @@ vim mylvm-q2.yaml
 ```
 ```
 ---
-- name: Create LVM, volume group, and ext4 filesystem on /dev/vdb without command module
+- name: LVM for block and rescue mode
   hosts: all
-  become: true
-  gather_facts: true
   tasks:
-    - name: Create volume group toto on /dev/vdb
-      community.general.lvg:
-        vg: toto
-        pvs: /dev/vdb
+    - debug:
+        msg: Create a VG toto first, ha ha
+      when: ansible_lvm.vgs.toto is not defined 
+	  
+    - block:
+        - name: Create a logical volume of 512m
+          community.general.lvol:
+            vg: toto
+            lv: redrose
+            size: 1024
 
-    - name: Create logical volume redrose
-      community.general.lvol:
-        vg: toto
-        lv: redrose
-        size: 512m
+        - name: Create a ext2 filesystem on /dev/sdb1
+          community.general.filesystem:
+            fstype: ext4
+            dev: /dev/toto/redrose
+      rescue:
+         - name: Generate error message -recue mode on
+           debug:
+              msg: Give size is high
 
-    - name: Create ext4 filesystem on logical volume
-      ansible.builtin.filesystem:
-        fstype: ext4
-        dev: /dev/toto/redrose
+         - name: Create a logical volume of 512m- rescue mode on
+           community.general.lvol:
+              vg: toto
+              lv: redrose
+              size: 512
+
+         - name: Create a ext2 filesystem on /dev/sdb1 - rescue mode on
+           community.general.filesystem:
+            fstype: ext4
+            dev: /dev/toto/redrose
+      when: ansible_lvm.vgs.toto is defined
 ```
 
 
 ### Run the playbook.
 ```
  ansible-navigator run mylvm-q2.yaml -m stdout
+```
+
+
+
+
+### For your references....
+
+```
+
+[student@workstation ansible]$ cat mylvm-q2.yaml 
+---
+- name: LVM for block and rescue mode
+  hosts: all
+  tasks:
+    - debug:
+        msg: Create a VG toto first, ha ha
+      when: ansible_lvm.vgs.toto is not defined 
+	  
+    - block:
+        - name: Create a logical volume of 512m
+          community.general.lvol:
+            vg: toto
+            lv: redrose
+            size: 1024
+
+        - name: Create a ext2 filesystem on /dev/sdb1
+          community.general.filesystem:
+            fstype: ext4
+            dev: /dev/toto/redrose
+      rescue:
+         - name: Generate error message -recue mode on
+           debug:
+              msg: Give size is high
+
+         - name: Create a logical volume of 512m- rescue mode on
+           community.general.lvol:
+              vg: toto
+              lv: redrose
+              size: 512
+
+         - name: Create a ext2 filesystem on /dev/sdb1 - rescue mode on
+           community.general.filesystem:
+            fstype: ext4
+            dev: /dev/toto/redrose
+      when: ansible_lvm.vgs.toto is defined 
+[student@workstation ansible]$
+
+
+
+[student@workstation ansible]$ ansible-navigator run mylvm-q2.yaml -m stdout 
+
+PLAY [LVM for block and rescue mode] *******************************************
+
+TASK [Gathering Facts] *********************************************************
+ok: [servera]
+ok: [serverd]
+ok: [serverb]
+ok: [serverc]
+
+TASK [Create a logical volume of 512m] *****************************************
+skipping: [servera]
+skipping: [serverb]
+fatal: [serverd]: FAILED! => {"changed": false, "err": "  Volume group \"toto\" has insufficient free space (255 extents): 256 required.\n", "msg": "Creating logical volume 'redrose' failed", "rc": 5}
+fatal: [serverc]: FAILED! => {"changed": false, "err": "  Volume group \"toto\" has insufficient free space (255 extents): 256 required.\n", "msg": "Creating logical volume 'redrose' failed", "rc": 5}
+
+TASK [Create a ext2 filesystem on /dev/sdb1] ***********************************
+skipping: [servera]
+skipping: [serverb]
+
+TASK [Generate error message -recue mode on] ***********************************
+ok: [serverc] => {
+    "msg": "Give size is high"
+}
+ok: [serverd] => {
+    "msg": "Give size is high"
+}
+
+TASK [Create a logical volume of 512m- rescue mode on] *************************
+changed: [serverc]
+changed: [serverd]
+
+TASK [Create a ext2 filesystem on /dev/sdb1 - rescue mode on] ******************
+changed: [serverc]
+changed: [serverd]
+
+TASK [debug] *******************************************************************
+ok: [servera] => {
+    "msg": "Create a VG toto first, ha ha"
+}
+ok: [serverb] => {
+    "msg": "Create a VG toto first, ha ha"
+}
+skipping: [serverc]
+skipping: [serverd]
+
+PLAY RECAP *********************************************************************
+servera                    : ok=2    changed=0    unreachable=0    failed=0    skipped=2    rescued=0    ignored=0   
+serverb                    : ok=2    changed=0    unreachable=0    failed=0    skipped=2    rescued=0    ignored=0   
+serverc                    : ok=4    changed=2    unreachable=0    failed=0    skipped=1    rescued=1    ignored=0   
+serverd                    : ok=4    changed=2    unreachable=0    failed=0    skipped=1    rescued=1    ignored=0   
+[student@workstation ansible]$
 ```
