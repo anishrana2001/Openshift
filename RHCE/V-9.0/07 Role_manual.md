@@ -242,9 +242,17 @@ serverd                    : ok=6    changed=2    unreachable=0    failed=0    s
 
 [student@workstation ansible]$ ansible webserver -m shell -a 'cat /var/www/html/index.html'
 serverd | CHANGED | rc=0 >>
-Welcome to devops-wala web page hosted on serverd.lab.example.com having IP 172.25.250.13 and runing on OS RedHat with architecture  x86_64
+Welcome to devops-wala web page hosted on serverd.lab.example.com having IP 172.25.250.13 and runing on OS RedHat with architecture x86_64
 serverc | CHANGED | rc=0 >>
-Welcome to devops-wala web page hosted on serverc.lab.example.com having IP 172.25.250.12 and runing on OS RedHat with architecture  x86_64
+Welcome to devops-wala web page hosted on serverc.lab.example.com having IP 172.25.250.12 and runing on OS RedHat with architecture x86_64
 [student@workstation ansible]$ 
+
+
+[student@workstation ansible]$ curl http://172.25.250.13
+Welcome to devops-wala web page hosted on serverd.lab.example.com having ip 172.25.250.13 and runing on OS RedHat with architecture x86_64
+[student@workstation ansible]$ curl http://172.25.250.12
+Welcome to devops-wala web page hosted on serverc.lab.example.com having ip 172.25.250.12 and runing on OS RedHat with architecture x86_64
+[student@workstation ansible]$
+
 
 ```
