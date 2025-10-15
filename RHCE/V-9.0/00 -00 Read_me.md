@@ -16,7 +16,7 @@
 ### All node root password is `redhat` and login as `student` user
 
 ### Registary URL: utility.lab.example.com
-### username: login
+### username: admin
 ### Password redhat
 
 
