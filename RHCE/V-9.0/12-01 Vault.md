@@ -44,7 +44,7 @@ punit: vtyshshbash
 ---
 ---
 
-### Question 2 : Your task is to update vault password from `ThisisaStrongpassword` to `aalotchale` of file `/home/student/ansible/mysecret.txt`
+### Question 2 : Your task is to update vault password from `ThisisaStrongpassword` to `aalotchale` of file `/home/student/ansible/pass-vault.yml`
 
 ### Solution: 
 ```
@@ -54,4 +54,20 @@ ansible-vault rekey --ask-vault-pass /home/student/ansible/mysecret.txt
 ### Post checks!!
 ```
 ansible-vault view --ask-vault-pass  /home/student/ansible/mysecret.txt
+```
+
+### For your references.
+```
+[student@workstation ansible]$ ansible-vault rekey --ask-vault-password pass-vault.yml
+Vault password: 
+New Vault password: 
+Confirm New Vault password: 
+Rekey successful
+[student@workstation ansible]$ ansible-vault view --ask-vault-password pass-vault.yml 
+Vault password: 
+---
+anishrana2001: devops-wala
+punit: vtyshshbash
+
+[student@workstation ansible]$
 ```
