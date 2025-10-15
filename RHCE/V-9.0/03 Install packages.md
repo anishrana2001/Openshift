@@ -6,7 +6,7 @@
   - Create a group called `devops-wala`.
   - Create a non login shell user `mon_ocp`
   - Password of both users should be `anishrana2001`
-  - Install `RPM developement Tools` package.
+  - Install `RPM development Tools` package.
 ---
 
 
