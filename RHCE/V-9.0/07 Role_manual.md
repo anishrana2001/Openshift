@@ -16,7 +16,7 @@
 
 #### As we know that we can create a role from `ansible-galaxy` command. The dot "." is for current directory. `mywebserver` is the role name.
 ```
-ansible-galaxy role init --init-path . mywebserver
+ansible-galaxy role init mywebserver
 ```
 ### Step 1. Let's create a file first to complete 3rd point.
 3. create a `index.html` file with below content under `/var/www/html/` directory on `webserver` host group.
