@@ -3,8 +3,16 @@
   - playbook should download the file and name it `node_information.yaml` in the `/root` directory.
   - `https://raw.githubusercontent.com/anishrana2001/Openshift/refs/heads/main/RHCE/V-9.0/gather_information-11.yaml`
   - Modify this file `node_information.yaml` with inventory hostname.
-  - Should run on all hosts in the inventory file.
-
+  - BIOS version
+  - lvm name
+  - Disk size of vda
+  - Disk size of vdb
+  - Total CPU
+  - Total memory
+  - FQDN name
+  - IP address of host
+  - Should run on all hosts in the inventory file. if values are not fetched then it should print NONE
+---
 ### Solution:
 
 ### Get the help for "how to download the file in the playbook?"
@@ -127,4 +135,53 @@ servera | CHANGED | rc=0 >>
 HOST=servera
 [student@workstation ansible]$ 
 
+```
+
+
+
+
+
+```
+---
+- name: gather information
+  hosts: all
+  tasks:
+    - name: Download foo.conf
+      ansible.builtin.get_url:
+        url: https://raw.githubusercontent.com/anishrana2001/Openshift/refs/heads/main/RHCE/V-9.0/gather_information-11.yaml
+        dest: /root/node_information.yaml
+
+    - name: Ensure SELinux is set to enforcing mode
+      ansible.builtin.lineinfile:
+       path: /root/node_information.yaml
+       regexp: '^HOST'
+       line: "HOST={{ inventory_hostname }}"
+
+
+    - name: Ensure SELinux is set to enforcing mode
+      ansible.builtin.lineinfile:
+       path: /root/node_information.yaml
+       regexp: '^MEMORY'
+       line: "MEMORY={{ ansible_memtotal_mb | default('NONE', true) }}"
+
+
+    - name: Ensure SELinux is set to enforcing mode
+      ansible.builtin.lineinfile:
+       path: /root/node_information.yaml
+       regexp: '^BIOS'
+       line: "BIIOS={{ ansible_bios_version }}"
+
+
+    - name: Ensure SELinux is set to enforcing mode
+      ansible.builtin.lineinfile:
+       path: /root/node_information.yaml
+       regexp: '^DISK_SIZE_VDA'
+       line: "DISK_SIZE_VDA={{ ansible_devices.vda.size | default('NONE', true) }}"
+
+
+    - name: Ensure SELinux is set to enforcing mode
+      ansible.builtin.lineinfile:
+       path: /root/node_information.yaml
+       regexp: '^DISK_SIZE_VDB'
+       line: "DISK_SIZE_VDB={{ ansible_devices.vdb.size | default('NONE', true) }}"
 ```
