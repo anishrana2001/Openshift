@@ -1,0 +1,9 @@
+- name: Create LVM, volume group, and ext4 filesystem on /dev/vdb without command module
+  hosts: lab,myprod
+  become: true
+  gather_facts: true
+  tasks:
+    - name: Create volume group firefly on /dev/vdb
+      community.general.lvg:
+        vg: toto
+        pvs: /dev/vdb
