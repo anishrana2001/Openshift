@@ -48,7 +48,7 @@ cat role-from-galaxy.yaml
 
 ### Install the role from galaxy.
 ```
-ansible-galaxy install -r role-from-galaxy.yaml
+ansible-galaxy install -r /home/student/ansible/my-roles/role-from-galaxy.yaml
 ```
 
 ### Perform the Post checks.
