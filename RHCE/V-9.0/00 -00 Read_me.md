@@ -14,3 +14,9 @@
 
 ### create a playbook as `student` user and remote user name is `devops` 
 ### All node root password is `redhat` and login as `student` user
+
+### Registary URL: utility.lab.example.com
+### username: login
+### Password redhat
+
+
