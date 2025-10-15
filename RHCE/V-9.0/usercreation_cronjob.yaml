@@ -1,0 +1,18 @@
+- name: Install httpd,update,development tools,users and group
+  hosts: lab   ### Groups name added.
+  become: yes
+  tasks:
+    - name: Create a group called 'devops-wala'
+      ansible.builtin.group:
+          name: devops-wala
+          state: present # Ensures the group exists
+    - name: Create user 'rajan' and add to 'devops-wala' group
+      ansible.builtin.user:
+          name: rajan
+          comment: "OCP cluster"
+          password: "{{ 'anishrana2001' | password_hash('sha512') }}" # Hash the password securely
+          groups: devops-wala
+          append: true # Add to the group without removing from others
+          state: present
+          uid: 1330
+          shell: /bin/bash # Specify the default shell
