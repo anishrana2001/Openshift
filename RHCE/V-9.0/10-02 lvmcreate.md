@@ -1,3 +1,9 @@
+## Create a lab for this question:
+### Note: If needed then please adjust the disk name. I will be using "/dev/vdb" for creating volume group on this disk.
+```
+curl -o /home/student/ansible/lab_for_10-02.yaml https://raw.githubusercontent.com/anishrana2001/Openshift/refs/heads/main/RHCE/V-9.0/lab_for_10-02.yaml
+ansible-navigator run /home/student/ansible/lab_for_10-02.yaml -m stdout
+```
 # From the below question, we get to know that how `block` and `rescue` work together.
 
 ### Question: Create a lvm and below tasks must be fullfill.
