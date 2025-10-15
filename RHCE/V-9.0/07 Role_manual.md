@@ -12,7 +12,10 @@
 
 ## Solution: 
   
-
+### For the lab environment, you need to upgrade the ansible.
+```
+pip install --user --upgrade ansible
+```
 
 #### As we know that we can create a role from `ansible-galaxy` command. The dot "." is for current directory. `mywebserver` is the role name.
 ```
