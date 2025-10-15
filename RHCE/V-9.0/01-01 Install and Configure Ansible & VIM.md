@@ -95,7 +95,20 @@ become_ask_pass=False
 become_method=sudo
 become_user=root
 ```
-
+### Check if your ansible.cfg file is taking into the account?
+```
+[student@workstation ansible]$ ansible --version
+ansible [core 2.13.0]
+  config file = /home/student/ansible/ansible.cfg
+  configured module search path = ['/home/student/.ansible/plugins/modules', '/usr/share/ansible/plugins/modules']
+  ansible python module location = /usr/lib/python3.9/site-packages/ansible
+  ansible collection location = /home/student/ansible/my-collection:/usr/share/ansible/collections
+  executable location = /bin/ansible
+  python version = 3.9.10 (main, Feb  9 2022, 00:00:00) [GCC 11.2.1 20220127 (Red Hat 11.2.1-9)]
+  jinja version = 3.0.3
+  libyaml = True
+[student@workstation ansible]$
+```
 ### Now, create inventory file.
 #### What we knows from question : 
 	- lab ---------> servera
