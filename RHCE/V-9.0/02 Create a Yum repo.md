@@ -1,6 +1,21 @@
 
 ### Question: You need to create a yum repo file with the help of Ansible on all the nodes. 
 
+```
+[rhel-9-for-x86_64-baseos-rpms]
+baseurl = http://content.example.com/rhel9.0/x86_64/dvd/BaseOS
+enabled = true
+gpgcheck = false
+name = Red Hat Enterprise Linux 9 for x86_64 - BaseOS (RPMs)
+
+[rhel-9-for-x86_64-appstream-rpms]
+baseurl = http://content.example.com/rhel9.0/x86_64/dvd/AppStream
+enabled = true
+gpgcheck = false
+name = Red Hat Enterprise Linux 9 for x86_64 - AppStream (RPMs)
+```
+---
+---
 ### Solution: 
 
 ### A good thing is that, we can take the help of Ansible documentation for creating a Ansible playbook. 
