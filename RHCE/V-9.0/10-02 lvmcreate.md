@@ -12,7 +12,7 @@ ansible-navigator run /home/student/ansible/lab_for_10-02.yaml -m stdout
     - Create a LVM with name `redrose` under the VolumeGroup named `toto`.
     - Size of LVM should be `1024 Mib`
     - Filesystem of this LVM should ext4.
-	- If it fails then it should generate the error message `Give size is high`
+	- If it fails then it should generate the error message `Given size is high`
 	- Then it should create a lvm with `200 Mib`
 	- If the volume group "toto" does not exist then generate the error `Create a VG toto first, ha ha` 
 ---
