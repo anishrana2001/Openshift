@@ -1,4 +1,4 @@
-## Question: Create a palybook called `/home/greg/ansible/ansible-role-selinux.yaml` and below tasks must be completed.
+## Question: Create a palybook called `/home/student/ansible/ansible-role-selinux.yaml` and below tasks must be completed.
 - hosts: all 
 - Must use `rhel-system-roles.selinux`
 - selinux_policy: targeted
