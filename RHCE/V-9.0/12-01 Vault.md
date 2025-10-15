@@ -20,6 +20,24 @@ vault_password_file=/home/student/ansible/mysecret.txt
 ```
 ansible-vault create /home/student/ansible/pass-vault.yml
 ```
+### It will ask the password first, use this password `ThisisaStrongpassword` and then add key-value paris.
+```
+---
+anishrana2001: devops-wala
+punit: vtyshshbash
+```
+### Save the file and exit.
+
+### You can see the content of this file only after givnging the right password `ThisisaStrongpassword`. 
+```
+[student@workstation ansible]$ ansible-vault view --ask-vault-password pass-vault.yml 
+Vault password: 
+---
+anishrana2001: devops-wala
+punit: vtyshshbash
+
+[student@workstation ansible]$
+```
 ---
 ### .
 ### .
