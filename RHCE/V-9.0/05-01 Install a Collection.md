@@ -6,12 +6,16 @@ lab start role-collections
 
 
 
-##  Question: Install the below collections available on `http://https://github.com/anishrana2001/Openshift/edit/main/RHCE/V-9.0/` 
+###  Question: Install the below collections available on under the directory `/home/student/role-collections/` 
 - gls-utils-0.0.1.tar.gz
 - community-general-5.5.0.tar.gz
 - redhat-insights-1.0.7.tar.gz
 - redhat-rhel_system_roles-1.19.3.tar.gz
-## Please make sure that these collections must be installed on `/home/student/ansible/my-collection`
+#### Please make sure that these collections must be installed on `/home/student/ansible/my-collection`
+
+#### Note: It may ask you to download these packages from URL too. Like below.
+`http://https://github.com/anishrana2001/Openshift/edit/main/RHCE/V-9.0/` 
+---
 
 ### Solution:
 ### Note:
