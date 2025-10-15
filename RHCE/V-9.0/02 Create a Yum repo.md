@@ -1,5 +1,5 @@
 
-### Question: You need to create a yum repo file with the help of Ansible on all the nodes. 
+### Question: You need to create a yum repo file with the help of Ansible on all the nodes. Playbook name must be `yum-repo.yaml` under `/home/student/ansible/` directory.
 
 ```
 [rhel-9-for-x86_64-baseos-rpms]
