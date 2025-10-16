@@ -5,6 +5,7 @@ ansible-navigator run usercreation_cronjob.yaml -m stdout
 ```
 
 ### Your task is to create a cronjob 
+- name of the cron should be `anishrana2001`
 - User `rajan` should execute `logger "Youtube Channel devops-wala"` every 7 minutes. 
 - Create a cronjob playbook with named `mycron.yaml` and it should run only on `lab` host group.
 ---
