@@ -1,19 +1,21 @@
 
 ### Question: You need to create a yum repo file with the help of Ansible on all the nodes. Playbook name must be `yum-repo.yaml` under `/home/student/ansible/` directory.
 
-```
-[rhel-9-for-x86_64-baseos-rpms]
-baseurl = http://content.example.com/rhel9.0/x86_64/dvd/BaseOS
-enabled = true
-gpgcheck = false
-name = Red Hat Enterprise Linux 9 for x86_64 - BaseOS (RPMs)
 
-[rhel-9-for-x86_64-appstream-rpms]
-baseurl = http://content.example.com/rhel9.0/x86_64/dvd/AppStream
-enabled = true
-gpgcheck = false
-name = Red Hat Enterprise Linux 9 for x86_64 - AppStream (RPMs)
-```
+- name of repository = `Red Hat Enterprise Linux 9 for x86_64 - BaseOS (RPMs)`
+- description = `rhel-9-for-x86_64-baseos`
+- baseurl = `http://content.example.com/rhel9.0/x86_64/dvd/BaseOS`
+- gpgcheck should be `enabled`
+- gpgkey url is ``
+- repository should be `enabled`
+
+
+- name of repository = `Red Hat Enterprise Linux 9 for x86_64 - AppsStream (RPMs)`
+- description = `rhel-9-for-x86_64-appstream`
+- baseurl = `http://content.example.com/rhel9.0/x86_64/dvd/AppStream`
+- gpgcheck should be `enabled`
+- gpgkey url is `disabled`
+- repository should be `enabled`
 ---
 ---
 ### Solution: 
