@@ -1,6 +1,6 @@
 ### Question 1: Write a ansible vault file named `pass-vault.yml` that creates the `anishrana2001` & `punit` users. It must do so as follows:
-- You must set the password for the `anishrana2001` has the password `devops-wala` in the `pass-vault.yml` file under `/home/student/ansible/` directory. Which is encrypted with Ansible Vault. 
-- The password for the `punit` user has the password `vtyshshbash` in the `pass-vault.yml` file under `/home/student/ansible/` directory, which is encrypted with Ansible Vault.
+- You must set the password as a variable, key `pw_punit` and the value is `devops-wala` in the `pass-vault.yml` file under `/home/student/ansible/` directory. Which is encrypted with Ansible Vault. 
+- The password for the `pw_rajan` user has the password `vtyshshbash` in the `pass-vault.yml` file under `/home/student/ansible/` directory, which is encrypted with Ansible Vault.
 - The password for Encrypt and decrypt the vault is `ThisisaStrongpassword` and store in the `mysecret.txt` file under `/home/student/ansible/` directory.
 ---
 	
@@ -23,8 +23,8 @@ ansible-vault create /home/student/ansible/pass-vault.yml
 ### It will ask the password first, use this password `ThisisaStrongpassword` and then add key-value paris.
 ```
 ---
-anishrana2001: devops-wala
-punit: vtyshshbash
+pw_punit: devops-wala
+pw_rajan: vtyshshbash
 ```
 ### Save the file and exit.
 
@@ -33,8 +33,8 @@ punit: vtyshshbash
 [student@workstation ansible]$ ansible-vault view --ask-vault-password pass-vault.yml 
 Vault password: 
 ---
-anishrana2001: devops-wala
-punit: vtyshshbash
+pw_punit: devops-wala
+pw_rajan: vtyshshbash
 
 [student@workstation ansible]$
 ```
@@ -66,8 +66,8 @@ Rekey successful
 [student@workstation ansible]$ ansible-vault view --ask-vault-password pass-vault.yml 
 Vault password: 
 ---
-anishrana2001: devops-wala
-punit: vtyshshbash
+pw_punit: devops-wala
+pw_rajan: vtyshshbash
 
 [student@workstation ansible]$
 ```
