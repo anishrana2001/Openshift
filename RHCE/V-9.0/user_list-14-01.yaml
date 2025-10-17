@@ -1,7 +1,7 @@
 users:
   - name: punit
     job: manager
-  - name: sandeep
+  - name: rajan
     job: engineer
   - name: rajesh
     job: manager
