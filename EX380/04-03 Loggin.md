@@ -3,7 +3,7 @@
 lab start logging-forward
 ```
 
-# You need to Install the OpenShift Logging operator and configure log forwarding to the syslog server according to the following specifications:
+# You need to Install the `OpenShift Logging operator` and configure log forwarding to the syslog server according to the following specifications:
 
   - The log collector type must be `vector`
   - Application and infrastructure logs must be forwarded to the syslog server on host `utility.lab.example.com`
