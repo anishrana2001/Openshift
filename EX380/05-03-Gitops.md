@@ -8,7 +8,7 @@
 - The `ocpadmins` group is the only group configured as `role:admin` with RBAC key policy.
 - An ArgoCD instance Git repository exists at `https://git.ocp4.example.com/` . User `developer` user with `d3v3lop3r` as the password.
 - Create a new project with name `machineconfig` and it should be `Public` in the visibility level.
-- An application named `mach-config-motd-deploy` must be exists in the Git repository with the Sync Policy configured as `Manual`.
+- An application named `mach-config-motd-deploy` must be exists in the ArgoCD with the Sync Policy configured as `Manual`.
 
 ### The Git repository `https://git.ocp4.example.com/developer/machineconfig.git` contains `four` MachineConfig resources as follows:
 
