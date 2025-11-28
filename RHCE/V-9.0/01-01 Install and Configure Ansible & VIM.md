@@ -32,7 +32,7 @@ podman login -u admin -p redhat  utility.lab.example.com
 
 ### Step 3. Create the mentioned directories.
 ```
-mkdir -p /home/student/ansible/my-role
+mkdir -p /home/student/ansible/my-roles
 mkdir /home/student/ansible/my-collection
 cd /home/student/ansible/
 ```
