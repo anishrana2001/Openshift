@@ -1,3 +1,7 @@
+---
+## If you are using Redhat Lab, then follow below steps.
+## If you are using your own Lab, then see the steps at the end of this page.
+---
 
 ### Question: You need to create a yum repo file with the help of Ansible on all the nodes. Playbook name must be `yum-repo.yaml` under `/home/student/ansible/` directory.
 
@@ -41,8 +45,8 @@ yum_repository                                 Add or remove YUM repositori...
   tasks:
   - name: first repo
     ansible.builtin.yum_repository:
-       name: rpmforge
-       description: RPMforge YUM repo
+       name: Red Hat Enterprise Linux 9 for x86_64 - BaseOS (RPMs)
+       description: rhel-9-for-x86_64-baseos
        file: external_repos
        baseurl: http://content.example.com/rhel9.0/x86_64/dvd/BaseOS
        enabled: yes
@@ -136,3 +140,71 @@ rhel-9-for-x86_64-baseos-rpms-updates                  Red Hat Enterpris enabled
 
 
 ### You can use the `--check` option to run the playbook in check mode, which performs a "dry run" of the playbook. This causes Ansible to report what changes would have occurred if the playbook were executed, but does not make any changes.
+
+## For Your own lab :
+
+### Question: You need to create a yum repo file with the help of Ansible on all the nodes. Playbook name must be `yum-repo.yaml` under `/home/student/ansible/` directory.
+
+
+- name of repository = `Red Hat Enterprise Linux 9 for x86_64 - BaseOS (RPMs)`
+- description = `rhel-9-for-x86_64-baseos`
+- baseurl = `https://mirrors.centos.org/metalink?repo=centos-baseos-$stream&arch=$basearch&protocol=https,http`
+- gpgcheck should be `enabled`
+- gpgkey url is `file:///etc/pki/rpm-gpg/RPM-GPG-KEY-centosofficial`
+- repository should be `enabled`
+
+
+
+- name of repository = `Red Hat Enterprise Linux 9 for x86_64 - AppsStream (RPMs)`
+- description = `rhel-9-for-x86_64-appstream`
+- baseurl = `https://mirrors.centos.org/metalink?repo=centos-baseos-$stream&arch=$basearch&protocol=https,http`
+- gpgcheck should be `enabled`
+- gpgkey url is `enabled`
+- gpgkey url is `file:///etc/pki/rpm-gpg/RPM-GPG-KEY-centosofficial`
+- repository should be `enabled`
+---
+---
+### Solution: 
+
+### A good thing is that, we can take the help of Ansible documentation for creating a Ansible playbook. 
+### Modify the values as per the question demands. 
+```
+[student@workstation ~]$ ansible-doc -l | grep yum
+yum                                            Manages packages with the `y...
+yum_repository                                 Add or remove YUM repositori...
+[student@workstation ~]$ 
+
+[student@workstation ~]$ ansible-doc yum_repository  
+
+```
+
+
+### Lets' create our own ansible playbook.
+```
+---
+- name: Config yum repo
+  hosts: all
+  tasks:
+  - name: Red Hat Enterprise Linux 9 for x86_64 - BaseOS (RPMs)
+    ansible.builtin.yum_repository:
+       name: Red Hat Enterprise Linux 9 for x86_64 - BaseOS (RPMs)
+       description: rhel-9-for-x86_64-baseos
+       file: myownlab_repos
+       baseurl: https://mirrors.centos.org/metalink?repo=centos-baseos-$stream&arch=$basearch&protocol=https,http
+       enabled: yes
+       gpgcheck: yes
+	   gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-centosofficial
+
+- name: Config yum repo
+  hosts: all
+  tasks:
+  - name: Red Hat Enterprise Linux 9 for x86_64 - AppsStream (RPMs)
+    ansible.builtin.yum_repository:
+       name: Red Hat Enterprise Linux 9 for x86_64 - AppsStream (RPMs)
+       description: rhel-9-for-x86_64-appstream
+       file: myownlab_repos
+       baseurl: https://mirrors.centos.org/metalink?repo=centos-baseos-$stream&arch=$basearch&protocol=https,http
+       enabled: yes
+       gpgcheck: yes
+	   gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-centosofficial
+```
