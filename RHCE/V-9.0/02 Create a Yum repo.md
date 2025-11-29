@@ -5,21 +5,21 @@
 
 ### Question: You need to create a yum repo file with the help of Ansible on all the nodes. Playbook name must be `yum-repo.yaml` under `/home/student/ansible/` directory.
 
+- Frist Repo details:
+	- name of repository = `Red Hat Enterprise Linux 9 for x86_64 - BaseOS (RPMs)`
+	- description = `rhel-9-for-x86_64-baseos`
+	- baseurl = `http://content.example.com/rhel9.0/x86_64/dvd/BaseOS`
+	- gpgcheck should be `enabled`
+	- gpgkey url is ``
+	- repository should be `enabled`
 
-- name of repository = `Red Hat Enterprise Linux 9 for x86_64 - BaseOS (RPMs)`
-- description = `rhel-9-for-x86_64-baseos`
-- baseurl = `http://content.example.com/rhel9.0/x86_64/dvd/BaseOS`
-- gpgcheck should be `enabled`
-- gpgkey url is ``
-- repository should be `enabled`
-
-
-- name of repository = `Red Hat Enterprise Linux 9 for x86_64 - AppsStream (RPMs)`
-- description = `rhel-9-for-x86_64-appstream`
-- baseurl = `http://content.example.com/rhel9.0/x86_64/dvd/AppStream`
-- gpgcheck should be `enabled`
-- gpgkey url is `disabled`
-- repository should be `enabled`
+- Second Repo details:
+	- name of repository = `Red Hat Enterprise Linux 9 for x86_64 - AppsStream (RPMs)`
+	- description = `rhel-9-for-x86_64-appstream`
+	- baseurl = `http://content.example.com/rhel9.0/x86_64/dvd/AppStream`
+	- gpgcheck should be `enabled`
+	- gpgkey url is `disabled`
+	- repository should be `enabled`
 ---
 ---
 ### Solution: 
