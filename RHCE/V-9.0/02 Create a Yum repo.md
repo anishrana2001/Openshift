@@ -145,7 +145,7 @@ rhel-9-for-x86_64-baseos-rpms-updates                  Red Hat Enterpris enabled
 
 ### Question: You need to create a yum repo file with the help of Ansible on all the nodes. Playbook name must be `yum-repo.yaml` under `/home/student/ansible/` directory.
 
-
+- First Repo details
 	- name of repository = `Red Hat Enterprise Linux 9 for x86_64 - BaseOS (RPMs)`
 	- description = `rhel-9-for-x86_64-baseos`
 	- baseurl = `https://mirrors.centos.org/metalink?repo=centos-baseos-$stream&arch=$basearch&protocol=https,http`
@@ -154,14 +154,14 @@ rhel-9-for-x86_64-baseos-rpms-updates                  Red Hat Enterpris enabled
 	- repository should be `enabled`
 
 
-
-- name of repository = `Red Hat Enterprise Linux 9 for x86_64 - AppsStream (RPMs)`
-- description = `rhel-9-for-x86_64-appstream`
-- baseurl = `https://mirrors.centos.org/metalink?repo=centos-baseos-$stream&arch=$basearch&protocol=https,http`
-- gpgcheck should be `enabled`
-- gpgkey url is `enabled`
-- gpgkey url is `file:///etc/pki/rpm-gpg/RPM-GPG-KEY-centosofficial`
-- repository should be `enabled`
+- Second Repo details
+	- name of repository = `Red Hat Enterprise Linux 9 for x86_64 - AppsStream (RPMs)`
+	- description = `rhel-9-for-x86_64-appstream`
+	- baseurl = `https://mirrors.centos.org/metalink?repo=centos-baseos-$stream&arch=$basearch&protocol=https,http`
+	- gpgcheck should be `enabled`
+	- gpgkey url is `enabled`
+	- gpgkey url is `file:///etc/pki/rpm-gpg/RPM-GPG-KEY-centosofficial`
+	- repository should be `enabled`
 ---
 ---
 ### Solution: 
