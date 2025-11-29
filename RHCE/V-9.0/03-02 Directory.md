@@ -45,9 +45,26 @@ cat > webserver.yaml
 ```
 ansible-navigator run webserver.yaml -m stdout
 ```
+#### Post checks.
+##### Post checks selinx image.
+```
+ansible myprod -m shell -a 'ls -ldZ /var/www/html/'
+```
+##### Post checks for symbolic link 
+```
+ansible myprod -m shell -a 'ls -l /var/www/html/'
+```
+##### Post checks for index.html file content.
+```
+ansible myprod -m shell -a 'cat /var/www/html/webserver/index.html'
+```
 
+##### Post checks for Stickybit.
+```
+ansible myprod -m shell -a 'ls -ld /webserver/'
+```
 
-
+### For your references. 
 ```
 [student@workstation ansible]$ ansible-navigator run webserver.yaml -m stdout
 
@@ -83,23 +100,17 @@ serverb                    : ok=4    changed=3    unreachable=0    failed=0    s
 serverc                    : ok=4    changed=3    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
 serverd                    : ok=4    changed=1    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
 [student@workstation ansible]$
-
+```
 
 #### Post checks.
 ##### Post checks selinx image.
 ```
-ansible myprod -m shell -a 'ls -ldZ /var/www/html/'
-```
-```
 [student@workstation ansible]$ ansible myprod -m shell -a 'ls -ldZ /var/www/html/'
 serverd | CHANGED | rc=0 >>
 drwxr-xr-x. 2 root root system_u:object_r:httpd_sys_content_t:s0 41 Oct 13 10:02 /var/www/html/
-
+```
 
 ##### Post checks for symbolic link 
-```
-ansible myprod -m shell -a 'ls -l /var/www/html/'
-```
 ```
 [student@workstation ansible]$ ansible myprod -m shell -a 'ls -l /var/www/html/'
 serverd | CHANGED | rc=0 >>
@@ -110,22 +121,21 @@ lrwxrwxrwx. 1 root root  10 Oct 13 10:02 webserver -> /webserver
 
 ##### Post checks for index.html file content.
 ```
-ansible myprod -m shell -a 'cat /var/www/html/webserver/index.html'
-```
-```
 [student@workstation ansible]$ ansible myprod -m shell -a 'cat /var/www/html/webserver/index.html'
 serverd | CHANGED | rc=0 >>
 Welcome to devops-wala
 ```
 
 ##### Post checks for Stickybit.
+```
 [student@workstation ansible]$ ansible myprod -m shell -a 'ls -ld /webserver/'
 serverd | CHANGED | rc=0 >>
 drwxrwsr-x. 2 root root 24 Oct 13 10:02 /webserver/
 [student@workstation ansible]$ 
-
+```
 
 ##### Post checks for webserver web page opening.
+```
 [student@workstation ansible]$ curl http://172.25.250.13/webserver/index.html ; echo
 Welcome to devops-wala
 [student@workstation ansible]$
