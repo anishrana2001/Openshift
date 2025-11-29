@@ -58,7 +58,12 @@ ansible myprod -m shell -a 'ls -l /var/www/html/'
 ```
 ansible myprod -m shell -a 'cat /var/www/html/webserver/index.html'
 ```
-
+```
+ansible myprod -m shell -a 'ls -ldZ  /var/www/html/webserver/index.html'
+```
+```
+ansible myprod -m shell -a 'ls -ldZ  /webserver/index.html'
+```
 ##### Post checks for Stickybit.
 ```
 ansible myprod -m shell -a 'ls -ld /webserver/'
