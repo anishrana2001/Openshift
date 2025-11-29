@@ -11,6 +11,10 @@
 ### Solution: 
 
 [student@workstation ansible]$ cat webserver.yaml 
+
+```
+cat > webserver.yaml
+```
 ```
 ---
 - name: Creating directory
@@ -35,10 +39,16 @@
         content: 'Welcome to devops-wala'
         dest: /webserver/index.html
         setype: httpd_sys_content_t
-[student@workstation ansible]$
+```
+
+### Run the playbook
+```
+ansible-navigator run webserver.yaml -m stdout
+```
 
 
 
+```
 [student@workstation ansible]$ ansible-navigator run webserver.yaml -m stdout
 
 PLAY [Creating directory] ******************************************************
@@ -77,24 +87,36 @@ serverd                    : ok=4    changed=1    unreachable=0    failed=0    s
 
 #### Post checks.
 ##### Post checks selinx image.
+```
+ansible myprod -m shell -a 'ls -ldZ /var/www/html/'
+```
+```
 [student@workstation ansible]$ ansible myprod -m shell -a 'ls -ldZ /var/www/html/'
 serverd | CHANGED | rc=0 >>
 drwxr-xr-x. 2 root root system_u:object_r:httpd_sys_content_t:s0 41 Oct 13 10:02 /var/www/html/
 
 
 ##### Post checks for symbolic link 
+```
+ansible myprod -m shell -a 'ls -l /var/www/html/'
+```
+```
 [student@workstation ansible]$ ansible myprod -m shell -a 'ls -l /var/www/html/'
 serverd | CHANGED | rc=0 >>
 total 4
 -rw-r--r--. 1 root root 140 Oct 12 12:34 index.html
 lrwxrwxrwx. 1 root root  10 Oct 13 10:02 webserver -> /webserver
-
+```
 
 ##### Post checks for index.html file content.
+```
+ansible myprod -m shell -a 'cat /var/www/html/webserver/index.html'
+```
+```
 [student@workstation ansible]$ ansible myprod -m shell -a 'cat /var/www/html/webserver/index.html'
 serverd | CHANGED | rc=0 >>
 Welcome to devops-wala
-
+```
 
 ##### Post checks for Stickybit.
 [student@workstation ansible]$ ansible myprod -m shell -a 'ls -ld /webserver/'
