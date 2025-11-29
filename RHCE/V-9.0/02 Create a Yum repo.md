@@ -140,8 +140,9 @@ rhel-9-for-x86_64-baseos-rpms-updates                  Red Hat Enterpris enabled
 
 
 ### You can use the `--check` option to run the playbook in check mode, which performs a "dry run" of the playbook. This causes Ansible to report what changes would have occurred if the playbook were executed, but does not make any changes.
-
-## For Your own lab :
+---
+---
+## Below section is only for those users who are using their own lab :
 
 ### Question: You need to create a yum repo file with the help of Ansible on all the nodes. Playbook name must be `yum-repo.yaml` under `/home/student/ansible/` directory.
 
@@ -232,4 +233,9 @@ BaseOS-RHCE                rhel-9-for-x86_64-baseos                     enabled
 AppsStream-RHCE            rhel-9-for-x86_64-appstream                  enabled
 BaseOS-RHCE                rhel-9-for-x86_64-baseos                     enabled
 [student@workstation ansible]$
+```
+
+### Once, we verified everything is good, then we have to delete this repo file because we used a Dummy `baseurl`.
+```
+ansible all -m command -a 'rm -rf /etc/yum.repos.d/myownlab_repos.repo'
 ```
