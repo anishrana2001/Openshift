@@ -51,9 +51,18 @@ ssh-keygen
 ```
 ssh-copy-id student@servera
 ```
+```
+ssh-copy-id student@serverb
+```
+```
+ssh-copy-id student@serverc
+```
+```
+ssh-copy-id student@serverd
+```
 
 #### How to escalate the privileges to `student` user ?
-#### 1. Login to servera and then execute the below command. Make sure, you switch to root user.
+#### 1. Login to `servera` and then execute the below command. Make sure, you switch to `root` user. Follow these steps for `serverb`, `serverc`, and `serverd`
 ```
 sudo visudo -f /etc/sudoers.d/student
 ```
