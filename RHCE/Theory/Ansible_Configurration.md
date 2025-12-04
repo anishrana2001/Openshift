@@ -85,7 +85,7 @@ ansible-playbook site.yml
 
 #### Typical structure for an RHCE project
 A common minimal ansible.cfg for EX294-style work looks like:
-
+```
 text
 [defaults]
 inventory = ./inventory
@@ -99,7 +99,7 @@ become = True
 become_method = sudo
 become_user = root
 become_ask_pass = False
-
+```
 
 #### From there you can add more options as needed (callback plugins, stdout callback, logging, etc.), but the core idea stays the same:
 
