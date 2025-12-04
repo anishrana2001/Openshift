@@ -86,7 +86,6 @@ ansible-playbook site.yml
 #### Typical structure for an RHCE project
 A common minimal ansible.cfg for EX294-style work looks like:
 ```
-text
 [defaults]
 inventory = ./inventory
 remote_user = devops
