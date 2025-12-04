@@ -118,7 +118,7 @@ ansible-config init --disable > /home/student/ansible/ansible.cfg
 ### It is a file where you list:
 
 	- Hostnames or IPs of the systems you will manage.
-	- Groups of hosts (like web, db, dev, prod).
+	- Groups of hosts (like lab, preprod, dev, prod).
 	- Optional variables (like SSH user, ports, custom settings).
 	- Default path: /etc/ansible/hosts, but in projects you usually create your own, e.g. inventory.ini or hosts.yml.
 
@@ -143,11 +143,11 @@ ansible -i inventory.ini servera.lab.example.com -m ping
    
 ### Step 2: Add multiple hosts and groups (INI format)
 ```
-[web]
+[lab]
 servera.lab.example.com
 serverb.lab.example.com
 
-[db]
+[preprod]
 serverc.lab.example.com
 
 [all_servers]
@@ -158,37 +158,37 @@ serverc.lab.example.com
 
 #### Explanation:
 
-	- [web] and [db] are group names.
+	- [lab] and [preprod] are group names.
 	- Under each group, you list hosts belonging to that group.
 	- A host can be in multiple groups.
 	
 ```
-ansible -i inventory.ini web -m ping      # ping only web servers
-ansible -i inventory.ini db -m ping       # ping only db servers
+ansible -i inventory.ini lab -m ping      # ping only lab servers
+ansible -i inventory.ini preprod -m ping       # ping only preprod servers
 ansible -i inventory.ini all_servers -m ping
 ```
 
 ### Step 3: Add connection details as host variables
 #### Sometimes hostnames are different from SSH endpoints, or SSH uses different users/ports.
 ```
-[web]
-web1 ansible_host=10.0.0.11 ansible_user=student ansible_port=2222
-web2 ansible_host=10.0.0.12 ansible_user=student ansible_port=2223
+[lab]
+lab1 ansible_host=10.0.0.11 ansible_user=student ansible_port=2222
+lab2 ansible_host=10.0.0.12 ansible_user=student ansible_port=2223
 
-[db]
+[preprod]
 db1 ansible_host=10.0.0.21 ansible_user=student
 ```
 
 ### Explanation:
 
-	- web1, web2, db1 are inventory names (logical names).
+	- lab1, lab2, preprod1 are inventory names (logical names).
 	- ansible_host is the real IP or DNS used for SSH.
 	- ansible_user is the SSH username Ansible will use.
 	- ansible_port is the SSH port (useful for NAT/VirtualBox).
 
 ### Now run:
 ```
-ansible -i inventory.ini web -m ping
+ansible -i inventory.ini lab -m ping
 ```
 
 
@@ -198,33 +198,33 @@ ansible -i inventory.ini web -m ping
 ### Step 4: Group variables (same for all hosts in a group)
 #### You can set variables that apply to all hosts in a group:
 ```
-[web]
-web1 ansible_host=10.0.0.11
-web2 ansible_host=10.0.0.12
+[lab]
+lab1 ansible_host=10.0.0.11
+lab2 ansible_host=10.0.0.12
 
-[web:vars]
+[lab:vars]
 ansible_user=student
 http_port=80
 env=dev
 
-[db]
-db1 ansible_host=10.0.0.21
+[preprod]
+preprod1 ansible_host=10.0.0.21
 
-[db:vars]
+[preprod:vars]
 ansible_user=student
 env=prod
 ```
 
 #### Explanation:
 
-- [web:vars] defines variables for all web hosts.
-- [db:vars] defines variables for all db hosts.
+- [lab:vars] defines variables for all lab hosts.
+- [preprod:vars] defines variables for all preprod hosts.
 
 
 #### In a playbook:
 ```
 - name: Show inventory variables
-  hosts: web
+  hosts: lab
   tasks:
     - ansible.builtin.debug:
         msg: "Host {{ inventory_hostname }} uses http_port={{ http_port }} env={{ env }}"
@@ -237,12 +237,12 @@ env=prod
 	 - all --> all hosts in the inventory.
 	 - You can use [all:vars] for global defaults.
 ```
-[web]
-web1 ansible_host=10.0.0.11
-web2 ansible_host=10.0.0.12
+[lab]
+lab1 ansible_host=10.0.0.11
+lab2 ansible_host=10.0.0.12
 
-[db]
-db1 ansible_host=10.0.0.21
+[preprod]
+preprod1 ansible_host=10.0.0.21
 
 [all:vars]
 ansible_user=student
@@ -255,8 +255,8 @@ ansible_ssh_common_args='-o StrictHostKeyChecking=no'
 - Playbook → defines what to do on those hosts.
 - ansible/ansible-playbook → uses -i to point to the inventory.
 ```
-- name: Install httpd on web servers
-  hosts: web
+- name: Install httpd on lab servers
+  hosts: lab
   become: yes
   tasks:
     - ansible.builtin.dnf:
