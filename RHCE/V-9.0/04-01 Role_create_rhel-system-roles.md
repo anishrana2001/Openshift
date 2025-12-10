@@ -1,4 +1,4 @@
-# Question: Install RHEL role and create a playbook for ntp server with name `ntp-ploybook1.yaml`
+# Question: Install RHEL role and create a playbook for ntp server with name `ntp-playbook1.yaml`
 - ntp should be installed on all the nodes
 - timesync role should be used.
 - ntp IP should be used `0.rhel.pool.ntp.org`
