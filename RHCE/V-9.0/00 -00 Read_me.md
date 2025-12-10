@@ -1,15 +1,15 @@
 
 ### Classroom Machines
 
-### `student` user is allowed to login into workstation server.
-### All the work should be done on workstation server.
+  - `student` user is allowed to login into workstation server.
+  -  All the work should be done on workstation server.
 
-### create a playbook as `student` user and remote user name is `devops` 
-### All node root password is `redhat` and login as `student` user
+  -   create a playbook as `student` user and remote user name is `devops` 
+  -  All node root password is `redhat` and login as `student` user
 
 ### Registary URL: utility.lab.example.com
-### username: admin
-### Password redhat
+  -   username: admin
+  -  Password redhat
 
 | Machine name               | IP addresses     | Role    |
 | :----------------------:   | :--------------: | :---: |
