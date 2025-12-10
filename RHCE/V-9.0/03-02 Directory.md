@@ -3,7 +3,7 @@
 - Owner and Group of this directory should be `root` user.
 - Permission 775
 - Set GID (Sticky bit for group)
-- Create sybmolic link of directory '/webserver` to `/var/www/html/webserver`
+- Create sybmolic link of directory `/webserver` to `/var/www/html/webserver`
 - Create a `index.html` file with content below under `/webserver` directory.
     - `Welcome to devops-wala`
 - Create a playbook with name `/home/student/ansible/webserver.yaml`
