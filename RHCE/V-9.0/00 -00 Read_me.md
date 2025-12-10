@@ -1,6 +1,16 @@
 
 ### Classroom Machines
 
+### `student` user is allowed to login into workstation server.
+### All the work should be done on workstation server.
+
+### create a playbook as `student` user and remote user name is `devops` 
+### All node root password is `redhat` and login as `student` user
+
+### Registary URL: utility.lab.example.com
+### username: admin
+### Password redhat
+
 | Machine name               | IP addresses     | Role    |
 | :----------------------:   | :--------------: | :---: |
 | bastion.lab.example.com 	 | 172.25.250.254   | Gateway system to connect student private network to classroom server (must always be running)|   |
@@ -11,12 +21,8 @@
 |serverc.lab.example.com  	 |172.25.250.12	    |Host managed with Ansible|
 |serverd.lab.example.com  	 |172.25.250.13	    |Host managed with Ansible|
 
-
-### create a playbook as `student` user and remote user name is `devops` 
-### All node root password is `redhat` and login as `student` user
-
-### Registary URL: utility.lab.example.com
-### username: admin
-### Password redhat
+### One can use the `redhat` credentials for the workstation VM.
 
 
+
+----
