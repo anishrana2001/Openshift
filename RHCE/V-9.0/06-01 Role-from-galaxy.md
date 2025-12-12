@@ -6,7 +6,7 @@
 - Download the file `https://galaxy.ansible.com/download/zabbix-zabbix-1.0.6.tar.gz` and name it `zabbix-anish`
 - Download the file `https://galaxy.ansible.com/download/openafs_contrib-openafs-1.9.0.tar.gz` and name it `openafs-devops-wala`
 - Download the file `https://github.com/vcc-caeit/ansible-role.squid/archive/1.2.1.tar.gz` and name it `squid-anish`
-- Download the file `https://github.com/anishrana2001/Openshift/blob/main/RHCE/V-9.0/phpinfo.tar.gz` and name it `phpinfo`
+- Download the file `https://github.com/anishrana2001/Openshift/raw/refs/heads/main/RHCE/V-9.0/phpinfo.tar.gz` and name it `phpinfo`
 
 ### Task 2. Create a playbook called `/home/student/ansible/ansible-galaxy-role1.yaml`
  1. The playbook contains a play which run on `lab` host group and use the role `zabbix-anish`
@@ -45,7 +45,7 @@ cat role-from-galaxy.yaml
   name: openafs-devops-wala
 - src: https://galaxy.ansible.com/downlaod/mafalb-squid-0.2.0.tar.gz
   name: squid-anish
-- src: https://github.com/anishrana2001/Openshift/blob/main/RHCE/V-9.0/phpinfo.tar.gz
+- src: https://github.com/anishrana2001/Openshift/raw/refs/heads/main/RHCE/V-9.0/phpinfo.tar.gz
   name: phpinfo
 ```
 
