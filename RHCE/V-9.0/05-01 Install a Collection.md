@@ -81,8 +81,8 @@ ansible-galaxy collection list
   - redhat-insights-1.3.0.tar.gz
   - redhat-rhel_system_roles-1.108.6.tar.gz
 
-  ### These collections must be in the default directory : `/home/student/ansible/my-collection`
-  ```
+### These collections must be in the default directory : `/home/student/ansible/my-collection`
+
 
 ### Solution:
 
@@ -104,4 +104,12 @@ collections:
 
 ```
 ansible-galaxy collection install -r requirements.yml -p /home/student/ansible/my-collection/
+```
+### Post checks!!!
+```
+ansible-navigator collections
+```
+
+```
+ansible-galaxy collection list
 ```
