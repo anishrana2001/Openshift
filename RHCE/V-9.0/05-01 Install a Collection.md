@@ -95,7 +95,7 @@ vim requirements.yml
 ```
 ---
 collections:
-  - name: https://github.com/anishrana2001/Openshift/raw/refs/heads/main/RHCE/V-9.0/mwadman-azure_roles-1.0.0.tar.gz/mwadman-azure_roles-1.0.0.tar.gz
+  - name: https://github.com/anishrana2001/Openshift/raw/refs/heads/main/RHCE/V-9.0/mwadman-azure_roles-1.0.0.tar.gz
   - name: https://github.com/anishrana2001/Openshift/raw/refs/heads/main/RHCE/V-9.0/redhat-insights-1.3.0.tar.gz
   - name: https://github.com/anishrana2001/Openshift/raw/refs/heads/main/RHCE/V-9.0/redhat-rhel_system_roles-1.108.6.tar.gz
 ```
