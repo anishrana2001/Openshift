@@ -41,11 +41,11 @@ vim role-from-galaxy.yaml
 ```
 ```
 ---
-- src: https://galaxy.ansible.com/download/zabbix-zabbix-1.0.6.tar.gz
+- src: https://github.com/anishrana2001/Openshift/raw/refs/heads/main/RHCE/V-9.0/Role_zabbix-1.0.6.tar.gz
   name: zabbix-anish
 - src: https://galaxy.ansible.com/download/openafs_contrib-openafs-1.9.0.tar.gz
   name: openafs-devops-wala
-- src: https://galaxy.ansible.com/downlaod/mafalb-squid-0.2.0.tar.gz
+- src: https://github.com/anishrana2001/Openshift/raw/refs/heads/main/RHCE/V-9.0/Role_ansible-squid-0.1.2.tar.gz
   name: squid-anish
 - src: https://github.com/anishrana2001/Openshift/raw/refs/heads/main/RHCE/V-9.0/phpinfo.tar.gz
   name: phpinfo
