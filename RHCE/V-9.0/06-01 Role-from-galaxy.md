@@ -3,9 +3,9 @@
 
 
 ### Task 1. You need to install 4 roles from `Ansible Galaxy` and these roles must be in the file `/home/student/ansible/my-roles/role-from-galaxy.yaml`
-- Download the file `https://galaxy.ansible.com/download/zabbix-zabbix-1.0.6.tar.gz` and name it `zabbix-anish`
+- Download the file `https://github.com/anishrana2001/Openshift/raw/refs/heads/main/RHCE/V-9.0/Role_zabbix-1.0.6.tar.gz` and name it `zabbix-anish`
 - Download the file `https://galaxy.ansible.com/download/openafs_contrib-openafs-1.9.0.tar.gz` and name it `openafs-devops-wala`
-- Download the file `https://github.com/vcc-caeit/ansible-role.squid/archive/1.2.1.tar.gz` and name it `squid-anish`
+- Download the file `https://github.com/anishrana2001/Openshift/raw/refs/heads/main/RHCE/V-9.0/Role_ansible-squid-0.1.2.tar.gz` and name it `squid-anish`
 - Download the file `https://github.com/anishrana2001/Openshift/raw/refs/heads/main/RHCE/V-9.0/phpinfo.tar.gz` and name it `phpinfo`
 
 ### Task 2. Create a playbook called `/home/student/ansible/ansible-galaxy-role1.yaml`
