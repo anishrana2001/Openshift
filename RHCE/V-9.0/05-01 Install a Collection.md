@@ -79,12 +79,17 @@ ansible-galaxy collection list
 
   - mwadman-azure_roles-1.0.0.tar.gz
   - redhat-insights-1.3.0.tar.gz
-  - redhat-rhel_system_roles-1.19.3.tar.gz
+  - redhat-rhel_system_roles-1.108.6.tar.gz
 
   ### These collections must be in the default directory : `/home/student/ansible/my-collection`
   ```
 
 ### Solution:
+
+### Open the requirement file
+```
+vim requirements.yml 
+```
 
 
 ```
@@ -92,7 +97,11 @@ ansible-galaxy collection list
 collections:
   - name: http://https://github.com/anishrana2001/Openshift/edit/main/RHCE/V-9.0/mwadman-azure_roles-1.0.0.tar.gz
   - name: http://https://github.com/anishrana2001/Openshift/edit/main/RHCE/V-9.0/redhat-insights-1.3.0.tar.gz
-  - name: http://https://github.com/anishrana2001/Openshift/edit/main/RHCE/V-9.0//redhat-rhel_system_roles-1.19.3.tar.gz
+  - name: http://https://github.com/anishrana2001/Openshift/edit/main/RHCE/V-9.0/redhat-rhel_system_roles-1.108.6.tar.gz
+```
 
-[student@workstation ansible]$
+### Now, run the playbook with `galaxy` command.
+
+```
+ansible-galaxy collection install -r requirements.yml -p /home/student/ansible/my-collection/
 ```
