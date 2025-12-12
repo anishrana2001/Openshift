@@ -37,7 +37,9 @@ cd /home/student/ansible/my-roles/
 
 ### Create a file with `role-from-galaxy.yaml`. 
 ```
-cat role-from-galaxy.yaml 
+vim role-from-galaxy.yaml
+```
+```
 ---
 - src: https://galaxy.ansible.com/download/zabbix-zabbix-1.0.6.tar.gz
   name: zabbix-anish
