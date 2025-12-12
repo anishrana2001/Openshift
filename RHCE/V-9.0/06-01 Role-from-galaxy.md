@@ -2,7 +2,7 @@
 ### Question: You need to complete 2 tasks. 
 
 
-### Task 1. You need to install 3 roles from `Ansible Galaxy` and these roles must be in the file `/home/student/ansible/my-roles/role-from-galaxy.yaml`
+### Task 1. You need to install 4 roles from `Ansible Galaxy` and these roles must be in the file `/home/student/ansible/my-roles/role-from-galaxy.yaml`
 - Download the file `https://galaxy.ansible.com/download/zabbix-zabbix-1.0.6.tar.gz` and name it `zabbix-anish`
 - Download the file `https://galaxy.ansible.com/download/openafs_contrib-openafs-1.9.0.tar.gz` and name it `openafs-devops-wala`
 - Download the file `https://github.com/vcc-caeit/ansible-role.squid/archive/1.2.1.tar.gz` and name it `squid-anish`
