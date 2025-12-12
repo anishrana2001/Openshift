@@ -78,7 +78,7 @@ ansible-galaxy collection list
 ### Install the below collections available on URL "https://github.com/anishrana2001/Openshift/blob/main/RHCE/V-9.0/"
 
   - mwadman-azure_roles-1.0.0.tar.gz
-  - redhat-insights-1.0.7.tar.gz
+  - redhat-insights-1.3.0.tar.gz
   - redhat-rhel_system_roles-1.19.3.tar.gz
 
   ### These collections must be in the default directory : `/home/student/ansible/my-collection`
@@ -91,8 +91,8 @@ ansible-galaxy collection list
 ---
 collections:
   - name: http://https://github.com/anishrana2001/Openshift/edit/main/RHCE/V-9.0/mwadman-azure_roles-1.0.0.tar.gz
-  - name: http://https://github.com/anishrana2001/Openshift/edit/main/RHCE/V-9.0/redhat-insights-1.0.7.tar.gz
+  - name: http://https://github.com/anishrana2001/Openshift/edit/main/RHCE/V-9.0/redhat-insights-1.3.0.tar.gz
   - name: http://https://github.com/anishrana2001/Openshift/edit/main/RHCE/V-9.0//redhat-rhel_system_roles-1.19.3.tar.gz
-  - name: http://https://github.com/anishrana2001/Openshift/edit/main/RHCE/V-9.0//community-general-5.5.0.tar.gz
+
 [student@workstation ansible]$
 ```
