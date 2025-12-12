@@ -11,9 +11,9 @@ lab start role-collections
 - community-general-5.5.0.tar.gz
 - redhat-insights-1.0.7.tar.gz
 - redhat-rhel_system_roles-1.19.3.tar.gz
-- 
+
 #### Please make sure that these collections must be installed on `/home/student/ansible/my-collection`
-### Create a playbook called `requirement.yaml` under the `/home/student/ansible/` dir.
+#### Create a playbook called `requirement.yaml` under the `/home/student/ansible/` dir.
 #### Note: It may ask you to download these packages from URL too. Like below.
 `http://https://github.com/anishrana2001/Openshift/edit/main/RHCE/V-9.0/` 
 ---
