@@ -1,5 +1,5 @@
 
-### Create a directory called `/webserver` for nginx server on `myprod` host group.
+### Create a directory called `/webserver` for nginx server on `lab` host group.
 - Owner and Group of this directory should be `root` user.
 - Permission 775
 - Set GID (Sticky bit for group)
@@ -18,7 +18,7 @@ cat > webserver.yaml
 ```
 ---
 - name: Creating directory
-  hosts: all
+  hosts: lab
   tasks:
     - name: create a webserver directory
       ansible.builtin.file:
