@@ -9,7 +9,7 @@
 - Download the file `https://github.com/anishrana2001/Openshift/raw/refs/heads/main/RHCE/V-9.0/phpinfo.tar.gz` and name it `phpinfo`
 
 ### Task 2. Create a playbook called `/home/student/ansible/ansible-galaxy-role1.yaml`
- 1. The playbook contains a play which run on `lab` host group and use the role `zabbix-anish`
+ 1. The playbook contains a play which run on `lab` host group and use the role `phpinfo`
  
    A PHP server (specifically a web server configured with a PHP interpreter) is used to execute server-side scripts for creating dynamic, data-driven, and interactive web applications. It processes PHP code on the server and sends the resulting HTML content to the client's web browse
 
@@ -63,10 +63,7 @@ ansible-galaxy role list | head
 ```
 
 
-## Task 2: Create a playbook called `/home/student/ansible/ansible-galaxy-role1.yaml`
- 1. The playbook contains a play which run on `lab` host group and use the role `zabbix-anish`
- 2. This playbook also contains a play which run on `webserver` host group and use the role `squid-anish`
- 3. This playbook must contain a play which run on `webserver` host group and use the role `phpinfo`
+## Task 2: 
 
 #### We just need to add 2 roles in the given file.
 
