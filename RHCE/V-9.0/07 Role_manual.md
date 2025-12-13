@@ -1,7 +1,7 @@
 # Question: Your task is to create a role named `mywebserver` in `/home/student/ansible/my-roles` and this role must complet the below jobs.
 1. `Install` and `start` the `httpd` web server.
 2. Make sure `firewall` is `enabled` and `firewall should allow to listing web traffic.`
-3. create a `index.html` file with below content under `/var/www/html/` directory on `lab` host group.
+3. create a `index.html` file with below content under `/var/www/html/` directory on `webserver` host group.
     - Welcome to devops-wala web page hosted on `HOSTNAME` having ip `IP` and runing on OS `OS NAME` with architecture `Architecture details`
         - HOSTNAME = Managed node fully qulified domain name.
         - IP = Managed node IP address.
@@ -12,7 +12,7 @@
 
 ## Solution: 
   
-### For the lab environment, you need to upgrade the ansible.
+### For the webserver environment, you need to upgrade the ansible.
 ```
 pip install --user --upgrade ansible
 ```
@@ -23,7 +23,7 @@ pip install --user --upgrade ansible
 ansible-galaxy role init --init-path /home/student/ansible/my-roles mywebserver
 ```
 ### Step 1. Let's create a file first to complete 3rd point.
-3. create a `index.html` file with below content under `/var/www/html/` directory on `lab` host group.
+3. create a `index.html` file with below content under `/var/www/html/` directory on `webserver` host group.
     - Welcome to devops-wala web page hosted on `HOSTNAME` having ip `IP` and runing on OS `OS NAME` with architecture `Architecture details`
     - HOSTNAME = Managed node fully qulified domain name.
     - IP = Managed node IP address.
@@ -112,13 +112,13 @@ ansible-navigator run mywebserver.yaml -m stdout
 
 ### Post checks.
 ```
-ansible lab -m shell -a 'cat /var/www/html/index.html'
+ansible webserver -m shell -a 'cat /var/www/html/index.html'
 ```
 
 ```
-ansible lab - a 'systemctl status httpd'
-ansible lab - a 'firewall -cmd --list-all'
-ansible lab  --list -hosts
+ansible webserver - a 'systemctl status httpd'
+ansible webserver - a 'firewall -cmd --list-all'
+ansible webserver  --list -hosts
 curl http://serverc
 curl http://serverd
 ```
@@ -185,7 +185,7 @@ vim mywebserver/tasks/main.yml
 [student@workstation ansible]$ cat /home/student/ansible/mywebserver.yaml
 ---
 - name: Deploying role
-  hosts: lab
+  hosts: webserver
   roles:
     - mywebserver
 [student@workstation ansible]$ 
@@ -248,18 +248,18 @@ serverc                    : ok=6    changed=2    unreachable=0    failed=0    s
 serverd                    : ok=6    changed=2    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
 [student@workstation ansible]$ 
 
-[student@workstation ansible]$ ansible lab -m shell -a 'cat /var/www/html/index.html'
+[student@workstation ansible]$ ansible webserver -m shell -a 'cat /var/www/html/index.html'
 serverd | CHANGED | rc=0 >>
-Welcome to devops-wala web page hosted on serverd.lab.example.com having IP 172.25.250.13 and runing on OS RedHat with architecture x86_64
+Welcome to devops-wala web page hosted on serverd.webserver.example.com having IP 172.25.250.13 and runing on OS RedHat with architecture x86_64
 serverc | CHANGED | rc=0 >>
-Welcome to devops-wala web page hosted on serverc.lab.example.com having IP 172.25.250.12 and runing on OS RedHat with architecture x86_64
+Welcome to devops-wala web page hosted on serverc.webserver.example.com having IP 172.25.250.12 and runing on OS RedHat with architecture x86_64
 [student@workstation ansible]$ 
 
 
 [student@workstation ansible]$ curl http://172.25.250.13
-Welcome to devops-wala web page hosted on serverd.lab.example.com having ip 172.25.250.13 and runing on OS RedHat with architecture x86_64
+Welcome to devops-wala web page hosted on serverd.webserver.example.com having ip 172.25.250.13 and runing on OS RedHat with architecture x86_64
 [student@workstation ansible]$ curl http://172.25.250.12
-Welcome to devops-wala web page hosted on serverc.lab.example.com having ip 172.25.250.12 and runing on OS RedHat with architecture x86_64
+Welcome to devops-wala web page hosted on serverc.webserver.example.com having ip 172.25.250.12 and runing on OS RedHat with architecture x86_64
 [student@workstation ansible]$
 
 
