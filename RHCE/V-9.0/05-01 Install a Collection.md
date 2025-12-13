@@ -75,7 +75,7 @@ ansible-galaxy collection list
 
 ## Question for Personal Lab :
 
-### Install the below collections available on URL "https://github.com/anishrana2001/Openshift/blob/main/RHCE/V-9.0/"
+### Install the below collections available on URL "https://github.com/anishrana2001/Openshift/raw/refs/heads/main/RHCE/V-9.0/"
 
   - mwadman-azure_roles-1.0.0.tar.gz
   - redhat-insights-1.3.0.tar.gz
