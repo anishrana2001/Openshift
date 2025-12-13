@@ -17,6 +17,7 @@
 pip install --user --upgrade ansible
 ```
 
+
 #### As we know that we can create a role from `ansible-galaxy` command. The dot "." is for current directory. `mywebserver` is the role name.
 ```
 ansible-galaxy role init --init-path /home/student/ansible/my-roles mywebserver
@@ -49,6 +50,10 @@ Welcome to devops-wala web page hosted on {{ ansible_fqdn }} having IP {{ ansibl
 
 1. Install and start the httpd web server.
 2. Make sure firewall is `enabled` and firewall should allow to listing web traffic.
+3. If you haven't observed the firewalld document then you should install the collection "ansible.posix"
+```
+ansible-galaxy collection install ansible.posix
+```
 
 ```
 vim mywebserver/tasks/main.yml 
