@@ -11,10 +11,10 @@
 ### Task 2. Create a playbook called `/home/student/ansible/ansible-galaxy-role1.yaml`
  1. The playbook contains a play which run on `lab` host group and use the role `zabbix-anish`
  
-    A Zabbix server is the core component of Zabbix, an open-source, enterprise-class monitoring system that tracks the performance and availability of various IT resources, including servers, network devices, virtual machines, and cloud services. 
-    It collects, stores, and analyzes data, sending alerts to administrators via methods like email and SMS to help identify and resolve issues quickly, thereby reducing system downtime and the risk of failure. 
+   A PHP server (specifically a web server configured with a PHP interpreter) is used to execute server-side scripts for creating dynamic, data-driven, and interactive web applications. It processes PHP code on the server and sends the resulting HTML content to the client's web browse
 
- 2. This playbook also contains a play which run on `webserver` host group and use the role `squid-anish`
+ 2. This playbook must contain a play which run on `webserver` host group and use the role `phpinfo`
+ 3. This playbook also contains a play which run on `webserver` host group and use the role `squid-anish`
  
     A Squid server is a free, open-source caching and forwarding web proxy, primarily used to improve network performance by storing frequently accessed web content locally. 
 
