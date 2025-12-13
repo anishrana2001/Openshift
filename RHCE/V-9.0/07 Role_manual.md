@@ -1,4 +1,4 @@
-# Question: Your task is to create a role named `mywebserver` in /home/student/ansible/my-roles and this role must complet the below jobs.
+# Question: Your task is to create a role named `mywebserver` in `/home/student/ansible/my-roles` and this role must complet the below jobs.
 1. `Install` and `start` the `httpd` web server.
 2. Make sure `firewall` is `enabled` and `firewall should allow to listing web traffic.`
 3. create a `index.html` file with below content under `/var/www/html/` directory on `webserver` host group.
