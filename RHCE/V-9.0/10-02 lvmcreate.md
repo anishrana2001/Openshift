@@ -61,7 +61,7 @@ vim mylvm-q2.yaml
     - debug:
         msg: Create a VG toto first, ha ha
       when: ansible_lvm.vgs.toto is not defined 
-	  
+
     - block:
         - name: Create a logical volume of 512m
           community.general.lvol:
