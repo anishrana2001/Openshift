@@ -1,5 +1,5 @@
 - name: Create LVM, volume group, and ext4 filesystem on /dev/vdb without command module
-  hosts: lab,myprod
+  hosts: lab,production
   become: true
   gather_facts: true
   tasks:
