@@ -78,11 +78,11 @@ vim mylvm-q2.yaml
            debug:
               msg: Give size is high
 
-         - name: Create a logical volume of 512m- rescue mode on
+         - name: Create a logical volume of 200m- rescue mode on
            community.general.lvol:
               vg: toto
               lv: redrose
-              size: 512
+              size: 200
 
          - name: Create a ext2 filesystem on /dev/sdb1 - rescue mode on
            community.general.filesystem:
