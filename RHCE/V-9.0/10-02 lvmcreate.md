@@ -63,13 +63,13 @@ vim mylvm-q2.yaml
       when: ansible_lvm.vgs.toto is not defined 
 
     - block:
-        - name: Create a logical volume of 512m
+        - name: Create a logical volume of 1024m
           community.general.lvol:
             vg: toto
             lv: redrose
             size: 1024
 
-        - name: Create a ext2 filesystem on /dev/sdb1
+        - name: Create a ext4 filesystem on /dev/sdb1
           community.general.filesystem:
             fstype: ext4
             dev: /dev/toto/redrose
@@ -84,7 +84,7 @@ vim mylvm-q2.yaml
               lv: redrose
               size: 200
 
-         - name: Create a ext2 filesystem on /dev/sdb1 - rescue mode on
+         - name: Create a ext4 filesystem on /dev/sdb1 - rescue mode on
            community.general.filesystem:
             fstype: ext4
             dev: /dev/toto/redrose
