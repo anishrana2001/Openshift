@@ -1,6 +1,6 @@
 # Ansible Vault – From Zero to Hero
 
-## Hook (0:00 – 0:45)
+## 
 
 Do you put real passwords inside your Ansible playbooks or `group_vars` files?  
 If yes, you are in danger. Anyone with Git access can see your database password, cloud keys, or SSH keys.  
@@ -9,9 +9,7 @@ In this video, you will learn Ansible Vault from zero to hero, with live example
 
 ---
 
-## Chapter 1 – What is Ansible Vault? (0:45 – 3:00)
-
-### Subtitle‑friendly points
+## Chapter 1 – What is Ansible Vault? 
 
 - Ansible Vault is a built‑in feature of Ansible to encrypt sensitive data like passwords, tokens, and keys.  
 - It protects the data at rest on disk using AES‑256 encryption.  
@@ -26,7 +24,7 @@ You do not need another tool; Vault is already part of Ansible.
 
 ---
 
-## Chapter 2 – When and why to use Vault (3:00 – 5:00)
+## Chapter 2 – When and why to use Vault 
 
 ### Common use cases
 
@@ -43,7 +41,7 @@ You do not need another tool; Vault is already part of Ansible.
 
 ---
 
-## Chapter 3 – Lab setup (5:00 – 6:00)
+## Chapter 3 – Lab setup 
 
 Tell viewers what you use, so they can follow:
 
@@ -51,5 +49,5 @@ Tell viewers what you use, so they can follow:
 - A test project folder `~/ansible-vault-demo`.  
 - A simple playbook `site.yml` that uses a secret variable.
 
-No need to go deep here, just briefly show the structure:
+
 
