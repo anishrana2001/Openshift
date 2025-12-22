@@ -67,4 +67,26 @@ api_key: "sk-abc123def456ghi789"
   - Warning: Use strong, unique passwords; store securely (not in repo). [Green Check: ✓ Readable only with pass] [Subtitle: "View without decrypting—secure!"]
 
 
+### Step 3: Playbook Using Vault
+  - Create `install_lamp.yml`:
+```
+---
+- hosts: webservers
+  vars_files:
+    - group_vars/webservers/vault.yml
+  tasks:
+    - name: Install Apache + MySQL
+      dnf:
+        name: ['httpd', 'mariadb-server']
+        state: present
+    - name: Set DB root password
+      mysql_user:
+        name: root
+        password: "{{ db_password }}"
+        state: present
+    - name: Debug API key (masked)
+      debug:
+        msg: "API Key starts with: {{ api_key[:8] }}***"
+```
 
+  - Run: `ansible-playbook -i hosts.ini install_lamp.yml --ask-vault-pass`
