@@ -49,5 +49,26 @@ Tell viewers what you use, so they can follow:
 - A test project folder `~/ansible-vault-demo`.  
 - A simple playbook `site.yml` that uses a secret variable.
 
+### Step 1: Create Vault File
+```
+ansible-vault create group_vars/webservers/vault.yml
+```
+
+```
+db_password: "MySuperSecretDBPass123"
+api_key: "sk-abc123def456ghi789"
+```
+
+### Step 2: View & Edit Vault 
+  - View: ansible-vault view group_vars/webservers/vault.yml (prompts password).
+```
+ansible-vault view group_vars/webservers/vault.yml
+```
+  - Edit: ansible-vault edit group_vars/webservers/vault.yml (add backup_pass: "backup123").
+```
+ansible-vault edit group_vars/webservers/vault.yml
+```
+  - Warning: Use strong, unique passwords; store securely (not in repo). [Green Check: ✓ Readable only with pass] [Subtitle: "View without decrypting—secure!"]
+
 
 
