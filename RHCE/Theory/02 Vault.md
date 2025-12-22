@@ -89,4 +89,4 @@ api_key: "sk-abc123def456ghi789"
         msg: "API Key starts with: {{ api_key[:8] }}***"
 ```
 
-  - Run: `ansible-playbook -i hosts.ini install_lamp.yml --ask-vault-pass`
+  - Run: `ansible-playbook  install_lamp.yml --ask-vault-pass`
