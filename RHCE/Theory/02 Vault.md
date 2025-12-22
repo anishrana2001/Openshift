@@ -60,11 +60,11 @@ api_key: "sk-abc123def456ghi789"
 ```
 
 ### Step 2: View & Edit Vault 
-  - View: ansible-vault view group_vars/webservers/vault.yml (prompts password).
+  - View: `ansible-vault view group_vars/webservers/vault.yml` (prompts password).
 ```
 ansible-vault view group_vars/webservers/vault.yml
 ```
-  - Edit: ansible-vault edit group_vars/webservers/vault.yml (add backup_pass: "backup123").
+  - Edit: `ansible-vault edit group_vars/webservers/vault.yml` (add backup_pass: "backup123").
 ```
 ansible-vault edit group_vars/webservers/vault.yml
 ```
