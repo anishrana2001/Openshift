@@ -90,3 +90,38 @@ api_key: "sk-abc123def456ghi789"
 ```
 
   - Run: `ansible-playbook  install_lamp.yml --ask-vault-pass`
+
+
+### Step 4: Advanced: Password File 
+  - Create a vault file and give `600` file permission.
+```
+echo -n "vault123!Secure" > .vault_pass.txt
+```
+```
+chmod 600 .vault_pass.txt
+```
+  - Run the ansible playbook:
+```
+ansible-playbook install_lamp.yml --vault-password-file .vault_pass.txt
+```
+  - Env the variable then run without flags.
+```
+export ANSIBLE_VAULT_PASSWORD_FILE=.vault_pass.txt 
+```
+```
+ansible-playbook install_lamp.yml  .vault_pass.txt
+```
+
+### Step 5: Rekey, Decrypt & Best Practices
+  - Rekey: ansible-vault rekey vault.yml (change password).
+  - Decrypt (rare): ansible-vault decrypt vault.yml.
+
+#### Tips:
+
+  - Multiple vaults: --vault-id prod@site1:vault.yml
+  - Integrate with Git: .gitignore vaults; use vault-id for teams.
+#### Cleanup & Next Steps
+```
+ansible-vault encrypt group_vars/webservers/vault.yml  # Re-encrypt if needed
+rm .vault_pass.txt  # Secure delete
+```
