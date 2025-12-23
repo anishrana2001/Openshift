@@ -1,4 +1,4 @@
-### Question 1: Write a ansible vault file named `pass-vault.yml` that creates the `anishrana2001` & `punit` users. It must do so as follows:
+### Question 1: Write a ansible vault file named `pass-vault.yml` that creates the `punit` & `rajan` users. It must do so as follows:
 - You must set the password as a variable, key `pw_punit` and the value is `devops-wala` in the `pass-vault.yml` file under `/home/student/ansible/` directory. Which is encrypted with Ansible Vault. 
 - The password for the `pw_rajan` user has the password `vtyshshbash` in the `pass-vault.yml` file under `/home/student/ansible/` directory, which is encrypted with Ansible Vault.
 - The password for Encrypt and decrypt the vault is `ThisisaStrongpassword` and store in the `mysecret.txt` file under `/home/student/ansible/` directory.
