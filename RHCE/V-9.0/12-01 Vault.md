@@ -48,7 +48,7 @@ pw_rajan: vtyshshbash
 
 ### Solution: 
 ```
-ansible-vault rekey --ask-vault-pass /home/student/ansible/mysecret.txt
+ansible-vault rekey --ask-vault-pass /home/student/ansible/pass-vault.yml
 ```
 
 ### Post checks!!
