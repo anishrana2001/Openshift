@@ -21,17 +21,17 @@ vim /home/student/ansible/question1-UserAdd.yaml
     - name: Create user `suraj` 
       ansible.builtin.user:
           name: suraj
-		  state: present
+          state: present
 
     - name: Create user 'rajan'
       ansible.builtin.user:
           name: rajan
-		  state: present
+          state: present
 
     - name: Create user ‘Punit’ 
       ansible.builtin.user:
           name: punit
-		  state: present
+          state: present
 ...
 ```
 #### Execute the playbook on dryrun mode to create the user.
@@ -65,20 +65,20 @@ vim /home/student/ansible/question1-UserDelete.yaml
     - name: Create user `suraj` 
       ansible.builtin.user:
           name: suraj
-		  state: absent
-		  remove: yes  # This ensures the home directory is deleted
+          state: absent
+          remove: yes  # This ensures the home directory is deleted
 
     - name: Create user 'rajan'
       ansible.builtin.user:
           name: rajan
-		  state: absent
-		  remove: yes  # This ensures the home directory is deleted
+          state: absent
+          remove: yes  # This ensures the home directory is deleted
 
     - name: Create user ‘Punit’ 
       ansible.builtin.user:
           name: punit
-		  state: absent
-		  remove: yes  # This ensures the home directory is deleted
+          state: absent
+          remove: yes  # This ensures the home directory is deleted
 ...
 ```
 #### Execute the playbook on dryrun mode to delete the user.
@@ -229,11 +229,11 @@ vim /home/student/ansible/question3-UserAdd.yaml
 ```
 #### Execute the playbook on dryrun mode to delete the user.
 ```
-ansible-navigator run question2-UserAdd.yaml -m stdout -C
+ansible-navigator run question3-UserAdd.yaml -m stdout -C
 ```
 #### Execute the playbook to delete the user.
 ```
-ansible-navigator run question2-UserAdd.yaml -m stdout
+ansible-navigator run question3-UserAdd.yaml -m stdout
 ```
 ### Post checks!
 ```
@@ -253,7 +253,7 @@ ansible lab -m shell -a 'ls -l /home'
 cat /home/student/ansible/user1.yaml
 ```
 ```
-vim /home/student/ansible/question3-UserAdd.yaml
+vim /home/student/ansible/question3-UserDelete.yaml
 ```
 ```
 ---
@@ -288,4 +288,11 @@ ansible lab -m shell -a 'id suraj; id rajan; id punit'
 ```
 ```
 ansible lab -m shell -a 'ls -l /home'
+```
+
+
+## How to clear the lab?
+```
+cd /home/student/ansible
+rm -rf question1-UserAdd.yaml question2-UserAdd.yaml question3-UserAdd.yaml question1-UserDelete.yaml question2-UserDelete.yaml question3-UserDelete.yaml user1.yaml
 ```
