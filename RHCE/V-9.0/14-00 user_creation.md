@@ -42,6 +42,17 @@ ansible-navigator run question1-UserAdd.yaml -m stdout -C
 ```
 ansible-navigator run question1-UserAdd.yaml -m stdout
 ```
+### Post checks!
+```
+ansible lab -m shell -a 'tail -n 3 /etc/passwd'
+```
+
+```
+ansible lab -m shell -a 'id suraj; id rajan; id punit'
+```
+```
+ansible lab -m shell -a 'ls -l /home'
+```
 ### Let's delete these users.
 ```
 vim /home/student/ansible/question1-UserDelete.yaml
@@ -78,6 +89,18 @@ ansible-navigator run question1-UserDelete.yaml -m stdout -C
 ```
 ansible-navigator run question1-UserDelete.yaml -m stdout
 ```
+
+### Post checks!
+```
+ansible lab -m shell -a 'tail -n 3 /etc/passwd'
+```
+
+```
+ansible lab -m shell -a 'id suraj; id rajan; id punit'
+```
+```
+ansible lab -m shell -a 'ls -l /home'
+```
 ## Question 2: Your task is to create 3 users on `lab` host group. Ansible playbook name must be `question2-UserAdd.yaml` under `/home/student/ansible` directory. You must use the Loop.
 	- suraj
 	- rajan
@@ -110,6 +133,20 @@ ansible-navigator run question2-UserAdd.yaml -m stdout -C
 ```
 ansible-navigator run question2-UserAdd.yaml -m stdout
 ```
+
+### Post checks!
+```
+ansible lab -m shell -a 'tail -n 3 /etc/passwd'
+```
+
+```
+ansible lab -m shell -a 'id suraj; id rajan; id punit'
+```
+```
+ansible lab -m shell -a 'ls -l /home'
+```
+
+
 ### How we can delete these uses with loop ?
 
 ```
@@ -140,6 +177,18 @@ ansible-navigator run question2-UserDelete.yaml -m stdout -C
 ```
 ansible-navigator run question2-UserDelete.yaml -m stdout
 ```
+### Post checks!
+```
+ansible lab -m shell -a 'tail -n 3 /etc/passwd'
+```
+
+```
+ansible lab -m shell -a 'id suraj; id rajan; id punit'
+```
+```
+ansible lab -m shell -a 'ls -l /home'
+```
+
 ## How to create users from file ?
 #### Question 3: Your task is to create 3 users on `lab` host group from the file `/home/student/ansible/user1.yaml`. Ansible playbook name must be `question3-UserAdd.yaml` under `/home/student/ansible` directory.
 	- suraj
@@ -186,6 +235,17 @@ ansible-navigator run question2-UserAdd.yaml -m stdout -C
 ```
 ansible-navigator run question2-UserAdd.yaml -m stdout
 ```
+### Post checks!
+```
+ansible lab -m shell -a 'tail -n 3 /etc/passwd'
+```
+
+```
+ansible lab -m shell -a 'id suraj; id rajan; id punit'
+```
+```
+ansible lab -m shell -a 'ls -l /home'
+```
 
 ### How to delete users by using variables from File?
 
@@ -217,4 +277,15 @@ ansible-navigator run question3-UserDelete.yaml -m stdout -C
 #### Execute the playbook to delete the user.
 ```
 ansible-navigator run question3-UserDelete.yaml -m stdout
+```
+### Post checks!
+```
+ansible lab -m shell -a 'tail -n 3 /etc/passwd'
+```
+
+```
+ansible lab -m shell -a 'id suraj; id rajan; id punit'
+```
+```
+ansible lab -m shell -a 'ls -l /home'
 ```
