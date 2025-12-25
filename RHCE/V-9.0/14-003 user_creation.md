@@ -95,7 +95,7 @@ vim create_users_del_role.yaml
 
 ```
 
-```
+
 ```
 ansible-navigator  run create_users_del_role.yaml -m stdout
 ```
