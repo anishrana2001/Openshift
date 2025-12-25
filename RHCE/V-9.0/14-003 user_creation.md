@@ -1,8 +1,8 @@
 ### Question 4-01: Create users.
 - Download the user list from https://raw.githubusercontent.com/anishrana2001/Openshift/refs/heads/main/RHCE/V-9.0/user_list-14-01.yaml
 - Use the Vault password file /home/student/ansible/pass-vault.yml that you created on task 12-01.
-- Your task is to create only a users who has description `manager` on `lab` host group from the file `user2.yaml`. Use the password pw_punit variable.
-- Your task is to create only a users who has description `intern` on `myprod` host group from the file `user2.yaml`. Assign the password pw_rajan
+- Your task is to create only a users who has description `manager` on `lab` host group from the file `user_list-14-01.yaml`. Use the password pw_punit variable.
+- Your task is to create only a users who has description `intern` on `myprod` host group from the file `user_list-14-01.yaml`. Assign the password pw_rajan
 ---
 
 ### Solution:
