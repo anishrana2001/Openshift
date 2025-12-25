@@ -81,7 +81,7 @@ vim question4-UserDelete.yaml
       ansible.builtin.user:
         name: "{{ item.name }}"
         state: absent
-		remove: yes   # This ensures the home directory is deleted
+        remove: yes   # This ensures the home directory is deleted
       loop: "{{ users }}"
       when: item.job == 'manager'
 
@@ -96,10 +96,9 @@ vim question4-UserDelete.yaml
       ansible.builtin.user:
         name: "{{ item.name }}"
         state: absent
-		remove: yes   # This ensures the home directory is deleted
+        remove: yes   # This ensures the home directory is deleted
       loop: "{{ users }}"
       when: item.job == 'intern'
-
 ```
 
 ```
