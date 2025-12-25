@@ -1,11 +1,15 @@
 ### Question 4-01: Create users.
-- Download the user list from https://raw.githubusercontent.com/anishrana2001/Openshift/refs/heads/main/RHCE/V-9.0/user_list-14-01.yaml
+- Download the user list from `https://raw.githubusercontent.com/anishrana2001/Openshift/refs/heads/main/RHCE/V-9.0/user_list-14-01.yaml` and save it with name `user2.yaml`.
 - Use the Vault password file /home/student/ansible/pass-vault.yml that you created on task 12-01.
-- Your task is to create only a users who has description `manager` on `lab` host group from the file `user_list-14-01.yaml`. Use the password pw_punit variable.
-- Your task is to create only a users who has description `intern` on `myprod` host group from the file `user_list-14-01.yaml`. Assign the password pw_rajan
+- Your task is to create only a users who has description `manager` on `lab` host group from the file `user2.yaml`. Use the password pw_punit variable.
+- Your task is to create only a users who has description `intern` on `myprod` host group from the file `user2.yaml`. Assign the password pw_rajan
 ---
 
 ### Solution:
+### Down the flie:
+```
+wget https://raw.githubusercontent.com/anishrana2001/Openshift/refs/heads/main/RHCE/V-9.0/user_list-14-01.yaml -O /home/student/ansible/user2.yaml
+```
 
 ```
 vim create_users_role.yaml
@@ -47,9 +51,19 @@ vim create_users_role.yaml
 ```
 
 ```
-ansible-navigator  run create_users_role.yaml -m stdout
+ansible-navigator run create_users_role.yaml -m stdout
 ```
 
+### Post checks!
+```
+ansible lab -m shell -a 'ls -l /home'
+```
+```
+cat user2.yaml
+```
+```
+ansible myprod -m shell -a 'ls -l /home'
+```
 
 ### Question 4-02: Delete users.
 
@@ -98,4 +112,14 @@ vim create_users_del_role.yaml
 
 ```
 ansible-navigator  run create_users_del_role.yaml -m stdout
+```
+### Post checks!
+```
+ansible lab -m shell -a 'ls -l /home'
+```
+```
+cat user2.yaml
+```
+```
+ansible myprod -m shell -a 'ls -l /home'
 ```
