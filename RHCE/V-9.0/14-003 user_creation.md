@@ -121,3 +121,8 @@ cat user2.yaml
 ```
 ansible myprod -m shell -a 'ls -l /home'
 ```
+
+### How to clear the lab.
+```
+rm -rf  create_users_role.yaml create_users_del_role.yaml user2.yaml
+```
