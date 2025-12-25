@@ -28,7 +28,7 @@ vim create_users_role.yaml
       ansible.builtin.user:
         name: "{{ item.name }}"
         state: present
-		password: "{{ pw_punit | password_hash('sha512') }}"
+        password: "{{ pw_punit | password_hash('sha512') }}"
       loop: "{{ users }}"
       when: item.job == 'manager'
 
@@ -44,10 +44,9 @@ vim create_users_role.yaml
       ansible.builtin.user:
         name: "{{ item.name }}"
         state: present
-		password: "{{ pw_rajan | password_hash('sha512') }}"
+        password: "{{ pw_rajan | password_hash('sha512') }}"
       loop: "{{ users }}"
       when: item.job == 'intern'
-
 ```
 
 ```
@@ -89,7 +88,7 @@ vim create_users_del_role.yaml
       ansible.builtin.user:
         name: "{{ item.name }}"
         state: absent
-		remove: yes   # This ensures the home directory is deleted
+        remove: yes   # This ensures the home directory is deleted
       loop: "{{ users }}"
       when: item.job == 'manager'
 
@@ -103,10 +102,9 @@ vim create_users_del_role.yaml
       ansible.builtin.user:
         name: "{{ item.name }}"
         state: absent
-		remove: yes   # This ensures the home directory is deleted
+        remove: yes   # This ensures the home directory is deleted
       loop: "{{ users }}"
       when: item.job == 'intern'
-
 ```
 
 
