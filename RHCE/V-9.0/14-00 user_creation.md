@@ -1,4 +1,4 @@
-## Question 1: Your task is to create 3 users on `lab` host group. Ansible playbook name must be `question1.yaml` under `/home/student/ansible` directory.
+## Question 1: Your task is to create 3 users on `lab` host group. Ansible playbook name must be `question1-UserAdd.yaml` under `/home/student/ansible` directory.
 	- suraj
 	- rajan
 	- punit
@@ -9,6 +9,10 @@
 ### Creating Users one bye one. 
 
 ```
+vim /home/student/ansible/question1-UserAdd.yaml
+```
+
+```
 ---
 - name: Demo - Looping through user list
   hosts: lab
@@ -28,9 +32,20 @@
           name: punit
 		  state: present
 ...
+```
+#### Execute the playbook on dryrun mode to create the user.
+```
+ansible-navigator run question1-UserAdd.yaml -m stdout -C
+```
+#### Execute the playbook to create the user.
+```
+ansible-navigator run question1-UserAdd.yaml -m stdout
 ```
 ### Let's delete these users.
 ```
+vim /home/student/ansible/question1-UserDelete.yaml
+```
+```
 ---
 - name: Demo - Looping through user list
   hosts: lab
@@ -54,8 +69,24 @@
 		  remove: yes  # This ensures the home directory is deleted
 ...
 ```
+#### Execute the playbook on dryrun mode to delete the user.
+```
+ansible-navigator run question1-UserDelete.yaml -m stdout -C
+```
+#### Execute the playbook to delete the user.
+```
+ansible-navigator run question1-UserDelete.yaml -m stdout
+```
+## Question 2: Your task is to create 3 users on `lab` host group. Ansible playbook name must be `question2-UserAdd.yaml` under `/home/student/ansible` directory. You must use the Loop.
+	- suraj
+	- rajan
+	- punit
+---
+### Solution:
 
-### This time, creating users from loop.
+```
+vim /home/student/ansible/question2-UserAdd.yaml
+```
 ```
 ---
 - name: Creating users
@@ -70,8 +101,20 @@
         - rajan
         - punit
 ```
-
+#### Execute the playbook on dryrun mode to delete the user.
+```
+ansible-navigator run question2-UserAdd.yaml -m stdout -C
+```
+#### Execute the playbook to delete the user.
+```
+ansible-navigator run question2-UserAdd.yaml -m stdout
+```
 ### How we can delete these uses with loop ?
+
+```
+vim /home/student/ansible/question2-UserDelete.yaml
+```
+
 ```
 ---
 - name: Delete users and their home directories
@@ -88,9 +131,37 @@
         - rajan
         - punit
 ```
+#### Execute the playbook on dryrun mode to delete the user.
+```
+ansible-navigator run question2-UserDelete.yaml -m stdout -C
+```
+#### Execute the playbook to delete the user.
+```
+ansible-navigator run question2-UserDelete.yaml -m stdout
+```
+## How to create users from file ?
+#### Question 3: Your task is to create 3 users on `lab` host group from the file `/home/student/ansible/user1.yaml`. Ansible playbook name must be `question3-UserAdd.yaml` under `/home/student/ansible` directory.
+	- suraj
+	- rajan
+	- punit
+---
+#### Create one file.
+```
+echo "---
+users:
+  - suraj
+  - rajan
+  - punit" > /home/student/ansible/user1.yaml
+```
 
-### How to create users from file ?
-
+### Solution:
+#### Open the File.
+```
+cat /home/student/ansible/user1.yaml
+```
+```
+vim /home/student/ansible/question3-UserAdd.yaml
+```
 ```
 ---
 - name: Create required users
@@ -105,4 +176,44 @@
         state: present
       loop: "{{ users }}"
 
+```
+#### Execute the playbook on dryrun mode to delete the user.
+```
+ansible-navigator run question2-UserAdd.yaml -m stdout -C
+```
+#### Execute the playbook to delete the user.
+```
+ansible-navigator run question2-UserAdd.yaml -m stdout
+```
+
+### How to delete users by using variables from File?
+
+```
+cat /home/student/ansible/user1.yaml
+```
+```
+vim /home/student/ansible/question3-UserAdd.yaml
+```
+```
+---
+- name: Create required users
+  hosts: lab
+  vars_files:
+    - /home/student/ansible/user1.yaml
+
+  tasks:
+    - name: Create users suraj, rajan, and punit
+      ansible.builtin.user:
+        name: "{{ item }}"
+        state: absent
+        remove: yes  # This ensures the home directory is deleted
+      loop: "{{ users }}"
+```
+#### Execute the playbook on dryrun mode to delete the user.
+```
+ansible-navigator run question3-UserDelete.yaml -m stdout -C
+```
+#### Execute the playbook to delete the user.
+```
+ansible-navigator run question3-UserDelete.yaml -m stdout
 ```
