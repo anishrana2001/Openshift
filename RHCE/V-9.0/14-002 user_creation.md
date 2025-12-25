@@ -7,7 +7,9 @@
 
 ### Solution:
 
-
+```
+vim question4-UserAdd.yaml
+```
 ```
 ---
 - name: Create Managers on Lab hosts
@@ -40,7 +42,9 @@
 
 ```
 
-
+```
+ansible-navigator run question4-UserAdd.yaml -m stdout
+```
 
 ### Question 4-02: Delete users.
 
@@ -50,6 +54,9 @@
 
 ### Solution:
 
+```
+vim question4-UserDelete.yaml
+```
 
 ```
 ---
@@ -83,4 +90,8 @@
       loop: "{{ users }}"
       when: item.job == 'intern'
 
+```
+
+```
+ansible-navigator run question4-UserDelete.yaml -m stdout
 ```
