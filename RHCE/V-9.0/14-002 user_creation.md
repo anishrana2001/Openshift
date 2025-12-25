@@ -45,6 +45,16 @@ vim question4-UserAdd.yaml
 ```
 ansible-navigator run question4-UserAdd.yaml -m stdout
 ```
+### Post checks
+```
+ansible lab -m shell -a 'tail -n 3 /etc/passwd'
+```
+```
+ansible lab -m shell -a 'id suraj; id rajan; id punit'
+```
+```
+ansible lab -m shell -a 'ls -l /home'
+```
 
 ### Question 4-02: Delete users.
 
@@ -94,4 +104,14 @@ vim question4-UserDelete.yaml
 
 ```
 ansible-navigator run question4-UserDelete.yaml -m stdout
+```
+### Post checks
+```
+ansible lab -m shell -a 'tail -n 3 /etc/passwd'
+```
+```
+ansible lab -m shell -a 'id suraj; id rajan; id punit'
+```
+```
+ansible lab -m shell -a 'ls -l /home'
 ```
