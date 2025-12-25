@@ -2,7 +2,18 @@
 
 - Your task is to create only a users who has description `manager` on `lab` host group from the file `user2.yaml`.
 - Your task is to create only a users who has description `intern` on `myprod` host group from the file `user2.yaml`.
-
+- user2.yaml 
+```
+users:
+  - name: punit
+    job: manager
+  - name: rajan
+    job: engineer
+  - name: rajesh
+    job: manager
+  - name: sunil
+    job: intern
+```
 ---
 
 ### Solution:
@@ -113,4 +124,9 @@ ansible lab -m shell -a 'id suraj; id rajan; id punit'
 ```
 ```
 ansible lab -m shell -a 'ls -l /home'
+```
+
+## How to clear the lab?
+```
+rm -rf question4-UserAdd.yaml question4-UserDelete.yaml  user2.yaml 
 ```
