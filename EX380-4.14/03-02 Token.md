@@ -74,7 +74,7 @@ LS0tLS1CRUdJTiBDRVJUSUZJQ0FURSBSRVFVRVNULS0tLS0KTUlJRWVqQ0NBbUlDQVFBd05URWZNQjBH
 
 
 ## For the reference purpose, you can download this file. But you have to remember all the content. 
-[student@workstation test]$ curl -o dummy-csr.yaml https://raw.githubusercontent.com/anishrana2001/Openshift/refs/heads/main/EX380/dummy-csr-0303-token.yaml
+[student@workstation test]$ curl -o dummy-csr.yaml https://raw.githubusercontent.com/anishrana2001/Openshift/refs/heads/main/EX380-4.14/dummy-csr-0303-token.yaml
   % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
                                  Dload  Upload   Total   Spent    Left  Speed
 100   222  100   222    0     0    369      0 --:--:-- --:--:-- --:--:--   370
