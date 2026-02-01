@@ -9,7 +9,7 @@
 - An ArgoCD instance Git repository exists at `https://git.ocp4.example.com/` with skip server verification enabled. User `developer` user with `d3v3lop3r` as the password.
 - An application named `mach-config-motd-deploy` mnust be exists in the Git repository with the Sync Policy configured as `Manual`.
 - You can download the file from below URL.
-https://raw.githubusercontent.com/anishrana2001/Openshift/refs/heads/main/EX380/Console-operator-05-02.yaml
+https://raw.githubusercontent.com/anishrana2001/Openshift/refs/heads/main/EX380-4.14/Console-operator-05-02.yaml
 ---
 
 
