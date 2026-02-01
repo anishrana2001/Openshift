@@ -3,7 +3,7 @@
 - Install the httpd package.
 - One can download the yum.repo file from `sudo curl -o /etc/yum.repos.d/yum.repo-file.repo  https://raw.githubusercontent.com/anishrana2001/Openshift/refs/heads/main/DO316-v4.16/yum.repo-file.repo`
 - httpd services must be enabled after the reboot.
-- Download the anish.html file from `https://raw.githubusercontent.com/anishrana2001/Openshift/refs/heads/main/DO316/anish.html` and upload on `/var/www/html` on the VM.
+- Download the anish.html file from `https://raw.githubusercontent.com/anishrana2001/Openshift/refs/heads/main/DO316-v4.16/anish.html` and upload on `/var/www/html` on the VM.
 - A Network Policy named `netpol-http` should exists in the `banana` Project
 - A `Clusterlp Service` allows Web Traffic into the `myvm-lan1` VirtualMachine
 - The Network Policy Restricts access to the VirtualMachine `myvm-lan1` and allowing only the member of Project `banana` to access TCP port `80` 
@@ -20,11 +20,11 @@
 ```
 oc project banana
 ```
-### Login to VM , user name is `raja` and password is `anishrana2001`
+### **Login to VM** , user name is `raja` and password is `anishrana2001`
 ```
 virtctl console myvm-lan1
 ```
-### Switch to root user
+### **Switch to root user**
 ```
 sudo su -
 ```
@@ -32,26 +32,26 @@ sudo su -
 ```
 sudo curl -o /etc/yum.repos.d/yum.repo-file.repo  https://raw.githubusercontent.com/anishrana2001/Openshift/refs/heads/main/DO316-v4.16/yum.repo-file.repo
 ```
-- Install the httpd package.
+- **Install the httpd package.**
 ```
 sudo yum install httpd -y
 ```
-- httpd services must be enabled after the reboot.
+- **httpd services must be enabled after the reboot.**
 ```
 systemctl enable httpd
 systemctl start httpd
 ```
 
-- Download the service.html file from "https://raw.githubusercontent.com/anishrana2001/Openshift/refs/heads/main/DO316/service.html" and upload on `/var/www/html` on the VM.
+- **Download the service.html file from the given link** `https://raw.githubusercontent.com/anishrana2001/Openshift/refs/heads/main/DO316-v4.16/anish.html` and upload on `/var/www/html` on the VM.
 ```
 cd /var/www/html/  
-curl -o anish.html  https://raw.githubusercontent.com/anishrana2001/Openshift/refs/heads/main/DO316/anish.html
+curl -o anish.html  https://raw.githubusercontent.com/anishrana2001/Openshift/refs/heads/main/DO316-v4.16/anish.html
 
 systemctl restart httpd
 curl localhost/anish.html
 ```
 - A Network Policy named `netpol-http` exists in the `banana` Project
-### Check the NetworkPolicy in the banana project.
+### Check the **NetworkPolicy** in the banana project.
 ```
 oc get netpol
 ```
@@ -59,13 +59,13 @@ oc get netpol
 oc describe netpol netpol-http
 ```
 
-### Based upon the above output, we need to modify the labels on namespace and VM.
+### Based upon the above output, we need to **modify the labels on namespace and VM.**
 ### Add the label on Namespace ==> `name=client-ns`   👈👈👈
 ```
 oc get namespaces banana --show-labels 
 ```
 
-### Add the label on VM under the "/spec/template/metadata/labels/" to "env: production". Based upon the network policy  👈👈👈
+### **Add the label** on VM under the "/spec/template/metadata/labels/" to "env: production". Based upon the network policy  👈👈👈
 ```
 oc edit vm myvm-lan1
 ```
@@ -106,7 +106,7 @@ oc new-project test
 ![image](https://github.com/user-attachments/assets/b88bf594-6c60-40f5-b387-255b379b80dd)
 
 
-### It should not work. 
+### **It should not work**. 
 ```
 oc rsh pods/webserver-app5-6848fd96fc-8nk9n curl svc-netpol.banana.svc.cluster.local
 ```
