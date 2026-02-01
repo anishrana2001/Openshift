@@ -3,7 +3,7 @@
 - The liveness probe tests the database server at TCP Port 3306
 - The time (in seconds) after the VM instance starts before the liveness probe is initiated is 100
 - The delay in seconds between performing probes is 5
-- download the yum.repo file to `mariadb-server` VM from "sudo curl -o /etc/yum.repos.d/yum.repo-file.repo https://raw.githubusercontent.com/anishrana2001/Openshift/refs/heads/main/DO316/yum.repo-file.repo"
+- download the yum.repo file to `mariadb-server` VM from link `https://raw.githubusercontent.com/anishrana2001/Openshift/refs/heads/main/DO316-v4.16/yum.repo-file.repo`
 ---
 
 ## Solution.
