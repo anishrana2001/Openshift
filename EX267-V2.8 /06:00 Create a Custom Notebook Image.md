@@ -54,8 +54,8 @@ podman push registry.ocp4.example.com:8443/student/custom-workbench:1.0
   - Set Image location to: `registry.ocp4.example.com:8443/student/custom-workbench:1.0`
   - Set Name to: `custom-workbench`
 
-5. Scroll to the bottom of the form, select the Packages tab, and click Add packages.
-6. Add the seaborn package and set the version to 0.12.2. Click the check button on the right side of the row to confirm.
+5. Scroll to the bottom of the form, select the `Packages tab`, and click `Add packages`.
+6. Add the `seaborn` package and set the version to `0.12.2`. Click the `check` button on the right side of the row to confirm.
 
 **Note:** Specifying packages on this screen only documents what is available to users. It does not install anything into the image. The image must already contain seaborn.
 
@@ -66,13 +66,27 @@ Once the image is imported into the RHOAI portal, create a workbench as the `dev
   2. In RHOAI, click Data Science Projects, then click the customnotebook-create project.
   3. On the Workbenches tab, click Create workbench.
   4. In the form:
-    - Set Name to: custom-wb
-    - Select the Image as: custom-workbench
+    - Set Name to: `custom-wb`
+    - Select the Image as: `custom-workbench`
   
-  5. Click Create workbench.
-  6. Wait until the Status column shows Running, then click Open.
-  7. Authenticate as the developer user with the developer password. Accept the default permissions by clicking Allow selected permissions.
+  5. Click Create `workbench`.
+  6. Wait until the Status column shows `Running`, then click `Open`.
+  7. Authenticate as the `developer` user with the `developer` password. Accept the `default` permissions by clicking `Allow selected permissions`.
 
+## 5. Verify that the seaborn Python package is pre-installed
+- In the Jupyter Launcher interface, create a notebook by clicking `Python 3.9` under the **Notebook section**.
 
+- In an empty notebook cell, run:
 
+```
+pip list | grep seaborn
+```
+- Execute the notebook cell by pressing `Shift+Enter` or by clicking `Run → Run Selected Cells`.
+
+- If you see the `seaborn` package listed with version `0.12.2`, it confirms that the image has **seaborn pre-installed**.
+
+## 6. Clean up the lab
+```
+lab finish customnotebook-create
+```
 
