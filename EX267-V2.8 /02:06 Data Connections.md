@@ -2,9 +2,9 @@
 ```
 lab start -t AI262 projects-data
 ```
+Qeustion: Create a data connection in Red Hat OpenShift AI (RHOAI) that stores information to connect to an S3 bucket.
 
-- Create a data connection in Red Hat OpenShift AI (RHOAI) that stores information to connect to an S3 bucket named `projects-data-bucket`.
-Use the following values to fill out and submit the form.
+- Use the following values to fill out and submit the form.
 
 | Field       | Value                                              |
 |-------------|----------------------------------------------------|
