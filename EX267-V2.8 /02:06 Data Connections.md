@@ -100,7 +100,7 @@ In this lab, you will:
 
 6. Select **Use existing data connection**.
 
-7. From the dropdown, choose **projects-data-connection**.
+7. From the dropdown, choose **projects-data-connection**. This is what we created i the Step 2, rigth ?
 
 8. Leave all other fields at their default values.
 
