@@ -17,4 +17,5 @@ lab start -t AI262 notebooks-collaboration
 
 - Step 2: Clone the Git.
 
-<img width="882" height="574" alt="image" src="https://github.com/user-attachments/assets/cdf47c75-62b4-438f-aefd-89a61cb96761" />
+<img width="882" height="574" alt="image" src="https://github.com/user-attachments/assets/589fdd05-8cab-4fd9-9b27-4cf90f057b01" />
+
