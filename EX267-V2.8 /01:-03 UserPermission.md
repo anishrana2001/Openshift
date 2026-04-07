@@ -13,6 +13,18 @@ Create a Data Science Workbench with specific configurations and user permission
 **Environment**: ConfigMap with `var=devops-wala`
 
 ---
+## How to create a lab for this question?
+```
+oc login -u admin -p redhatocp  https://api.ocp4.example.com:6443
+oc -n openshift-config get secrets htpasswd-secret -o json | jq -r '.data.htpasswd' | base64 --decode > /tmp/htpasswd-ex267.text
+htpasswd -b /tmp/htpasswd-ex267.text suraj anishrana2001
+htpasswd -b /tmp/htpasswd-ex267.text rajan anishrana2001
+htpasswd -b /tmp/htpasswd-ex267.text punit anishrana2001
+htpasswd -b /tmp/htpasswd-ex267.text raja anishrana2001
+oc -n openshift-config delete secrets htpasswd-secret 
+oc -n openshift-config create secret generic htpasswd-secret --from-file htpasswd=/tmp/htpasswd-ex267.text
+lab start -t AI263 manage-resources
+```
 
 ## Prerequisites
 - OpenShift AI (RHODS) installed and accessible
@@ -24,76 +36,17 @@ Create a Data Science Workbench with specific configurations and user permission
 ## Step-by-Step Solution
 
 ### Step 1: Create Project
-```bash
-oc new-project my-lab-pro
-oc project my-lab-pro
-```
+- Create project from Web GUI.
 
-### Step 2: Create ConfigMap for Environment Variables
-```bash
-cat <<EOF | oc apply -f -
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: workbench-config
-  namespace: my-lab-pro
-data:
-  var: devops-wala
-EOF
-```
+### Step 2: Assign the given privileges to users.
 
 ### Step 3: Login as Suraj User and Create Workbench
-```bash
-# Switch to suraj user context
-oc login -u suraj -p <suraj-password> <api-server-url>
 
-# Create workbench using OpenShift AI dashboard or CLI
-oc create -f - <<EOF
-apiVersion: rhods.redhat.com/v1beta01
-kind: DataScienceWorkBench
-metadata:
-  name: myworkbench-wb
-  namespace: my-lab-pro
-spec:
-  template:
-    name: pytorch-2.0.1
-    namespace: rhods-notebooks  # Default notebook namespace
-  resources:
-    limits:
-      memory: 8Gi
-      cpu: 2
-    requests:
-      memory: 8Gi
-      cpu: 2
-  storage:
-    pvcStorageClass: ocs-storagecluster-cephfs  # Adjust for your storage class
-    pvcSize: 2Gi
-  env:
-    - name: VAR
-      valueFrom:
-        configMapKeyRef:
-          name: workbench-config
-          key: var
-EOF
-```
 
-### Step 4: Grant Admin Permissions to Rajan and Punit
-```bash
-# As cluster admin or project owner
-oc adm policy add-role-to-user admin rajan -n my-lab-pro
-oc adm policy add-role-to-user admin punit -n my-lab-pro
-```
-
-### Step 5: Configure Suraj Edit Permissions
-```bash
-# Suraj already has edit permissions as workbench owner
-# Verify permissions
-oc auth can-i edit datascienceworkbench --as=suraj -n my-lab-pro
-```
-
-### Step 6: Verify Workbench Creation
+### Step 4: Verify Workbench Creation
 ```bash
 # Check workbench status
+oc project my-lab-pro
 oc get dsworkbench myworkbench-wb -n my-lab-pro -o wide
 
 # Check PVC
