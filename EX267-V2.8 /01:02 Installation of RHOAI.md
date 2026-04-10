@@ -23,3 +23,11 @@
 
 ## Verify it.
   - Once it done, `click` on **Installed Operators** ==> Select **Redhat Openshift AI** ==> **Data Science Cluster** ==> **default-dsc** ==> Review the **conditions** 
+
+Notes:
+
+**Home** ==> **Projects** ==> Search **ods** ==> At the bottom you wiil observe 4 projects 
+- **redhat-ods-applications**
+- **redhat-ods-monitoring**
+- **redhat-ods-operator**
+- **rhods-notebooks**
