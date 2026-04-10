@@ -18,7 +18,8 @@
   - Go to the **YAML** view to read the DataScienceCluster custom resource definition (CRD).
   - FYI `the installed components are defined as Managed. The Removed components are not installed.`
   - Then, click **Create**.
-- Install the Red Hat OpenShift Serverless operator by using the RHOCP console.
+- Install the Red Hat OpenShift **Serverless** operator by using the RHOCP console.
   - Click **Operators** → **OperatorHub**. Search `serverless` to locate the `Red Hat OpenShift Serverless operator`, and then click **Red Hat OpenShift Serverless operator**.
 
+## Verify it.
   - Once it done, `click` on **Installed Operators** ==> Select **Redhat Openshift AI** ==> **Data Science Cluster** ==> **default-dsc** ==> Review the **conditions** 
