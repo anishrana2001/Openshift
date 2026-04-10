@@ -1,9 +1,9 @@
-**Install Red Hat OpenShift AI (RHOAI) by using the web console.**
+## **Install Red Hat OpenShift AI (RHOAI) by using the web console.**
 Configure RHOAI components by creating the "Data Science Cluster" (DSC) object.
 
-## Solution:
+### Solution:
 
-## If you observe any issue then, you can execute the below command. This lab will ensure that RHOCP is not pre-installed.
+### If you observe any issue then, you can execute the below command. This lab will ensure that RHOCP is not pre-installed.
 ```
 lab start -t AI263 rhoai-install
 ```
