@@ -1,5 +1,5 @@
-## Task: Install Red Hat OpenShift AI (RHOAI) by using the web console.
-## Configure RHOAI components by creating the "Data Science Cluster" (DSC) object.
+**Install Red Hat OpenShift AI (RHOAI) by using the web console.**
+Configure RHOAI components by creating the "Data Science Cluster" (DSC) object.
 
 ## Solution:
 
