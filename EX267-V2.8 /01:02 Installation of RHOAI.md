@@ -3,6 +3,10 @@
 
 ## Solution:
 
+## If you observe any issue then, you can execute the below command. This lab will ensure that RHOCP is not pre-installed.
+```
+lab start -t AI263 rhoai-install
+```
 
 - Open a web browser `https://console-openshift-console.apps.ocp4.example.com`.
 - Use `admin` user and the password is `redhatocp`.
