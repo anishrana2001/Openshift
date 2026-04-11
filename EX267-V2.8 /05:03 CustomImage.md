@@ -50,20 +50,19 @@ podman login registry.ocp4.example.com:8443 -u developer -p developer
 
 ### Build the container. 
 ```
-podman build . -t registry.ocp4.example.com:8443/student/custom-workbench:1.0
+podman build . -t  registry.ocp4.example.com:8443/developer/custom-workbench:1.0
 ```
 
 ```
-student@workstation customnotebook-create]$ podman images
-REPOSITORY                                                   TAG                                                         IMAGE ID      CREATED        SIZE
-localhost/custom-workbench                                   1.0                                                         d8c3fb9af56c  2 minutes ago  4.45 GB
-<none>                                                       <none>                                                      ddc02ee8bcec  5 minutes ago  2.9 GB
-registry.ocp4.example.com:8443/opendatahub/workbench-images  jupyter-datascience-ubi9-python-3.9-2023b-20240219-ffe72a0  769eda83a903  2 years ago    2.9 GB
-[student@workstation customnotebook-create]$ 
+[student@workstation customnotebook-create]$ podman images
+REPOSITORY                                                      TAG                                                         IMAGE ID      CREATED         SIZE
+registry.ocp4.example.com:8443/developer/custom-workbench       1.0                                                         1ca8adc5ae91  12 minutes ago  4.45 GB
+registry.ocp4.example.com:8443/redhattraining/ai265-models      2.13                                                        5c5b3751e77c  16 months ago   268 MB
+registry.ocp4.example.com:8443/opendatahub/workbench-images     jupyter-datascience-ubi9-python-3.9-2023b-20240219-ffe72a0  769eda83a903  2 years ago     2.9 GB
 ```
 ### Push the image to the registry.
 ```
-podman push registry.ocp4.example.com:8443/student/custom-workbench:1.0
+podman push registry.ocp4.example.com:8443/developer/custom-workbench:1.0
 ```
 
 ### Import the custom workbench image into RHOAI.
