@@ -45,6 +45,7 @@ podman login registry.ocp4.example.com:8443 -u developer -p developer
 
 <img width="1819" height="683" alt="image" src="https://github.com/user-attachments/assets/d933718d-22e3-4198-a955-f0ab499ebd5b" />
 
+<img width="1819" height="683" alt="Screenshot 2026-04-11 at 8 28 15 PM" src="https://github.com/user-attachments/assets/d1ee5be4-edfc-4ef5-b1c2-9e73014c32a3" />
 
 
 ### Build the container. 
