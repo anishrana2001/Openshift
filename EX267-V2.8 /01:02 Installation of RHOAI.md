@@ -49,3 +49,8 @@ lab start -t AI263 rhoai-install
 ---
 
 ### At the end, open the RHOAI webpage from the web console itself
+
+## How to finish the lab?
+```
+lab finish -t AI263  rhoai-install
+```
