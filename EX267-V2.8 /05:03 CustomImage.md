@@ -43,6 +43,9 @@ echo "python-json-logger==2.0.7" >> requirements.txt
 podman login registry.ocp4.example.com:8443 -u developer -p developer
 ```
 
+<img width="1819" height="683" alt="image" src="https://github.com/user-attachments/assets/09a29e42-6da5-454c-927c-e62b6f28da36" />
+
+
 ### Build the container. 
 ```
 podman build . -t registry.ocp4.example.com:8443/student/custom-workbench:1.0
