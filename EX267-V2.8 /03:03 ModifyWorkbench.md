@@ -9,7 +9,7 @@ lab start -t AI262 notebooks-collaboration
 
 ### A workbench named `git-experiments` already exist in the `notebooks-collaboration` data science project:
 - Do not delete the workbench and create a new workbench. You have to modify it.
-- Modify the **workbench** to use the recommended **notebook image** to **`HabanaAI`.**
+- Modify the **workbench** to use the recommended **notebook image** to **`CUDA`.**
 - Modify the **workbench** to use **ConfigMap** with key `RANDOM_SIZE` set to value `40`
 - It the Jupyter notebook, clone the repository **`https://github.com/RedHatTraining/AI26X-apps`**
 - After testing your changes, ensure the workbench is stopped.
