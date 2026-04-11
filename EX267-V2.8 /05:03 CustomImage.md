@@ -20,7 +20,7 @@ lab start -t AI263 customnotebook-create
 - Description of notebook image should be `The image provides the seaborn Python package.`
 - For image displayed contents, the software name `seaborn` is set to version `0.12.2`
 - For image displayed contents, `python-json-logger` software with version `2.0.7`
-- Use the `requirements.txt` file to add `seaborn v0.12.2` and python-json-logger v2.0.7 softwares in the image.
+- Use the `requirements.txt` file to add **`seaborn v0.12.2`** and **`python-json-logger v2.0.7`** softwares in the image.
 - Create a workbench `custom-wb` from the custom image `custom-workbench` in the project `customnotebook-create`.
 - Verify that the workbench has the seaborn Python package pre-installed.
 ---
