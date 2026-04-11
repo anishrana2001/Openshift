@@ -7,7 +7,7 @@ Create a Data Science Workbench with specific configurations and user permission
 - User `suraj` should create a **workbench** called `myworkbench-wb` under project `my-lab-pro`
 - Allow **`rajan`** and **`punit`** users with **`admin`** permission.
 - User `suraj` can `edit` the workbench.
-- Select the image which contain **`PyTorch** and **Version selection `2024.1`**
+- Select the image which contain **`PyTorch`** and **Version selection `2024.1`**
 - The workbench must have `8GB` **RAM**, `2` **CPU** 
 - `2 Gi` **Persistent Storage**.
 - Add the **`environment variables`** as **`configMap`** with `var=devops-wala`
