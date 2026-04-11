@@ -47,13 +47,15 @@ lab start -t AI263 manage-resources
 ```bash
 # Check workbench status
 oc project my-lab-pro
-oc get dsworkbench myworkbench-wb -n my-lab-pro -o wide
+oc get all
+oc get statefulset.apps/myworkbench-wb
+oc get pods myworkbench-wb-0 -n my-lab-pro -o wide
 
 # Check PVC
 oc get pvc -n my-lab-pro
 
 # Check ConfigMap
-oc get configmap workbench-config -n my-lab-pro -o yaml
+oc -n my-lab-pro get configmaps  $(oc -n my-lab-pro get configmaps | grep configmap | awk '{print $1}' ) -o yaml
 ```
 
 ---
