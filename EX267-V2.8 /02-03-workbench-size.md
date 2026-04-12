@@ -40,16 +40,16 @@ fig.show()
 
 ### Solution:
 
-2. **Go to Home** -> APIExplorer -> search for **`odhDashboardConfig`** -> click that by ensuring, **All Projects** in project filter on top -> click 
+Step 2. **Go to Home** -> APIExplorer -> search for **`odhDashboardConfig`** -> click that by ensuring, **All Projects** in project filter on top -> click 
   - **Instances** -> click `odh-dashboard-config` -> then you got yaml file -> into that go to **'notebooksizes:`** spec -> edit/modify
   - large as Micro with limits 2 Cpu and 2Gi memory. requests 1 Cpu and 1Gi memory then
-3. delete Large and Xlarge, then click **save** further click **reload**
+Step 3. delete Large and Xlarge, then click **save** further click **reload**
 
-1. Now, we can create a workbench which is asked in step 1.
+Step 1. Now, we can create a workbench which is asked in step 1.
 
 
 
- 4. Click `Clone` a Repository.
+ Step 4. Click `Clone` a Repository.
 
   - Enter `https://github.com/RedHatTraining/AI26X-apps` as the repository, and click `Clone`.
 
@@ -58,7 +58,7 @@ fig.show()
   - Click the `Git icon`, and change to the `RHOAI2.13` branch by clicking `Current Branch` and selecting `origin/RHOAI2.13`.
   In the JupyterLab file browser, navigate to the `AI26X-apps/intro/notebooks-collaboration` directory and **double click** the `hello.ipynb` notebook to open it.
 
-5. Create a Python notebook called `experiment1.ipynb` that displays a basic scatter plot.
+Step 5. Create a Python notebook called `experiment1.ipynb` that displays a basic scatter plot.
     - **Right-click** the empty canvas of the file browser, and then **click New Notebook**.
     - Alternatively, **click File** and then select **New → Notebook**.
     - In the dialog that opens, select **Python 3.9** as the **kernel**, and click **Select**.
@@ -82,7 +82,7 @@ fig.show()
 	- Press **Ctrl+S** to save the notebook. Alternatively, you can Click **File → Save Notebook**.
 	- A modal window opens to **rename** the notebook file. Enter **`experiment1.ipynb`** and click **Rename**.
 
-6. Commit the changes to a new branch called `experiment`.
+Step 6. Commit the changes to a new branch called `experiment`.
 - **Click** `Git` icon at left pannel. 
 - **Create** a new branch. See the below print screen.
 
