@@ -5,6 +5,7 @@
 
 ```
 lab start -t AI263 manage-resources
+lab start -t AI262 notebooks-collaboration
 ```
 1. Create a small **workbench** called `manage-resources-wb` under `manage-resources` **project**. and Select `Minimal Python` as the **notebook image**.
 
