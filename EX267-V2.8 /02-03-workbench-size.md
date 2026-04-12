@@ -7,16 +7,11 @@
 lab start -t AI263 manage-resources
 lab start -t AI262 notebooks-collaboration
 ```
-1. Create a small **workbench** called `manage-resources-wb` under `manage-resources` **project**. and Select `Minimal Python` as the **notebook image**.
-
+1. Create a small **workbench** called `manage-resources-wb` under `manage-resources` **project**. and Select `Minimal Python` as the **notebook image**.\
 2. Modify the notebook **available sizes** to add an option called `MediumSmall`,
   - with max `2 CPUs` and `16 Gi` of **memory** and **minimum** `1 CPU` and `16 Gi` **memeory**.
-
-3. Remove the **Large and Xlarge** size. User should not able to see these size when creating a new workbench.
-
-- **Following are the steps:**
-4. Clone the `https://github.com/RedHatTraining/AI26X-apps` repository and **use branch** `origin/RHOAI2.13`
-
+3. Remove the **Large and Xlarge** size. Users should not able to see these size when creating a new workbench.
+4. Once the workbench started, **Clone** the `https://github.com/RedHatTraining/AI26X-apps` repository and **use branch** `origin/RHOAI2.13`
 5. **Create a Python notebook** called `experiment1.ipynb` that displays a basic scatter plot. Use the below content.
 
 ```python
@@ -39,12 +34,15 @@ fig.show()
 
 
 ### Solution:
-In order to comlete this question, first we need to modify the size. Thus, start with Step 2.
+In order to complete this question, first we need to modify the size. Thus, start with Step 2.
 
-Step 2. **Go to Home** -> APIExplorer -> search for **`odhDashboardConfig`** -> click that by ensuring, **All Projects** in project filter on top -> click 
-  - **Instances** -> click `odh-dashboard-config` -> then you got yaml file -> into that go to **'notebooksizes:`** spec -> edit/modify
-  - large as Micro with limits 2 Cpu and 2Gi memory. requests 1 Cpu and 1Gi memory then
+Step 2. 
 
+**Navigate to Home** → **APIExplorer**
+Search for **`odhDashboardConfig`**
+Click Instances → **odh-dashboard-config**
+Edit the notebook sizes in the **YAML**
+then you got yaml file -> into that go to **'notebooksizes:`** spec -> edit/modify as per the question.
 Step 3. delete Large and Xlarge, then click **save** further click **reload**
 
 Step 1. Now, we can create a workbench which is asked in step 1.
@@ -61,7 +59,7 @@ Step 5. Create a Python notebook called `experiment1.ipynb` that displays a basi
     - Alternatively, **click File** and then select **New → Notebook**.
     - In the dialog that opens, select **Python 3.9** as the **kernel**, and click **Select**.
     - Enter the following code in the first cell of the notebook:
-      ```yaml
+      ```python
       import numpy as np
       import plotly.express as px
 
@@ -81,7 +79,7 @@ Step 5. Create a Python notebook called `experiment1.ipynb` that displays a basi
 	- A modal window opens to **rename** the notebook file. Enter **`experiment1.ipynb`** and click **Rename**.
 
 Step 6. Commit the changes to a new branch called `experiment`.
-- **Click** `Git` icon at left pannel. 
+- **Click** `Git` icon at left panel. 
 - **Create** a new branch. See the below print screen.
 Step 1. 
 ![alt text](<Screenshot 2026-04-12 at 8.18.08 PM.png>)
