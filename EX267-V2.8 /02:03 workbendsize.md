@@ -90,3 +90,10 @@ fig.show()
 - Right click on the file and **Click** `Track`.
 
 ![alt text](<Screenshot 2026-04-12 at 8.28.09 PM.png>)
+
+- Then, add summary after that you need to click on `COMMIT`.
+
+- Change the branch to RHOAI2.13 by click on this branch.
+- Merge the content of `experiment` to current branch.
+
+![alt text](<Screenshot 2026-04-12 at 8.39.46 PM.png>)
