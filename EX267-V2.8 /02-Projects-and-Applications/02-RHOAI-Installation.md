@@ -18,10 +18,14 @@ Install Red Hat OpenShift AI using OperatorHub.
 
 ### 🔹 Step 1: Login to OpenShift
 
-```bash
-oc login -u kubeadmin -p <password>
-```
+* Open a web browser: 
+  👉  `https://console-openshift-console.apps.ocp4.example.com`
+  - Use the `admin` user and the password `redhatocp`.
 
+### 🔹 If you observe any issue, you can execute the below command. This lab will ensure that RHOCP is not pre-installed.
+```bash
+lab start -t AI263 rhoai-install
+```
 ---
 
 ### 🔹 Step 2: Open OperatorHub
@@ -35,29 +39,42 @@ oc login -u kubeadmin -p <password>
 ### 🔹 Step 3: Search for RHOAI
 
 * Search: **OpenShift AI**
-* Select the operator
+* Select the operator `Redhat Openshift AI`
 
 ---
 
 ### 🔹 Step 4: Install Operator
 
-* Click Install
+* Click **Install**
 * Choose:
 
-  * All namespaces
-  * Automatic updates
+  * `All namespaces`
+  * **Automatic updates**
 
 ---
 
-### 🔹 Step 5: Create Data Science Project
+### 🔹 Step 5: Create `DataScienceCluster`
 
-* Go to:
-  👉 Data Science Projects
-* Click **Create Project**
+* Go to the **YAML** view to read the `DataScienceCluster` custom resource definition (CRD).
+  👉 FYI: the installed components are defined as **Managed**. The removed components are not installed.
+* Then, Click **Create**.
 
 ---
 
-## 🧪 CLI Alternative (IMPORTANT)
+### 🔹 Step 6: Install the Red Hat OpenShift `Serverless` operator
+
+* Click **Operators** → **OperatorHub**.
+* Search `serverless` to locate the **Red Hat OpenShift Serverless operator**, and then **Click** it.
+
+## Post checks / ✅ Verify the installation
+
+- ✅ Once it is done:
+  - Click **Installed Operators**.
+  - Select **Red Hat OpenShift AI**.
+  - Go to **Data Science Cluster** → **default-dsc**.
+  - Review the **Conditions**.
+
+## 🧪 CLI Alternative (IMPORTANT), just a hint
 
 ```bash
 oc get operators
