@@ -6,17 +6,17 @@
 ```
 lab start -t AI263 manage-resources
 ```
-- 1. Create a small **workbench** called `manage-resources-wb` under `manage-resources` **project**. and Select `Minimal Python` as the **notebook image**.
+1. Create a small **workbench** called `manage-resources-wb` under `manage-resources` **project**. and Select `Minimal Python` as the **notebook image**.
 
-- 2. Modify the notebook **available sizes** to add an option called `MediumSmall`,
+2. Modify the notebook **available sizes** to add an option called `MediumSmall`,
   - with max `2 CPUs` and `16 Gi` of **memory** and **minimum** `1 CPU` and `16 Gi` **memeory**.
 
-- 3. Remove the **Large and Xlarge** size. User should not able to see these size when creating a new workbench.
+3. Remove the **Large and Xlarge** size. User should not able to see these size when creating a new workbench.
 
 - **Following are the steps:**
-- 4. Clone the `https://github.com/RedHatTraining/AI26X-apps` repository and **use branch** `origin/RHOAI2.13`
+4. Clone the `https://github.com/RedHatTraining/AI26X-apps` repository and **use branch** `origin/RHOAI2.13`
 
-- 5. **Create a Python notebook** called `experiment1.ipynb` that displays a basic scatter plot. Use the below content.
+5. **Create a Python notebook** called `experiment1.ipynb` that displays a basic scatter plot. Use the below content.
 
 ```yaml
 import numpy as np
@@ -33,8 +33,8 @@ fig = px.scatter(x=x, y=y)
 
 fig.show()
 ```
-- 6. Create a new branch called `experiment` and save all the changes.
-- 7. Merge the `experiment` feature branch into the `RHOAI2.13 branch`
+6. Create a new branch called `experiment` and save all the changes.
+7. Merge the `experiment` feature branch into the `RHOAI2.13 branch`
 
 
 ### Solution:
