@@ -19,7 +19,7 @@ lab start -t AI262 notebooks-collaboration
 
 5. **Create a Python notebook** called `experiment1.ipynb` that displays a basic scatter plot. Use the below content.
 
-```yaml
+```python
 import numpy as np
 import plotly.express as px
 
@@ -40,10 +40,12 @@ fig.show()
 
 ### Solution:
 
-**Go to Home** -> APIExplorer -> search for **`odhDashboardConfig`** -> click that by ensuringm, **All Projects** in project filter on top -> click 
+2. **Go to Home** -> APIExplorer -> search for **`odhDashboardConfig`** -> click that by ensuring, **All Projects** in project filter on top -> click 
   - **Instances** -> click `odh-dashboard-config` -> then you got yaml file -> into that go to **'notebooksizes:`** spec -> edit/modify
-  - large as Micro with limits 2 Cpu and 2Gi memory,
-  - requests 1 Cpu and 1Gi memory then delete Large and Xlarge, then click **save** further click **reload**
+  - large as Micro with limits 2 Cpu and 2Gi memory. requests 1 Cpu and 1Gi memory then
+3. delete Large and Xlarge, then click **save** further click **reload**
+
+1. Now, we can create a workbench which is asked in step 1.
 
 
 
