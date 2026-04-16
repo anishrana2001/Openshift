@@ -64,5 +64,10 @@ oc -n my-lab-pro get configmaps  $(oc -n my-lab-pro get configmaps | grep config
 ---
 
 ## Expected Output
-
+```
+oc login -u suraj -p anishrana2001
+oc get statefulset.apps/myworkbench-wb
+oc -n my-lab-pro get configmaps  $(oc -n my-lab-pro get configmaps | grep configmap | awk '{print $1}' ) -o yaml | egrep "var: devops-wala"
+oc get pvc | egrep "Bound|2Gi"
+```
 ### Workbench Status
