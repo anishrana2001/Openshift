@@ -22,8 +22,8 @@ cat /tmp/.s3cfg | awk '
 		- Model name: `diabetes`
 		- Model framework (name - version): `onnx - 1`
 		- Create a new `data connection` by using the file `/tmp/.s3cfg`
-			-     Name: `rhoaiserving-using`
-			-     Path: `models/diabetes`
+			- Name: `rhoaiserving-using`
+			- Path: `models/diabetes`
 
 Your tasks:
 
