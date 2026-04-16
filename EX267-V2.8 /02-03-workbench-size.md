@@ -7,7 +7,7 @@
 lab start -t AI263 manage-resources
 lab start -t AI262 notebooks-collaboration
 ```
-1. Create a small **workbench** called `manage-resources-wb` under `manage-resources` **project**. and Select `Minimal Python` as the **notebook image**.\
+1. Create a small **workbench** called `manage-resources-wb` under `manage-resources` **project**. and Select `Standard Data Science` as the **notebook image**.
 2. Modify the notebook **available sizes** to add an option called `MediumSmall`,
   - with max `2 CPUs` and `16 Gi` of **memory** and **minimum** `1 CPU` and `16 Gi` **memeory**.
 3. Remove the **Large and Xlarge** size. Users should not able to see these size when creating a new workbench.
