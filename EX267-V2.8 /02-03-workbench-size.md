@@ -60,7 +60,7 @@ Step 5. Create a Python notebook called `experiment1.ipynb` that displays a basi
     - In the dialog that opens, select **Python 3.9** as the **kernel**, and click **Select**.
     - Enter the following code in the first cell of the notebook:
       
-	  ```python
+	  ```
       import numpy as np
       import plotly.express as px
 
