@@ -59,8 +59,7 @@ Step 5. Create a Python notebook called `experiment1.ipynb` that displays a basi
     - Alternatively, **click File** and then select **New → Notebook**.
     - In the dialog that opens, select **Python 3.9** as the **kernel**, and click **Select**.
     - Enter the following code in the first cell of the notebook:
-      
-	  ```
+```
       import numpy as np
       import plotly.express as px
 
@@ -74,7 +73,7 @@ Step 5. Create a Python notebook called `experiment1.ipynb` that displays a basi
       fig = px.scatter(x=x, y=y)
 
       fig.show()
-      ```
+```
 
 	- Press **Ctrl+S** to save the notebook. Alternatively, you can Click **File → Save Notebook**.
 	- A modal window opens to **rename** the notebook file. Enter **`experiment1.ipynb`** and click **Rename**.
