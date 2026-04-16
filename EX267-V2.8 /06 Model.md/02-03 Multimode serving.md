@@ -6,7 +6,7 @@ lab start -t AI265 serving-saving
 
 oc -n rhoai-multimodel get secret aws-connection-rhoaiserving-using -o json  | jq -r '.data | to_entries[] | "\(.key): \(.value | @base64d)"' > /tmp/S3file
 
-cat /tmp/.s3cfg | awk ' 
+cat /tmp/S3file | awk ' 
 /AWS_ACCESS_KEY_ID/   { print $0 }
 /AWS_SECRET_ACCESS_KEY/ { print $0 } 
 /AWS_DEFAULT_REGION/   { print $0 }
