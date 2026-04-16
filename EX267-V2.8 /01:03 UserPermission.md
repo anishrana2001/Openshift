@@ -1,5 +1,19 @@
 # EX267 Red Hat OpenShift AI - Workbench Creation Lab
 
+
+## How to create a lab for this question?
+```
+oc login -u admin -p redhatocp  https://api.ocp4.example.com:6443
+oc -n openshift-config get secrets htpasswd-secret -o json | jq -r '.data.htpasswd' | base64 --decode > /tmp/htpasswd-ex267.text
+htpasswd -b /tmp/htpasswd-ex267.text suraj anishrana2001
+htpasswd -b /tmp/htpasswd-ex267.text rajan anishrana2001
+htpasswd -b /tmp/htpasswd-ex267.text punit anishrana2001
+htpasswd -b /tmp/htpasswd-ex267.text raja anishrana2001
+oc -n openshift-config delete secrets htpasswd-secret 
+oc -n openshift-config create secret generic htpasswd-secret --from-file htpasswd=/tmp/htpasswd-ex267.text
+lab start -t AI263 manage-resources
+```
+
 ## Task Overview
 Create a Data Science Workbench with specific configurations and user permissions in OpenShift AI.
 
@@ -13,18 +27,6 @@ Create a Data Science Workbench with specific configurations and user permission
 - Add the **`environment variables`** as **`configMap`** with `var=devops-wala`
 
 ---
-## How to create a lab for this question?
-```
-oc login -u admin -p redhatocp  https://api.ocp4.example.com:6443
-oc -n openshift-config get secrets htpasswd-secret -o json | jq -r '.data.htpasswd' | base64 --decode > /tmp/htpasswd-ex267.text
-htpasswd -b /tmp/htpasswd-ex267.text suraj anishrana2001
-htpasswd -b /tmp/htpasswd-ex267.text rajan anishrana2001
-htpasswd -b /tmp/htpasswd-ex267.text punit anishrana2001
-htpasswd -b /tmp/htpasswd-ex267.text raja anishrana2001
-oc -n openshift-config delete secrets htpasswd-secret 
-oc -n openshift-config create secret generic htpasswd-secret --from-file htpasswd=/tmp/htpasswd-ex267.text
-lab start -t AI263 manage-resources
-```
 
 ## Prerequisites
 - OpenShift AI (RHODS) installed and accessible
