@@ -3,6 +3,7 @@
 ## How to create lab?
 ```
 lab start -t AI265 serving-saving
+lab start -t AI265 rhoaiserving-using
 
 oc -n rhoai-multimodel get secret aws-connection-rhoaiserving-using -o json  | jq -r '.data | to_entries[] | "\(.key): \(.value | @base64d)"' > /tmp/S3file
 
