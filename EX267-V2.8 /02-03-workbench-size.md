@@ -12,7 +12,7 @@ lab start -t AI262 notebooks-collaboration
   - with max `2 CPUs` and `16 Gi` of **memory** and **minimum** `1 CPU` and `16 Gi` **memeory**.
 3. Remove the **Large and Xlarge** size. Users should not able to see these size when creating a new workbench.
 4. Once the workbench started, **Clone** the `https://github.com/RedHatTraining/AI26X-apps` repository and **use branch** `origin/RHOAI2.13`
-5. **Create a Python notebook** called `experiment1.ipynb` that displays a basic scatter plot. Use the below content.
+5. **Create a Python notebook** called `experiment1.ipynb` under `AI26X-apps/intro/notebooks-collaboration` that displays a basic scatter plot. Use the below content.
 
 ```python
 import numpy as np
