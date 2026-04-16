@@ -13,4 +13,4 @@ oc -n openshift-config create secret generic htpasswd-secret --from-file htpassw
 
 - Create one **group** called `devops-wala` and this group must have `developer`, `rajan` and `punit` **users**.
 - These users must able to access RHOAI dashboard but neither the part of **admin group** and nor **other groups**.
-- Give the Admin rights of RHOAI to `cluster-admin`, `raja` and `suraj` users.
+- Make sure only `rhods-admins` group is the part of Administrator group.
