@@ -1,9 +1,13 @@
-# Create a Custom Notebook Image
+# 🚀  Create a Custom Notebook Image
 
-## How to prepare the lab?  Chapter 5
+## 🎯 How to prepare the lab?  Chapter 5
 
 ```
 lab start -t AI263 customnotebook-create
+cat <<EOF >> /home/student/AI263/labs/customnotebook-create/requirements.txt
+seaborn==0.12.2
+python-json-logger==2.0.7
+EOF
 ```
 
 - Build a custom workbench image for use in Red Hat OpenShift AI (RHOAI).
@@ -13,30 +17,23 @@ lab start -t AI263 customnotebook-create
 --- 
 
 
-- A container image built from the source is `registry.ocp4.example.com:8443/opendatahub/workbench-images:jupyter-datascience-ubi9-python-3.9-2023b-20240219-ffe72a0`
-- Build a new customer image named `custom-workbench` with `1.0` tag. 
+- A container image built from the source is `registry.ocp4.example.com:8443/student/custom-workbench-image:1.0`
+- Containerfile is located under `/home/student/AI263/labs/customnotebook-create` directory.
+- Build a new **customer image** named `custom-workbench-image` with `1.0` tag. 
 - Import a custom workbench image into RHOAI.
-- Build a custom workbench image `custom-workbench` for use in Red Hat OpenShift AI (RHOAI).
-- Description of notebook image should be `The image provides the seaborn Python package.`
-- For image displayed contents, the software name `seaborn` is set to version `0.12.2`
-- For image displayed contents, `python-json-logger` software with version `2.0.7`
+- **Build a custom workbench image** `custom-workbench` for use in Red Hat OpenShift AI (RHOAI).
+- Description of notebook image should be **`The image provides the seaborn Python package.`**
+- For image displayed contents, the **software name** `Python` is set to version `v2.2.0`
+- For image displayed contents, the **package name** shown which are mentioned in the `requirements.txt` file.
 - Use the `requirements.txt` file to add **`seaborn v0.12.2`** and **`python-json-logger v2.0.7`** softwares in the image.
 - Create a workbench `custom-wb` from the custom image `custom-workbench` in the project `customnotebook-create`.
 - Verify that the workbench has the seaborn Python package pre-installed.
 ---
 
-## 
+## 👨‍💻 Solution
 ```
 cd /home/student/AI263/labs/customnotebook-create
 ```
-
-
-
-cd ~/AI263/labs/customnotebook-create
-cat ~/AI263/labs/customnotebook-create/requirements.txt
-
-echo "seaborn==0.12.2" >> requirements.txt
-echo "python-json-logger==2.0.7" >> requirements.txt
 
 ### You need to login into the Registry.
 ```
@@ -50,19 +47,19 @@ podman login registry.ocp4.example.com:8443 -u developer -p developer
 
 ### Build the container. 
 ```
-podman build . -t  registry.ocp4.example.com:8443/developer/custom-workbench:1.0
+podman build . -t registry.ocp4.example.com:8443/student/custom-workbench-image:1.0
 ```
 
 ```
 [student@workstation customnotebook-create]$ podman images
 REPOSITORY                                                      TAG                                                         IMAGE ID      CREATED         SIZE
-registry.ocp4.example.com:8443/developer/custom-workbench       1.0                                                         1ca8adc5ae91  12 minutes ago  4.45 GB
+registry.ocp4.example.com:8443/student/custom-workbench-image   1.0                                                         1ca8adc5ae91  12 minutes ago  4.45 GB
 registry.ocp4.example.com:8443/redhattraining/ai265-models      2.13                                                        5c5b3751e77c  16 months ago   268 MB
 registry.ocp4.example.com:8443/opendatahub/workbench-images     jupyter-datascience-ubi9-python-3.9-2023b-20240219-ffe72a0  769eda83a903  2 years ago     2.9 GB
 ```
 ### Push the image to the registry.
 ```
-podman push registry.ocp4.example.com:8443/developer/custom-workbench:1.0
+podman push registry.ocp4.example.com:8443/student/custom-workbench-image:1.0
 ```
 
 ### Import the custom workbench image into RHOAI.
