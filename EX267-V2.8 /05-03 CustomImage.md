@@ -92,7 +92,7 @@ podman push registry.ocp4.example.com:8443/student/custom-workbench-image:1.0
 
 - Provide **`custom-wb`** as the name, and select the `custom-workbench` **image** from the Image selection field. Leave the default values in other fields, and click **Create workbench**.
 
-- When the workbench stauts `running` then click on `open`.
+- Wait for the **status** column to show `Running`. When it is ready, click `Open` to open the workbench in a new browser tab.
 
 
 ## ➡️ Run all the shell and then import the joblib in the first cell.
