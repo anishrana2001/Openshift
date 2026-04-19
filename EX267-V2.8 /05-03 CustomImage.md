@@ -84,7 +84,17 @@ podman push registry.ocp4.example.com:8443/student/custom-workbench-image:1.0
 
 ### 3. Create a workbench `custom-wb` from the custom image...
 
-- Can you know create the workbench and then open it when it start `running`.
+
+- **Login by** `admin` user by using the `redhatocp` password on RHOAI dashboard.
+- From the left side navigation, click `Data Science Projects`, and then click the `customnotebook-create` project.
+
+- On the Workbenches tab, click **Create workbench**.
+
+- Provide **`custom-wb`** as the name, and select the `custom-workbench` **image** from the Image selection field. Leave the default values in other fields, and click **Create workbench**.
+
+- When the workbench stauts `running` then click on `open`.
+
+
 ## ➡️ Run all the shell and then import the joblib in the first cell.
 ```
 import joblib
