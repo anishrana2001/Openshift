@@ -15,16 +15,17 @@ lab start -t AI263 manage-resources
 ```
 
 ## Task Overview
-Create a Data Science Workbench with specific configurations and user permissions in OpenShift AI.
+Create a Data Science Project and a workbench with specific configurations with user `admin`.
 
 - create a **project** `my-lab-pro`
-- User `suraj` should create a **workbench** called `myworkbench-wb` under project `my-lab-pro`
+- User `admin` should create a **workbench** called `myworkbench-wb` under project `my-lab-pro`
 - Allow **`rajan`** and **`punit`** users with **`admin`** permission only on this project.
 - User `suraj` can `edit` this workbench.
-- Select the image which contain **`PyTorch`** and **Version selection `2024.1`**
+- Select the image which contain **`PyTorch`** `V2.0.1` and **Version selection `2024.1`**
 - The workbench must have `8GB` **RAM**, `2` **CPU** 
 - `2 Gi` **Persistent Storage**.
-- Add the **`environment variables`** as **`configMap`** with `var=devops-wala`
+- Add the **`environment variables`** as **`configMap`** with `var=devops-wala`.
+- Clone the Github repo `https://github.com/RedHatTraining/AI26X-apps`
 
 ---
 
