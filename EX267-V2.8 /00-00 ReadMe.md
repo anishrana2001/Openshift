@@ -8,6 +8,23 @@ Welcome to the complete OpenShift EX267 preparation course.
 - The password of RHOC is `redhatocp`.
 - S3 credentials is `minio` and password is `minio123`
 - One can use users name `developer` and same password to upload the images.
+
+| Module | Topic | Link |
+|--------|------|------|
+|Machine name                |	IP addresses |	Role|
+|workstation.lab.example.com |	172.25.250.9	|Graphical workstation for system administration|
+|classroom.example.com 	|172.25.254.254	|Router to link the Classroom network to the internet|
+|bastion.lab.example.com |	172.25.250.254	|Router to link the Student network to the Classroom network|
+|utility.lab.example.com |	172.25.250.253|	Router to link the Student and Cluster networks|
+|ceph.ocp4.example.com |	192.168.50.30	|Server with a Red Hat Storage Ceph preinstalled cluster|
+|registry.ocp4.example.com |	192.168.50.50|	Server with Quay and GitLab|
+|master01.ocp4.example.com |	192.168.50.10	|Control plane node|
+|master02.ocp4.example.com |	192.168.50.11	|Control plane node|
+|master03.ocp4.example.com |	192.168.50.12	|Control plane node|
+|worker01.ocp4.example.com |	192.168.50.13	|Compute node|
+|worker02.ocp4.example.com |	192.168.50.14	|Compute node|
+|worker03.ocp4.example.com | 192.168.50.15	|Compute node|
+
 ## 📚 Course Modules
 
 | Module | Topic | Link |
