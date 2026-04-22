@@ -1,4 +1,4 @@
-# 🚀 OpenShift EX267 Certification Guide (v2.8)
+# 🚀 OpenShift EX267 Certification Guide (v2.3)
 
 ## Welcome to the complete OpenShift EX267 preparation course.
 
