@@ -40,16 +40,16 @@ oc -n openshift-config create secret generic htpasswd-secret --from-file htpassw
 
 #### 🔹 Create the group
 ```
-oc adm groups new `devops-wala` `developer` `rajan` `punit`
+oc adm groups new devops-wala
 ```
 ####  🔹 If the group exists already, reset membership explicitly
 ```
-oc adm groups add-users `devops-wala` `developer` `rajan` `punit`
+oc adm groups add-users devops-wala developer rajan punit
 ```
 
 #### 🔹  Make sure *only* these are members:
 ```
-oc get group `devops-wala` -o yaml
+oc get group devops-wala -o yaml
 ```
 #### 🔹 If you find extra users in the YAML (users: list), remove them:
 
