@@ -1,6 +1,6 @@
 # 🚀 OpenShift EX267 Certification Guide (v2.8)
 
-Welcome to the complete OpenShift EX267 preparation course.
+## Welcome to the complete OpenShift EX267 preparation course.
 
 - You can push the images on Redaht registry `registry.ocp4.example.com:8443`
 - One can use the S3 URL `https://minio-ui-minio.apps.ocp4.example.com`.
