@@ -29,7 +29,7 @@ EOF
 	- Use the `requirements.txt` file to add **`seaborn v0.12.2`** and **`python-json-logger v2.0.7`** softwares in the image.
 3. Create a workbench `custom-wb` from the custom image `custom-workbench` in the project `customnotebook-create`.
 	- Verify that the workbench has the seaborn Python package pre-installed.
-	- In the cloned Jupyter notebook, the cell starting with comment **"saving THE JOBLIB Model file"** is updaed to use joblib to save the model to the root of the cloned repo as a file named: `carido-model.joblib`.
+
 ---
 
 ## 👨‍💻➡️  Solution
