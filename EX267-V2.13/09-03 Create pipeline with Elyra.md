@@ -6,10 +6,11 @@ lab start -t AI266 pipelines-elyra
 # 🧩  Create configure, run, and verify an Elyra pipeline
 - Pipeline named **`issues_prediction.pipeline`** in the **`pipelines-elyra`** data science project by using the **`pipelines-elyra-wb`** workbench.
     - PV size of workbench must be 10 GB.
-    - Clone a repository from URL `https://github.com/RedHatTraining/AI26X-apps` and use the branch **`RHOAI2.13`**.
+    - Clone a GIT repository from URL `https://github.com/RedHatTraining/AI26X-apps` and use the branch **`RHOAI2.13`**.
     - Navigate to `AI26X-apps/pipelines/pipelines-elyra` directory.
-    - The runtime image must be **`forecast-pipeline-runtime`** from url `quay.io/redhattraining/forecast-pipeline-runtime:1.0`.
-- Use the existing **`s3-minio`** data connection.
+    - In runtime image, **display name** must be **`forecast-pipeline-runtime`** & **image name** **`quay.io/redhattraining/forecast-pipeline-runtime:1.0`**
+    - Use the existing **`s3-minio`** data connection.
+    
     | Environment Variable | Secret Name | Secret Key |
     |---|---|---|
     | `AWS_ACCESS_KEY_ID` | `aws-connection-s3-minio` | `AWS_ACCESS_KEY_ID` |
@@ -17,9 +18,13 @@ lab start -t AI266 pipelines-elyra
     | `AWS_S3_ENDPOINT` | `aws-connection-s3-minio` | `AWS_S3_ENDPOINT` |
     | `AWS_S3_BUCKET` | `aws-connection-s3-minio` | `AWS_S3_BUCKET` |
 
-- The required Python pipeline nodes to generate **`data.csv, clean-data.csv, and forecast-data.csv`**?
 
-
+    - The required Python pipeline nodes to generate **`data.csv, clean-data.csv, and forecast-data.csv`**?
+```text
+data_ingestion.py     --------------> Output file --> data.csv
+data_preprocessing.py   ------------> Output file --> clean-data.csv,
+data_training_and_forecasting.py  --> Output file --> orecast-data.csv
+```
 
 
 
