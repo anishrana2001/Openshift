@@ -1,6 +1,6 @@
 
 
-# Red Hat OpenShift AI (EX267) - Data Science Pipelines Question
+#  Data Science Pipelines Question
 
 **Question / Task**
 
