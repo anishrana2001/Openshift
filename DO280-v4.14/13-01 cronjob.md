@@ -72,7 +72,10 @@ spec:
             command: ["sh", "-c", "echo 'Running backup...' && /usr/local/bin/backup.sh"]
           restartPolicy: OnFailure
 ```
-
+### Or we can use the command line help and then modify the values as per our requirements.
+```
+oc create cronjob -h
+```
 ### Verification
 
 ```bash
