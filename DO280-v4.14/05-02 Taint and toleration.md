@@ -14,15 +14,18 @@
   3. **Effect**: `NoSchedule`, `PreferNoSchedule`, `NoExecute`
 
 **Command example:**
-"oc adm taint nodes <node-name> key=value:effect"
+```
+oc adm taint nodes <node-name> key=value:effect
+```
 
 ### 🔹 Tolerations
 - **Tolerations** are applied to **pods** to allow them to be scheduled on nodes with matching taints.
 - Tolerations specify **key, value, operator, and effect**.
 
 **Command example:**
-"oc set toleration pod <pod-name> key=value:effect"
-
+```
+oc set toleration pod <pod-name> key=value:effect
+```
 **Mermaid Diagram – Taint & Toleration Concept:**
 
 ```mermaid
