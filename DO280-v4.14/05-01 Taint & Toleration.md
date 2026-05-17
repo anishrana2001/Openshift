@@ -13,8 +13,9 @@
   3. **Effect**: `NoSchedule`, `PreferNoSchedule`, `NoExecute`
 
 **Command Example:**
-"oc adm taint nodes <node-name> key=value:effect"
-
+```
+oc adm taint nodes <NODE_NAME> key=value:effect
+```
 **Mermaid Diagram – Taints Concept:**
 ```mermaid
 flowchart TD
@@ -40,9 +41,19 @@ flowchart TD
 **Goal:** Taint a node to repel pods without tolerations.
 
 **Steps:**
-1. List nodes: "oc get nodes"
-2. Apply taint: "oc adm taint nodes node1 dedicated=frontend:NoSchedule"
-3. Verify: "oc describe node node1 | grep Taints"
+1. **List nodes:**    
+```oc get nodes```
+2. **Apply taint:**   
+
+```
+oc adm taint nodes node1 dedicated=frontend:NoSchedule
+```
+
+3. **Verify:** 
+
+```
+oc describe node node1 | grep Taints
+```
 
 **Expected Outcome:**
 - Node `node1` now has the taint and pods without the matching toleration cannot schedule on it.
@@ -81,9 +92,14 @@ spec:
 **Goal:** Remove a taint from a node to allow all pods.
 
 **Steps:**
-1. Remove taint: "oc adm taint nodes node1 dedicated-"
-2. Verify: "oc describe node node1 | grep Taints"
-
+1. Remove taint: "
+```
+oc adm taint nodes node1 dedicated-
+```
+2. Verify: 
+```
+oc describe node node1 | grep Taints
+```
 **Expected Outcome:**
 - Node `node1` has no taints and any pod can schedule on it.
 
@@ -94,8 +110,14 @@ spec:
 
 **Steps:**
 1. Apply taints to node2:
-"oc adm taint nodes node2 role=db:NoSchedule"
-"oc adm taint nodes node2 environment=prod:NoExecute"
+
+```
+oc adm taint nodes node2 role=db:NoSchedule
+```
+```
+oc adm taint nodes node2 environment=prod:NoExecute
+```
+
 2. Create a pod YAML with multiple tolerations:
 ```yaml
 apiVersion: v1
@@ -116,8 +138,14 @@ spec:
     value: "prod"
     effect: "NoExecute"
 ```
-3. Apply pod: "oc apply -f db-pod.yaml"
-4. Verify: "oc get pods -o wide"
+3. Apply pod: 
+```
+oc apply -f db-pod.yaml
+```
+4. Verify: 
+```
+oc get pods -o wide
+```
 
 **Expected Outcome:**
 - `db-pod` runs on `node2` respecting all taints.
@@ -128,9 +156,18 @@ spec:
 **Goal:** Combine Taints with Resource Quotas for practice.
 
 **Steps:**
-1. Create a project "beta": "oc new-project beta"
-2. Check quotas: "oc get quota"
-3. Apply a node taint: "oc adm taint nodes node3 dedicated=critical:NoSchedule"
+1. Create a project "beta": 
+```
+oc new-project beta
+```
+2. Check quotas:
+```
+oc get quota
+```
+3. Apply a node taint: 
+```
+oc adm taint nodes node3 dedicated=critical:NoSchedule
+```
 4. Create a pod with toleration and resource requests:
 ```yaml
 apiVersion: v1
@@ -151,27 +188,31 @@ spec:
     value: "critical"
     effect: "NoSchedule"
 ```
-5. Apply pod: "oc apply -f critical-pod.yaml"
-6. Verify pod placement and resources: "oc get pods -o wide" and "oc describe pod critical-pod"
-
+5. Apply pod: 
+```
+oc apply -f critical-pod.yaml
+```
+6. Verify pod placement and resources: 
+```
+oc get pods -o wide" and "oc describe pod critical-pod
+```
 **Expected Outcome:**
 - Pod schedules on tainted node and respects resource quota.
 
 ---
 
 ## 🔹 Part D – Tips and Best Practices
-- Check node taints: "oc describe node <node-name>"
-- Verify pod placement: "oc get pods -o wide"
+- Check node taints: "
+```
+oc describe node <node-name>
+```
+- Verify pod placement:
+```
+oc get pods -o wide
+```
 - Match toleration key, value, and effect exactly
 - Understand effects: `NoSchedule`, `PreferNoSchedule`, `NoExecute`
 - After mastering these tasks, students can attempt more exercises from [DO280 Taint and Toleration Lab](https://github.com/anishrana2001/Openshift/blob/main/DO280-v4.14/05.%20taint%20and%20toleration.md)
-
----
-
-### 🔹 GitHub Badges / Graphics
-![OpenShift](https://img.shields.io/badge/OpenShift-OKD-red?logo=openshift)  
-![Taint](https://img.shields.io/badge/Taint-NoSchedule-blue)  
-![Kubernetes](https://img.shields.io/badge/Kubernetes-cluster-blueviolet?logo=kubernetes)
 
 ---
 
