@@ -39,10 +39,14 @@ flowchart TD
 
 ### Steps
 1. Check current nodes:
-"oc get nodes"
-2. Apply a taint:
-"oc adm taint nodes node1 dedicated=frontend:NoSchedule"
-3. Verify the taint:
+```
+oc get nodes
+```
+3. Apply a taint:
+```
+oc adm taint nodes node1 dedicated=frontend:NoSchedule
+```
+4. Verify the taint:
 "oc describe node node1 | grep Taints"
 
 ### Expected Result
@@ -75,10 +79,13 @@ spec:
 ```
 
 2. Apply the pod:
-"oc apply -f nginx-tolerated.yaml"
-3. Verify pod placement:
-"oc get pods -o wide"
-
+```
+oc apply -f nginx-tolerated.yaml
+```
+4. Verify pod placement:
+```
+oc get pods -o wide
+```
 ### Expected Result
 - Pod `nginx-tolerated` is scheduled on `node1` despite the taint.
 
@@ -90,9 +97,13 @@ spec:
 
 ### Steps
 1. Remove taint:
-"oc adm taint nodes node1 dedicated-"
+```
+oc adm taint nodes node1 dedicated-
+```
 2. Verify:
-"oc describe node node1 | grep Taints"
+```
+oc describe node node1 | grep Taints
+```
 
 ### Expected Result
 - Node `node1` has no taints.
@@ -106,9 +117,10 @@ spec:
 
 ### Steps
 1. Taint node:
-"oc adm taint nodes node2 role=db:NoSchedule"
-"oc adm taint nodes node2 environment=prod:NoExecute"
-
+```
+oc adm taint nodes node2 role=db:NoSchedule
+oc adm taint nodes node2 environment=prod:NoExecute
+```
 2. Create pod with multiple tolerations:
 
 ```yaml
@@ -132,10 +144,13 @@ spec:
 ```
 
 3. Apply the pod:
-"oc apply -f db-pod.yaml"
-4. Verify:
-"oc get pods -o wide"
-
+```
+oc apply -f db-pod.yaml
+```
+5. Verify:
+```
+oc get pods -o wide
+```
 ### Expected Result
 - `db-pod` runs on `node2` successfully respecting all taints.
 
