@@ -20,9 +20,9 @@ EOF
 ## 🔹 You need to perform the following tasks.
 1. A container image built from the source is `registry.ocp4.example.com:8443/student/custom-workbench-image:1.0`
 	- Containerfile is located under `/home/student/AI263/labs/customnotebook-create` directory.
-	- Build a new **custom image image** named `custom-workbench-image` with `1.0` tag. 
+	- Build a new **custom image** named **`custom-workbench-image`** with **`1.0`** tag. 
 2. Import a custom workbench image into RHOAI.
-	- **Build a custom workbench image** `custom-workbench` for use in Red Hat OpenShift AI (RHOAI).
+	- **Import a custom workbench image** named `custom-workbench` for use in Red Hat OpenShift AI (RHOAI).
 	- Description of notebook image should be **`The image provides the seaborn Python package.`**
 	- For image displayed contents, the **software name** `Python` is set to version `v2.2.0`
 	- For image displayed contents, the **package name** shown which are mentioned in the `requirements.txt` file.
@@ -81,34 +81,27 @@ podman push registry.ocp4.example.com:8443/student/custom-workbench-image:1.0
 
 - As per the task, you need to add the **description** `**The image provides the seaborn Python package.`**
 
-- Scroll down of the form, select the `**Software tab`**, and click `**Add packages`**.
+- Scroll to the **Software** section and click **Add software**.
 
-Under the **Software** section:
-
-
-- Scroll down of the form, select the `**Packages tab`**, and click `**Add packages`**.
-Scroll to the **Software** section and click **Add software**.
-
-Add:
+Add the following software information:
 
 | Software | Version |
 |---|---|
 | Python | v2.2.0 |
 
+- Next, scroll to the **Packages** section and click **Add package**.
 
-Then open the **Packages** section and click **Add package**.
+Add the following packages. These package information must be in the `requirements.txt` file.
 
-Add:
-
-- `seaborn` → `0.12.2`
-- `python-json-logger` → `2.0.7`
-- Specify the `**seaborn`** package and version `**0.12.2`**. Click the check button in the right side of the row to confirm.
-
+| Package | Version |
+|---|---|
+| seaborn | 0.12.2 |
+| python-json-logger | 2.0.7 |
 
 ### 3. Create a workbench `custom-wb` from the custom image...
 
 
-- **Login by** `admin` user by using the `redhatocp` password on RHOAI dashboard.
+- **Login in** as `admin` user by using the `redhatocp` password on RHOAI dashboard.
 - From the left side navigation, click `Data Science Projects`, and then click the `customnotebook-create` project.
 
 - On the Workbenches tab, click **Create workbench**.
@@ -118,7 +111,7 @@ Add:
 - Wait for the **status** column to show `Running`. When it is ready, click `Open` to open the workbench in a new browser tab.
 
 
-## ➡️ Run all the shell and then import the joblib in the first cell.
+## ➡️ Run the notebook cells and then import the joblib in the first cell.
 ```
 import joblib
 ```
