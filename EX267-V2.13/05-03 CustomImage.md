@@ -1,6 +1,6 @@
 # 🚀  Create a Custom Notebook Image
 
-## 🎯 How to prepare the lab?  Chapter 5
+## 🎯 Lab Preparation –  Check more details from Chapter 5
 
 ```
 lab start -t AI263 customnotebook-create
@@ -11,16 +11,16 @@ EOF
 ```
 👨‍💻 What will you learn from this task?
 ---
-- How to create a custom image from Containerfile and then push to registry?
-- How to import custom image to RHOAI.
+- How to create a custom image from a Containerfile and push it to a registry
+- How to import a custom notebook image into RHOAI
 - Add the data visualization library seaborn, based on matplotlib, to a workbench image.
 - Create a workbench from a custom workbench image.
 --- 
 
-## 🔹 You need to perform below tasks.
+## 🔹 You need to perform the following tasks.
 1. A container image built from the source is `registry.ocp4.example.com:8443/student/custom-workbench-image:1.0`
 	- Containerfile is located under `/home/student/AI263/labs/customnotebook-create` directory.
-	- Build a new **customer image** named `custom-workbench-image` with `1.0` tag. 
+	- Build a new **custom image image** named `custom-workbench-image` with `1.0` tag. 
 2. Import a custom workbench image into RHOAI.
 	- **Build a custom workbench image** `custom-workbench` for use in Red Hat OpenShift AI (RHOAI).
 	- Description of notebook image should be **`The image provides the seaborn Python package.`**
@@ -32,7 +32,7 @@ EOF
 
 ---
 
-## 👨‍💻➡️  Solution
+## 👨‍💻 Solution
 
 ### 1. A container image built from the source is .......
 ```
@@ -72,13 +72,36 @@ podman push registry.ocp4.example.com:8443/student/custom-workbench-image:1.0
 
 - Log in as the `admin` user by using the `redhatocp` password.
 - At left, click **`Settings → Notebook images`**, after that **`click Import new image`**.
-- Enter `registry.ocp4.example.com:8443/student/custom-workbench:1.0` as the `**Image location`** and enter `**custom-workbench`** as the name. 
+- Enter `registry.ocp4.example.com:8443/student/custom-workbench-image:1.0` as the `**Image location`** and enter `**custom-workbench`** as the name.
+
+|Meaning: |Value |
+|--|--|
+| Image location | registry.ocp4.example.com:8443/student/custom-workbench-image:1.0 |
+| Notebook image name | custom-workbench |
+
 - As per the task, you need to add the **description** `**The image provides the seaborn Python package.`**
 
 - Scroll down of the form, select the `**Software tab`**, and click `**Add packages`**.
 
-- Scroll down of the form, select the `**Packages tab`**, and click `**Add packages`**.
+Under the **Software** section:
 
+
+- Scroll down of the form, select the `**Packages tab`**, and click `**Add packages`**.
+Scroll to the **Software** section and click **Add software**.
+
+Add:
+
+| Software | Version |
+|---|---|
+| Python | v2.2.0 |
+
+
+Then open the **Packages** section and click **Add package**.
+
+Add:
+
+- `seaborn` → `0.12.2`
+- `python-json-logger` → `2.0.7`
 - Specify the `**seaborn`** package and version `**0.12.2`**. Click the check button in the right side of the row to confirm.
 
 
