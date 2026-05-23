@@ -2,13 +2,13 @@
 ### Create a Lab for this question. Chapter 5: User and Resource Management
 ```
 oc login -u admin -p redhatocp  https://api.ocp4.example.com:6443
-oc -n openshift-config get secrets htpasswd-secret -o json | jq -r '.data.htpasswd' | base64 --decode > /tmp/htpasswd-ex267.text
-htpasswd -b /tmp/htpasswd-ex267.text suraj anishrana2001
-htpasswd -b /tmp/htpasswd-ex267.text rajan anishrana2001
-htpasswd -b /tmp/htpasswd-ex267.text punit anishrana2001
-htpasswd -b /tmp/htpasswd-ex267.text raja anishrana2001
+oc -n openshift-config get secrets htpasswd-secret -o json | jq -r '.data.htpasswd' | base64 --decode > /tmp/htpasswd-ex267.txt
+htpasswd -b /tmp/htpasswd-ex267.txt suraj anishrana2001
+htpasswd -b /tmp/htpasswd-ex267.txt rajan anishrana2001
+htpasswd -b /tmp/htpasswd-ex267.txt punit anishrana2001
+htpasswd -b /tmp/htpasswd-ex267.txt raja anishrana2001
 oc -n openshift-config delete secrets htpasswd-secret 
-oc -n openshift-config create secret generic htpasswd-secret --from-file htpasswd=/tmp/htpasswd-ex267.text
+oc -n openshift-config create secret generic htpasswd-secret --from-file htpasswd=/tmp/htpasswd-ex267.txt
 ```
 
 ### 📌  Create one group called `devops-wala` and this group must have `developer`, `rajan` and `punit` users.
@@ -44,7 +44,8 @@ oc adm groups new devops-wala
 ```
 ####  🔹 If the group exists already, reset membership explicitly
 ```
-oc adm groups add-users devops-wala developer rajan punit
+oc adm groups add-users devops-wala developer rajan
+oc adm groups add-users devops-wala developer punit
 ```
 
 #### 🔹  Make sure *only* these are members:
@@ -54,7 +55,7 @@ oc get group devops-wala -o yaml
 #### 🔹 If you find extra users in the YAML (users: list), remove them:
 
 ```
-oc adm groups remove-users `devops-wala` <extra-user1> <extra-user2>
+oc adm groups remove-users `devops-wala` <extra-user1>
 ```
 
 #### 📦 Result: Group `devops-wala` now contains only `developer`, `rajan`, `punit`.
