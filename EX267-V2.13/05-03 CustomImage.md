@@ -12,7 +12,7 @@ EOF
 👨‍💻 What will you learn from this task?
 ---
 - How to create a custom image from a Containerfile and push it to a registry
-- How to import a custom notebook image into RHOAI
+- How to import the custom workbench image into RHOAI
 - Add the data visualization library seaborn, based on matplotlib, to a workbench image.
 - Create a workbench from a custom workbench image.
 --- 
