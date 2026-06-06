@@ -6,11 +6,12 @@ This task describes how to update the `Containerfile.MYSQL-db`, build the image,
 ## 🎯 Prepare the lab for this question.
 ```bash
 mkdir /home/student/task7
-cat <<EOF > /home/student/task7/script.sh
+mkdir /home/student/task7/db-script/
+cat <<EOF > /home/student/task7/db-script/script.sh
 #!/bin/bash
 echo "Starting MySQL database container..."
 EOF
-chmod 755 /home/student/task7/script.sh
+chmod 755 /home/student/task7/db-script/script.sh
 touch /home/student/task7/Containerfile.MYSQL-db
 ```
 ---
@@ -38,7 +39,7 @@ DB_ROOT_PASSWORD
 
 ### 1.4 Copy the script file
 
-Copy the `script.sh` file under `/home/student/task7/` directory into `/tmp/mydb` directory.
+Copy the `script.sh` file under `/home/student/task7/db-script/` directory into `/tmp/mydb` directory.
 
 ### 1.5 Set the working directory
 
@@ -93,7 +94,7 @@ ENV MYSQL_APP_VERSION="${DB_APP_VERSION}" \
 RUN mkdir -p /tmp/mydb
 
 # Copy the script.sh file into /mydb directory
-COPY --chmod=755 script.sh /tmp/mydb/script.sh
+COPY --chmod=755 db-script/script.sh /tmp/mydb/script.sh
 
 # Make sure the script is executable
 # RUN chmod +x /tmp/mydb/script.sh
