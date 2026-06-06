@@ -23,14 +23,14 @@ Update `/home/student/task7/Containerfile.MYSQL-db` so that it does the followin
 
 Use `registry.ocp4.example.com:8443/rhel9/mysql-80:latest` as the base image.
 
-### 1.2 Accepts the following build arguments (ARG)
+### 1.2 Accepts the following build arguments
 
 ```bash
 DB_APP_VERSION
 DB_ROOT_PASSWORD
 ```
 
-### 1.3 Pass the following environment variables (ENV)
+### 1.3 Pass the following environment variables
 
 - `MYSQL_APP_VERSION` → value from `DB_APP_VERSION`
 - `MYSQL_ROOT_PASSWORD` → value from `DB_ROOT_PASSWORD`
