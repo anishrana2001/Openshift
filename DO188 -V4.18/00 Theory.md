@@ -66,7 +66,7 @@ By the end of this lesson, students should be able to:
 
 Key points:
 
-- Podman can run **OCI-compliant containers**.
+- Podman can run **OCI-compliant containers** (Open Container Initiative (OCI), a Linux Foundation project).
 - Podman is **daemonless**, meaning there is no always-running central daemon like Docker Engine.
 - Podman supports **rootless containers**, allowing normal users to run containers without becoming `root`.
 - Podman can manage:
