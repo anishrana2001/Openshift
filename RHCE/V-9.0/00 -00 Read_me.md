@@ -1,5 +1,5 @@
 
-### Classroom Machines
+### Classroom Machines for EXAM EX294
 
   - `student` user is allowed to login into workstation server.
   -  All the work should be done on workstation server.
