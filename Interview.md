@@ -372,31 +372,67 @@ Access process
 
 ---
 
-## 2.3 How do you design a multi-region OpenShift cluster?
+## 2.3 ## 5. How do you design a multi-region OpenShift cluster?
 
 ### Interview Answer
 
-I usually do not design one stretched OpenShift cluster across distant regions because etcd and control plane components are latency-sensitive. My preferred design is one OpenShift cluster per region, managed centrally through Red Hat Advanced Cluster Management and deployed consistently through GitOps.
+First, I would clarify that I normally do not design one stretched OpenShift cluster across multiple distant regions. Stretching a single cluster across regions can create latency and etcd quorum problems.
 
-### Design
+My preferred approach is one OpenShift cluster per region, managed centrally using Red Hat Advanced Cluster Management and deployed consistently using GitOps tools such as Argo CD.
 
-| Area | Design |
+The design depends on the required RTO and RPO. For stateless applications, I prefer active-active across regions with global DNS or GSLB. For stateful applications, I design data replication at the database or storage layer, and I use OpenShift Data Foundation disaster recovery patterns where appropriate.
+
+### Multi-Region Architecture
+
+| Component | Design |
 |---|---|
-| Cluster model | One OCP cluster per region |
-| Management | Red Hat Advanced Cluster Management |
-| Deployment | Argo CD / OpenShift GitOps |
-| Traffic | Global DNS or GSLB |
-| Stateless apps | Active-active |
-| Stateful apps | Database replication or ODF DR |
-| Secrets | Central Vault or replicated secret backend |
-| Registry | Quay or registry mirroring per region |
-| Monitoring | Central dashboards with cluster labels |
-| DR | RTO/RPO-based failover plan |
+| Cluster model | One OpenShift cluster per region |
+| Management | Red Hat Advanced Cluster Management hub |
+| Deployment | Argo CD / GitOps |
+| Traffic | Global DNS, GSLB, health checks, weighted routing |
+| Apps | Active-active for stateless services |
+| Data | Database replication or managed geo-database |
+| Stateful DR | ODF Regional-DR / Metro-DR where suitable |
+| Secrets | Central Vault or replicated secret manager |
+| Registry | Quay or registry mirroring near each region |
+| Observability | Central metrics, logs, traces with cluster labels |
+| Failover | Automated or controlled based on RTO/RPO |
+
+### Design Pattern
+
+```text
+                         Global DNS / GSLB
+                               |
+              -------------------------------------
+              |                                   |
+        Region 1 OCP Cluster              Region 2 OCP Cluster
+              |                                   |
+        Apps + Local Services              Apps + Local Services
+              |                                   |
+              -------- Replicated Data Layer -------
+                               |
+                         Central Observability
+                         Central GitOps / ACM
+```
+
+### Important Design Decisions
+
+| Question | Design Consideration |
+|---|---|
+| Active-active or active-passive? | Depends on application design and data consistency |
+| What is the RTO? | Determines failover automation |
+| What is the RPO? | Determines replication strategy |
+| Is the app stateless? | Easier to run active-active |
+| Is the database regional? | Need database-level replication |
+| How are secrets managed? | Central or replicated secret backend |
+| How are images distributed? | Registry mirror per region |
+| How is traffic routed? | GSLB with health checks |
 
 ### Good Interview Line
 
-> I avoid stretching etcd across regions. I design one OpenShift cluster per region, manage them through ACM and GitOps, use global traffic management, and handle state through database replication or OpenShift Data Foundation DR.
+> I avoid stretching etcd across regions. I design one OpenShift cluster per region, manage them through ACM and GitOps, use global traffic management, and handle state through database replication or OpenShift Data Foundation disaster recovery depending on RTO and RPO.
 
+---
 ---
 
 # 3. Deployment and Application Lifecycle
