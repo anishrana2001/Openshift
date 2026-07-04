@@ -26,7 +26,7 @@ cat task1-files-Containerfile
 podman login -u developer -p developer registry.ocp4.example.com:8443
 ```
 
-## Create a 
+## Create an image from the file **`task1-files-Containerfile`** with tag 1.0.0
 ```
 podman build  -f task1-files-Containerfile  -t registry.ocp4.example.com:8443/developer/building-container:1.0.0
 ```
