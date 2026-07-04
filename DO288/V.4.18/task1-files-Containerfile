@@ -1,0 +1,13 @@
+FROM registry.ocp4.example.com:8443/ubi10/nodejs-22-minimal:10.0
+## Set the port = 80 in the environment value.
+ENV PORT=80
+EXPOSE ${PORT}
+
+## ADD command will copy all the current directly ciles in to the container home directory.
+ADD . $HOME
+
+## Container will run as root user "USER root"
+USER root 
+RUN npm ci --omit=dev && rm -rf .npm
+
+CMD npm start
