@@ -96,6 +96,7 @@ oc delete deployment greeting1
 
 ##  Solution of this issue is to Create a robot account for your user in the internal container registry.
 ### 1. Create a robot account.
+---
 	- Go to https://registry.ocp4.example.com:8443 and log in using the user developer with the password developer.
 	- Click develop…> Account Settings to open the developer account settings.
 	- Click the robot icon in the left sidebar to open the Robot Accounts page.
@@ -105,7 +106,7 @@ oc delete deployment greeting1
 	- Click developer+ocprobot to open the robot credentials page.
 	- Copy the authentication token within the Username & Robot Account section.
 	- Create the registry-credentials secret of the docker-registry type that uses the robot account you created.
-
+---
 ```
 oc create secret docker-registry registry-credentials \
 --docker-server=registry.ocp4.example.com:8443 \
