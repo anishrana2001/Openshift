@@ -99,12 +99,12 @@ oc delete deployment greeting1
 - Go to https://registry.ocp4.example.com:8443 and log in using the user developer with the password developer.
 - Click develop…> Account Settings to open the developer account settings.
 - Click the robot icon in the left sidebar to open the Robot Accounts page.
-	- Click Create Robot Account.
-	- Use ocprobot as the username for the new robot account.
-	- Click Create robot account to finish the process. You can safely skip the Add permissions for developer+ocprobot step by clicking Close.
-	- Click developer+ocprobot to open the robot credentials page.
-	- Copy the authentication token within the Username & Robot Account section.
-	- Create the registry-credentials secret of the docker-registry type that uses the robot account you created.
+- Click Create Robot Account.
+- Use ocprobot as the username for the new robot account.
+- Click Create robot account to finish the process. You can safely skip the Add permissions for developer+ocprobot step by clicking Close.
+- Click developer+ocprobot to open the robot credentials page.
+- Copy the authentication token within the Username & Robot Account section.
+- Create the registry-credentials secret of the docker-registry type that uses the robot account you created.
 ---
 ```
 oc create secret docker-registry registry-credentials \
