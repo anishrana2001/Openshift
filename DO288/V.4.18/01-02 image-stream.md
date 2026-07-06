@@ -96,10 +96,9 @@ oc delete deployment greeting1
 
 ##  Solution of this issue is to Create a robot account for your user in the internal container registry.
 ### 1. Create a robot account.
----
-	- Go to https://registry.ocp4.example.com:8443 and log in using the user developer with the password developer.
-	- Click develop…> Account Settings to open the developer account settings.
-	- Click the robot icon in the left sidebar to open the Robot Accounts page.
+- Go to https://registry.ocp4.example.com:8443 and log in using the user developer with the password developer.
+- Click develop…> Account Settings to open the developer account settings.
+- Click the robot icon in the left sidebar to open the Robot Accounts page.
 	- Click Create Robot Account.
 	- Use ocprobot as the username for the new robot account.
 	- Click Create robot account to finish the process. You can safely skip the Add permissions for developer+ocprobot step by clicking Close.
