@@ -168,11 +168,11 @@ oc logs deployments/greetings
 ---
 
 ### 🧹 Step 1.11 — Clean Up the Broken Deployment
-      - View labels to confirm selector before deletion
+- View labels to confirm selector before deletion
 ```bash
 oc get all --show-labels
 ```
-      - Delete all resources related to the greetings app
+- Delete all resources related to the greetings app
 ```bash
 oc delete all --selector app=greetings
 ```
