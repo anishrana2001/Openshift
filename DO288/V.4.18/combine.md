@@ -782,18 +782,6 @@ Build Image               Manage with               Secure the
 | Personal credentials in secret | 🔴 Low — base64 exposed | ❌ No |
 | Robot account token in secret | 🟢 High — scoped & revocable | ✅ Yes |
 
-### 🐛 All Bugs Fixed
-
-| Task | Step | Bug | Fix |
-|---|---|---|---|
-| Task 1 | 1.6 | Wrong image name in `podman run` | Corrected to `building-container` |
-| Task 1 | 1.13–1.16 | Invalid `podman build . -t --image=` syntax | Corrected to `podman build -f ... -t ...` |
-| Task 1 | 1.18 | Redeployed broken `v1.0.0` | Corrected to use `v1.0.1` |
-| Task 2 | 2.2 | `podman inspect docker://` invalid for remote | Replaced with `skopeo inspect` |
-| Task 2 | 2.5 | Unnecessary project prefix + typo in app name | Removed prefix, fixed typo |
-| Task 2 | 2.7 | Wrong service name `svc hello` | Corrected to `svc/image-stream-deploy` |
-| Task 2 | 2.2 | `oc new-project` called twice | Removed duplicate call |
-| Task 3 | 3.6, 3.10 | `oc secrets unlink` used wrong secret name | Corrected to `registry-credentials` |
 
 ---
 
