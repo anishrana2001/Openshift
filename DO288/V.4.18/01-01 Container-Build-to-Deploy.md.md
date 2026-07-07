@@ -168,14 +168,12 @@ oc logs deployments/greetings
 ---
 
 ### 🧹 Step 1.11 — Clean Up the Broken Deployment
-
+      - View labels to confirm selector before deletion
 ```bash
-# View labels to confirm selector before deletion
 oc get all --show-labels
 ```
-
+      - Delete all resources related to the greetings app
 ```bash
-# Delete all resources related to the greetings app
 oc delete all --selector app=greetings
 ```
 
@@ -205,7 +203,6 @@ CMD npm start
 
 
 ```bash
-
 podman build -f task1-files-Containerfile \
   -t registry.ocp4.example.com:8443/developer/building-container:1.0.1
 ```
