@@ -110,15 +110,8 @@ podman build -f task1-files-Containerfile \
 
 ### 🧪 Step 1.6 — Test the Image Locally Before Pushing
 
-> **⚠️ Bug Fixed:**
-> The original used a wrong image name `images-ubi-greetings`.
-> The correct name is `building-container`.
-
 ```bash
-# ❌ WRONG (original):
-# podman run --rm registry.ocp4.example.com:8443/developer/images-ubi-greetings:1.0.0
 
-# ✅ CORRECT:
 podman run --rm registry.ocp4.example.com:8443/developer/building-container:1.0.0
 ```
 
@@ -210,15 +203,7 @@ CMD npm start
 
 ### 🏗️ Step 1.13 — Rebuild as v1.0.1 and Test
 
-> **⚠️ Bug Fixed:**
-> Original syntax `podman build . -t --image=...` is invalid.
-> Correct syntax is `podman build -f <file> -t <tag>`.
-
 ```bash
-# ❌ WRONG (original):
-# podman build . -t --image=registry.ocp4.example.com:8443/developer/building-container:1.0.1
-
-# ✅ CORRECT:
 podman build -f task1-files-Containerfile \
   -t registry.ocp4.example.com:8443/developer/building-container:1.0.1
 ```
