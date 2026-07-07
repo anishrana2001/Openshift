@@ -200,3 +200,15 @@ oc expose svc/greetings
 ```
 curl -s http://greetings-building-container.apps.ocp4.example.com | jq
 ```
+
+## 📌 Key Insight
+Even with **`oc new-app --image`**, OpenShift still creates an ImageStream behind the scenes. However, you have less control over how that ImageStream is configured compared to creating it manually.
+
+Next chapter, we will going to create our own ImageStream.
+```
+oc get is
+```
+
+```
+oc get all
+```
