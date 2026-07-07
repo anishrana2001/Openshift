@@ -1,7 +1,6 @@
 const os = require("os");
 const http = require("http");
 const localization = require("./LocalizationService");
-################################ 
 const hostname = "0.0.0.0";
 const userInfo = os.userInfo();
 const port = process.env.PORT || 8080;
