@@ -479,27 +479,6 @@ A lightweight Eclipse Vert.x web application for devops-wala.com, built as a beg
 
 ---
 
-## License Note
-
-Vert.x itself is open source.  
-This project structure has been rewritten with your own branding and package names.
-
-If this was originally copied from a Red Hat lab, do not publish the exact lab content as your own unless the original lab clearly includes a license that allows it. Rewrite the code, rename packages, and add your own README/license before pushing to GitHub. Tiny effort now, fewer legal gremlins later.
-
-Recommended license for your own rewritten code:
-
-```text
-MIT License
-```
-
-or
-
-```text
-Apache License 2.0
-```
-
----
-
 ## Final Project Summary
 
 ```text
