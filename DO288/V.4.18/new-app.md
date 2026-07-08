@@ -1,10 +1,7 @@
-I modified the content and corrected the main lifecycle mistakes. The important fixes: `--build-env` now appears inside the Git/S2I build flow because Red Hat documents it as a build-container variable for `oc new-app`; runtime variables stay under `-e/--env-file`; routes are shown using `oc expose svc`, not a fake `--route` flag, because apparently reality wanted one more command; and Docker build arguments are treated as BuildConfig/Docker-strategy details, not a clean beginner `oc new-app` option. ([Red Hat Documentation][1])
 
-I have reorganized the entire `oc new-app` explanation into a logical application lifecycle order:
 
 **Source → Build Method → Build Configuration → Image → Deployment → Runtime Configuration → Networking → Advanced Options**
 
-This order is better for DO288 preparation because it follows how OpenShift actually creates and runs an application.
 
 ---
 
