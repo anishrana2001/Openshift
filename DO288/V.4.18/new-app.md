@@ -347,15 +347,15 @@ nodejs~https://github.com/user/app \
 Important:
 
 ```text
---build-env is used while building the image.
--e or --env is used after the application is running.
+--build-env is used while building the image (Stage = During image build)
+-e or --env is used after the application is running (Stage = Running container)
 ```
 
 Humans confusing these two is basically a required certification objective at this point.
 
 ---
 
-## Build Environment File
+## Build Environment File - (Stage = During image build)
 
 Option:
 
@@ -383,7 +383,7 @@ oc new-app \
 nodejs~https://github.com/user/app \
 --build-env-file=build.env
 ```
-
+### If we need multiple variables during Running container then "--env-file=file.env" 
 ---
 
 # 3B. Docker / Containerfile Strategy
