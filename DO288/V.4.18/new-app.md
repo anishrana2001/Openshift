@@ -30,6 +30,125 @@ Creates an application from source code.
 
 ---
 
+I assume you mean a **Mermaid diagram** (the diagram syntax), not a magical "mirmade" creature that draws OpenShift apps for us. Sadly, Kubernetes has not reached that level of convenience yet.
+
+Here is a **Mermaid flow diagram showing different ways to create an application in OpenShift using `oc new-app`:**
+
+```mermaid
+flowchart TD
+    A[Developer wants to create Application] --> B{Application Source Type}
+
+    B --> C[Container Image]
+    B --> D[Source Code Repository]
+    B --> E[OpenShift Template]
+    B --> F[Existing YAML/Manifests]
+
+    C --> C1[oc new-app nginx]
+    C1 --> G[ImageStream]
+    C1 --> H[Deployment / DeploymentConfig]
+    C1 --> I[Service]
+
+    D --> D1[Git Repository]
+    D1 --> D2{Build Strategy}
+
+    D2 --> D3[S2I Source Strategy]
+    D2 --> D4[Docker Strategy]
+
+    D3 --> J[BuildConfig]
+    D4 --> J
+
+    J --> K[Build Image]
+    K --> G
+    G --> H
+    H --> I
+
+    E --> E1[oc new-app -f template.yaml]
+    E1 --> H
+    E1 --> I
+
+    F --> F1[oc apply -f deployment.yaml]
+    F1 --> H
+    F1 --> I
+
+    I --> L{Need External Access?}
+
+    L -->|Yes| M[oc expose service]
+    M --> N[Route]
+    N --> O[External URL]
+
+    L -->|No| P[Internal Application Only]
+
+    O --> Q[Users Access Application]
+    P --> Q
+```
+
+## Simplified OpenShift Application Creation Flow
+
+```mermaid
+flowchart LR
+    A[Source] --> B[oc new-app]
+
+    B --> C{Input}
+
+    C --> D[Git Repo]
+    C --> E[Container Image]
+    C --> F[Template]
+
+    D --> G[BuildConfig]
+    G --> H[ImageStream]
+
+    E --> H
+
+    F --> I[Application Objects]
+
+    H --> J[Deployment]
+
+    I --> J
+
+    J --> K[Pod]
+
+    K --> L[Service]
+
+    L --> M[Route]
+
+    M --> N[End User]
+```
+
+### In interview terms:
+
+```
+Git Code
+   |
+   | oc new-app
+   ↓
+BuildConfig
+   |
+   ↓
+Build
+   |
+   ↓
+ImageStream
+   |
+   ↓
+Deployment
+   |
+   ↓
+Pod
+   |
+   ↓
+Service
+   |
+   ↓
+Route
+   |
+   ↓
+User
+```
+
+This is the mental model you need for DO288: **everything starts from the application source, but the final goal is always a running Pod exposed through a Service (and optionally a Route).**
+
+---
+
 # 1. Create Application from Container Image
 
 ### Option: Image name
