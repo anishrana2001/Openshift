@@ -60,22 +60,18 @@ FOCUS:       Image Building      Image Lifecycle             Security
 
 ### 🔧 Step 1.1 — Prepare the Lab Directory
 
-```bash
+```
 mkdir -p /home/student/task1/building-container/
 cd /home/student/task1/building-container/
+wget https://raw.githubusercontent.com/anishrana2001/Openshift/refs/heads/main/DO288/V.4.18/task1-files-index.js -O index.js
+wget https://raw.githubusercontent.com/anishrana2001/Openshift/refs/heads/main/DO288/V.4.18/task1-files-LocalizationService.js -O LocalizationService.js 
+wget https://raw.githubusercontent.com/anishrana2001/Openshift/refs/heads/main/DO288/V.4.18/task1-files-package-lock.json  -O package-lock.json 
+wget https://raw.githubusercontent.com/anishrana2001/Openshift/refs/heads/main/DO288/V.4.18/task1-files-package.json  -O package.json 
+wget https://raw.githubusercontent.com/anishrana2001/Openshift/refs/heads/main/DO288/V.4.18/task1-files-Containerfile  -O Containerfile 
 ```
 
-### 📥 Step 1.2 — Download the Source Files
 
-```bash
-wget https://raw.githubusercontent.com/anishrana2001/Openshift/refs/heads/main/DO288/V.4.18/task1-files-index.js
-wget https://raw.githubusercontent.com/anishrana2001/Openshift/refs/heads/main/DO288/V.4.18/task1-files-LocalizationService.js
-wget https://raw.githubusercontent.com/anishrana2001/Openshift/refs/heads/main/DO288/V.4.18/task1-files-package-lock.json
-wget https://raw.githubusercontent.com/anishrana2001/Openshift/refs/heads/main/DO288/V.4.18/task1-files-package.json
-wget https://raw.githubusercontent.com/anishrana2001/Openshift/refs/heads/main/DO288/V.4.18/task1-files-Containerfile
-```
-
-### 🔍 Step 1.3 — Inspect the Working Directory and Containerfile
+### 🔍 Step 1.2 — Inspect the Working Directory and Containerfile
 
 ```bash
 # Confirm you are in the correct directory
@@ -84,7 +80,7 @@ pwd
 
 ```bash
 # Review the Containerfile before building
-cat task1-files-Containerfile
+cat Containerfile
 ```
 
 > **📌 Instructor Note:** Always inspect your Containerfile before building.
@@ -93,7 +89,7 @@ cat task1-files-Containerfile
 
 ---
 
-### 🔐 Step 1.4 — Login to the Private Registry
+### 🔐 Step 1.3 — Login to the Private Registry
 
 ```bash
 podman login -u developer -p developer registry.ocp4.example.com:8443
@@ -101,14 +97,14 @@ podman login -u developer -p developer registry.ocp4.example.com:8443
 
 ---
 
-### 🏗️ Step 1.5 — Build the Initial Image (v1.0.0)
+### 🏗️ Step 1.4 — Build the Initial Image (v1.0.0)
 
 ```bash
-podman build -f task1-files-Containerfile \
+podman build -f Containerfile \
   -t registry.ocp4.example.com:8443/developer/building-container:1.0.0
 ```
 
-### 🧪 Step 1.6 — Test the Image Locally Before Pushing
+### 🧪 Step 1.5 — Test the Image Locally Before Pushing
 
 ```bash
 
@@ -120,7 +116,7 @@ podman run --rm registry.ocp4.example.com:8443/developer/building-container:1.0.
 
 ---
 
-### 📤 Step 1.7 — Push the Image to the Registry
+### 📤 Step 1.6 — Push the Image to the Registry
 
 ```bash
 podman push registry.ocp4.example.com:8443/developer/building-container:1.0.0
@@ -128,7 +124,7 @@ podman push registry.ocp4.example.com:8443/developer/building-container:1.0.0
 
 ---
 
-### 🔑 Step 1.8 — Login to OpenShift and Create a Project
+### 🔑 Step 1.7 — Login to OpenShift and Create a Project
 
 ```bash
 oc login -u developer -p developer https://api.ocp4.example.com:6443
@@ -140,14 +136,14 @@ oc new-project building-container
 
 ---
 
-### 🚀 Step 1.9 — Deploy the Application (v1.0.0 — Intentionally Broken)
+### 🚀 Step 1.8 — Deploy the Application (v1.0.0 — Intentionally Broken)
 
 ```bash
 oc new-app --name greetings \
   --image=registry.ocp4.example.com:8443/developer/building-container:1.0.0
 ```
 
-### 🔎 Step 1.10 — Post-Deployment Checks
+### 🔎 Step 1.9 — Post-Deployment Checks
 
 ```bash
 oc get all
@@ -167,7 +163,7 @@ oc logs deployments/greetings
 
 ---
 
-### 🧹 Step 1.11 — Clean Up the Broken Deployment
+### 🧹 Step 1.10 — Clean Up the Broken Deployment
 - View labels to confirm selector before deletion
 ```bash
 oc get all --show-labels
@@ -179,10 +175,10 @@ oc delete all --selector app=greetings
 
 ---
 
-### 🛠️ Step 1.12 — Fix #1: Remove USER root
+### 🛠️ Step 1.11 — Fix #1: Remove USER root
 
 ```bash
-vi task1-files-Containerfile
+vi Containerfile
 ```
 
 ```dockerfile
@@ -199,11 +195,11 @@ RUN npm ci --omit=dev && rm -rf .npm
 CMD npm start
 ```
 
-### 🏗️ Step 1.13 — Rebuild as v1.0.1 and Test
+### 🏗️ Step 1.12 — Rebuild as v1.0.1 and Test
 
 
 ```bash
-podman build -f task1-files-Containerfile \
+podman build -f Containerfile \
   -t registry.ocp4.example.com:8443/developer/building-container:1.0.1
 ```
 
@@ -217,10 +213,10 @@ podman run --rm registry.ocp4.example.com:8443/developer/building-container:1.0.
 
 ---
 
-### 🛠️ Step 1.14 — Fix #2: Change Privileged Port 80 → 8080
+### 🛠️ Step 1.13 — Fix #2: Change Privileged Port 80 → 8080
 
 ```bash
-vi task1-files-Containerfile
+vi Containerfile
 ```
 
 ```dockerfile
@@ -238,7 +234,7 @@ CMD npm start
 ```
 
 ```bash
-podman build -f task1-files-Containerfile \
+podman build -f Containerfile \
   -t registry.ocp4.example.com:8443/developer/building-container:1.0.1
 ```
 
@@ -252,10 +248,10 @@ podman run --rm registry.ocp4.example.com:8443/developer/building-container:1.0.
 
 ---
 
-### 🛠️ Step 1.15 — Fix #3: Correct Group Permissions on /var/cache
+### 🛠️ Step 1.14 — Fix #3: Correct Group Permissions on /var/cache
 
 ```bash
-vi task1-files-Containerfile
+vi Containerfile
 ```
 
 ```dockerfile
@@ -295,10 +291,10 @@ CMD npm start
 
 ---
 
-### 🏗️ Step 1.16 — Final Rebuild of v1.0.1
+### 🏗️ Step 1.15 — Final Rebuild of v1.0.1
 
 ```bash
-podman build -f task1-files-Containerfile \
+podman build -f Containerfile \
   -t registry.ocp4.example.com:8443/developer/building-container:1.0.1
 ```
 
@@ -311,7 +307,7 @@ podman run --rm registry.ocp4.example.com:8443/developer/building-container:1.0.
 
 ---
 
-### 📤 Step 1.17 — Push the Fixed Image (v1.0.1)
+### 📤 Step 1.16 — Push the Fixed Image (v1.0.1)
 
 ```bash
 podman push registry.ocp4.example.com:8443/developer/building-container:1.0.1
@@ -319,7 +315,7 @@ podman push registry.ocp4.example.com:8443/developer/building-container:1.0.1
 
 ---
 
-### 🚀 Step 1.18 — Redeploy Using the Fixed Image
+### 🚀 Step 1.17 — Redeploy Using the Fixed Image
 
 
 ```bash
@@ -335,7 +331,7 @@ oc logs deployments/greetings
 
 ---
 
-### 🌐 Step 1.19 — Expose the Application via a Route
+### 🌐 Step 1.18 — Expose the Application via a Route
 
 ```bash
 oc expose svc/greetings
@@ -350,7 +346,7 @@ curl -s http://greetings-building-container.apps.ocp4.example.com | jq
 
 ---
 
-### 🔍 Step 1.20 — Inspect the Auto-Created ImageStream
+### 🔍 Step 1.19 — Inspect the Auto-Created ImageStream
 
 ```bash
 oc get is
