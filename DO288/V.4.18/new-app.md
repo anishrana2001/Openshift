@@ -1,281 +1,456 @@
-In OpenShift Container Platform, the command you mean is most likely:
+I have reorganized the entire `oc new-app` explanation into a **logical application lifecycle order**:
+
+**Source → Build Method → Image → Deployment → Configuration → Networking → Advanced Options**
+
+This order is much easier for DO288 preparation because it follows how OpenShift actually creates an application.
+
+---
+
+# `oc new-app` Complete Options (Synchronized Learning Flow)
+
+In OpenShift Container Platform, the command:
 
 ```bash
 oc new-app
 ```
 
-(`oc new-a` is just an incomplete command. Humans invented autocomplete, then still managed to type half a command. A timeless achievement.)
+creates an application from different sources:
 
-`oc new-app` creates a new application by detecting source code, images, templates, or other inputs and creating the required Kubernetes/OpenShift objects.
+* Git source code
+* Container images
+* Containerfile/Dockerfile
+* S2I builder images
+* Templates
+* Existing image streams
 
-## Basic Syntax
+It automatically creates required OpenShift objects:
 
-```bash
-oc new-app [options] <source>
+```
+BuildConfig
+ImageStream
+Deployment
+Service
+Route (optional)
 ```
 
-Examples:
+---
 
-```bash
-oc new-app nginx
+# Application Creation Lifecycle
+
+```mermaid
+flowchart TD
+
+A[Developer Application] --> B{Application Source}
+
+B --> C[Git Repository]
+B --> D[Container Image]
+B --> E[ImageStream]
+B --> F[Template]
+
+C --> G{Build Method}
+
+G --> H[S2I Strategy]
+G --> I[Docker / Containerfile Strategy]
+
+H --> J[BuildConfig]
+I --> J
+
+J --> K[Container Image]
+
+D --> K
+E --> K
+
+K --> L[ImageStream]
+
+F --> M[Application Objects]
+
+L --> N[Deployment]
+
+M --> N
+
+N --> O[Pod]
+
+O --> P[Service]
+
+P --> Q{External Access?}
+
+Q -->|Yes| R[Route]
+
+Q -->|No| S[Internal Application]
+
+R --> T[User Access]
+S --> T
 ```
 
-Creates an application from an image named `nginx`.
+---
+
+# 1. Application Source Options
+
+First decide: **Where is my application coming from?**
+
+---
+
+# A. Git Repository Source
+
+Used when you have application source code.
+
+Syntax:
+
+```bash
+oc new-app <git-url>
+```
+
+Example:
 
 ```bash
 oc new-app https://github.com/user/myapp.git
 ```
 
-Creates an application from source code.
+OpenShift:
+
+```
+Git Repository
+      |
+      ↓
+Detect Application
+      |
+      ↓
+Build Application
+      |
+      ↓
+Create Image
+      |
+      ↓
+Deploy
+```
 
 ---
 
-I assume you mean a **Mermaid diagram** (the diagram syntax), not a magical "mirmade" creature that draws OpenShift apps for us. Sadly, Kubernetes has not reached that level of convenience yet.
+## Git Branch Selection
 
-Here is a **Mermaid flow diagram showing different ways to create an application in OpenShift using `oc new-app`:**
-
-```mermaid
-flowchart TD
-    A[Developer wants to create Application] --> B{Application Source Type}
-
-    B --> C[Container Image]
-    B --> D[Source Code Repository]
-    B --> E[OpenShift Template]
-    B --> F[Existing YAML/Manifests]
-
-    C --> C1[oc new-app nginx]
-    C1 --> G[ImageStream]
-    C1 --> H[Deployment / DeploymentConfig]
-    C1 --> I[Service]
-
-    D --> D1[Git Repository]
-    D1 --> D2{Build Strategy}
-
-    D2 --> D3[S2I Source Strategy]
-    D2 --> D4[Docker Strategy]
-
-    D3 --> J[BuildConfig]
-    D4 --> J
-
-    J --> K[Build Image]
-    K --> G
-    G --> H
-    H --> I
-
-    E --> E1[oc new-app -f template.yaml]
-    E1 --> H
-    E1 --> I
-
-    F --> F1[oc apply -f deployment.yaml]
-    F1 --> H
-    F1 --> I
-
-    I --> L{Need External Access?}
-
-    L -->|Yes| M[oc expose service]
-    M --> N[Route]
-    N --> O[External URL]
-
-    L -->|No| P[Internal Application Only]
-
-    O --> Q[Users Access Application]
-    P --> Q
-```
-
-## Simplified OpenShift Application Creation Flow
-
-```mermaid
-flowchart LR
-    A[Source] --> B[oc new-app]
-
-    B --> C{Input}
-
-    C --> D[Git Repo]
-    C --> E[Container Image]
-    C --> F[Template]
-
-    D --> G[BuildConfig]
-    G --> H[ImageStream]
-
-    E --> H
-
-    F --> I[Application Objects]
-
-    H --> J[Deployment]
-
-    I --> J
-
-    J --> K[Pod]
-
-    K --> L[Service]
-
-    L --> M[Route]
-
-    M --> N[End User]
-```
-
-### In interview terms:
-
-```
-Git Code
-   |
-   | oc new-app
-   ↓
-BuildConfig
-   |
-   ↓
-Build
-   |
-   ↓
-ImageStream
-   |
-   ↓
-Deployment
-   |
-   ↓
-Pod
-   |
-   ↓
-Service
-   |
-   ↓
-Route
-   |
-   ↓
-User
-```
-
-This is the mental model you need for DO288: **everything starts from the application source, but the final goal is always a running Pod exposed through a Service (and optionally a Route).**
-
----
-
-# 1. Create Application from Container Image
-
-### Option: Image name
+Option:
 
 ```bash
-oc new-app nginx
+--branch
 ```
-
-Explanation:
-
-* Pulls the `nginx` image
-* Creates:
-
-  * Deployment
-  * Service
-  * ImageStream (usually)
 
 Example:
 
 ```bash
-oc new-app docker.io/library/nginx
+oc new-app \
+https://github.com/user/app \
+--branch=develop
+```
+
+Repository:
+
+```
+app
+ |
+ ├── main
+ |
+ ├── develop  ← selected
+ |
+ └── test
 ```
 
 ---
 
-# 2. Create Application from Git Repository
+## Git Context Directory
 
-### Source Code Deployment
-
-```bash
-oc new-app https://github.com/sclorg/nodejs-ex
-```
-
-OpenShift detects:
-
-* Language
-* Build strategy
-* Required builder image
-
-Creates:
-
-```
-BuildConfig
-Deployment
-Service
-ImageStream
-```
-
----
-
-# 3. Specify Builder Image
-
-### `--strategy`
-
-Choose build strategy.
-
-Syntax:
+Option:
 
 ```bash
-oc new-app <source> --strategy=<strategy>
+--context-dir
 ```
 
-Options:
-
-### Source-to-Image (S2I)
-
-```bash
-oc new-app https://github.com/example/app \
---strategy=source
-```
-
-Used for:
-
-* Java
-* Python
-* Node.js
-* PHP applications
-
----
-
-### Docker Strategy
-
-```bash
-oc new-app https://github.com/example/app \
---strategy=docker
-```
-
-Uses:
-
-```
-Dockerfile
-```
+Used when the application is inside a subfolder.
 
 Example:
 
 Repository:
 
 ```
-myapp/
- ├── Dockerfile
- └── index.html
+project
+ |
+ ├── frontend
+ |
+ └── backend
 ```
 
 Command:
 
 ```bash
-oc new-app https://github.com/user/myapp \
+oc new-app \
+https://github.com/user/project \
+--context-dir=backend
+```
+
+Builds:
+
+```
+backend/
+```
+
+only.
+
+---
+
+# 2. Build Strategy Options
+
+After selecting Git source:
+
+**How should OpenShift build the application?**
+
+---
+
+# A. Source-to-Image (S2I) Strategy
+
+S2I means:
+
+```
+Source Code
+     +
+Builder Image
+     |
+     ↓
+Application Image
+```
+
+Example:
+
+```bash
+oc new-app \
+nodejs~https://github.com/user/app
+```
+
+The `nodejs~` means:
+
+"Use Node.js S2I builder."
+
+OpenShift automatically:
+
+```
+Download Source
+       |
+Install Dependencies
+       |
+Build Application
+       |
+Create Image
+       |
+Deploy
+```
+
+Common S2I builders:
+
+```
+Node.js
+Python
+Java
+PHP
+Ruby
+```
+
+---
+
+# B. Docker / Containerfile Strategy
+
+Used when you provide your own build instructions.
+
+Example:
+
+Repository:
+
+```
+myapp
+
+├── Containerfile
+└── app.py
+```
+
+Command:
+
+```bash
+oc new-app \
+https://github.com/user/myapp \
+--strategy=docker
+```
+
+Flow:
+
+```
+Source Code
+     |
+Containerfile/Dockerfile
+     |
+Container Build
+     |
+Image
+```
+
+---
+
+## Specify Strategy
+
+Option:
+
+```bash
+--strategy
+```
+
+Example:
+
+S2I:
+
+```bash
+--strategy=source
+```
+
+Docker:
+
+```bash
 --strategy=docker
 ```
 
 ---
 
-# 4. Give Application Name
+# 3. Container Image Source
 
-### `--name`
+If an image already exists, no build is needed.
+
+---
+
+## Image Name
+
+Example:
 
 ```bash
-oc new-app nginx --name=my-web
+oc new-app nginx
 ```
 
 Creates:
 
 ```
-app name = my-web
+nginx Image
+     |
+     ↓
+Deployment
+     |
+     ↓
+Pod
 ```
 
-Instead of default:
+---
+
+## Full Registry Image
+
+Example:
+
+```bash
+oc new-app \
+docker.io/library/nginx
+```
+
+---
+
+## Private Registry Image
+
+Example:
+
+```bash
+oc new-app \
+registry.example.com/myapp:v1
+```
+
+Create registry secret:
+
+```bash
+oc create secret docker-registry mysecret \
+--docker-server=registry.example.com
+```
+
+---
+
+# 4. ImageStream Source
+
+OpenShift can use internal ImageStreams.
+
+Example:
+
+```bash
+oc new-app \
+--image-stream=nodejs:18
+```
+
+Flow:
+
+```
+ImageStream
+     |
+     ↓
+Deployment
+     |
+     ↓
+Pod
+```
+
+---
+
+# 5. Template-Based Application
+
+Used when application definition already exists.
+
+Option:
+
+```bash
+-f
+```
+
+Example:
+
+```bash
+oc new-app \
+-f mysql-template.yaml
+```
+
+Template creates:
+
+```
+Deployment
+Service
+Secrets
+ConfigMaps
+```
+
+---
+
+# 6. Application Naming and Organization
+
+---
+
+## Application Name
+
+Option:
+
+```bash
+--name
+```
+
+Example:
+
+```bash
+oc new-app nginx \
+--name=frontend
+```
+
+Creates:
+
+```
+frontend
+```
+
+instead of:
 
 ```
 nginx
@@ -283,162 +458,13 @@ nginx
 
 ---
 
-# 5. Create from Template
+## Labels
 
-### `-f`
-
-```bash
-oc new-app -f template.yaml
-```
-
-Example:
+Option:
 
 ```bash
-oc new-app -f mysql-persistent-template.json
+--labels
 ```
-
-Uses OpenShift template.
-
----
-
-# 6. Environment Variables
-
-### `-e`
-
-Add environment variables.
-
-Example:
-
-```bash
-oc new-app mysql \
--e MYSQL_USER=admin \
--e MYSQL_PASSWORD=password
-```
-
-Creates container with:
-
-```
-MYSQL_USER=admin
-MYSQL_PASSWORD=password
-```
-
-Multiple variables:
-
-```bash
-oc new-app myimage \
--e DB_HOST=mysql \
--e DB_PORT=3306
-```
-
----
-
-# 7. Create Application Without Deployment
-
-### `--as-deployment-config=false`
-
-Default older OpenShift behavior creates:
-
-```
-DeploymentConfig
-```
-
-To create Kubernetes Deployment:
-
-```bash
-oc new-app nginx \
---as-deployment-config=false
-```
-
-Creates:
-
-```
-Deployment
-```
-
----
-
-# 8. Create Only Build Configuration
-
-### `--build-env`
-
-Example:
-
-```bash
-oc new-app \
-https://github.com/user/app \
---build-env NODE_ENV=production
-```
-
-Sets variables only during build.
-
-Difference:
-
-| Option        | Used for          |
-| ------------- | ----------------- |
-| `-e`          | Runtime container |
-| `--build-env` | Build process     |
-
----
-
-# 9. Expose Ports
-
-### `--ports`
-
-Example:
-
-```bash
-oc new-app nginx \
---ports=8080
-```
-
-Creates service exposing:
-
-```
-8080/TCP
-```
-
-Multiple ports:
-
-```bash
-oc new-app app \
---ports=8080,8443
-```
-
----
-
-# 10. Create Route Automatically
-
-### `--route`
-
-Example:
-
-```bash
-oc new-app nginx --route
-```
-
-Creates:
-
-```
-Pod
- |
-Service
- |
-Route
- |
-External URL
-```
-
-Without it:
-
-```
-Only internal service
-```
-
----
-
-# 11. Labels
-
-### `--labels`
 
 Example:
 
@@ -447,7 +473,7 @@ oc new-app nginx \
 --labels=env=production
 ```
 
-Adds:
+Creates:
 
 ```yaml
 labels:
@@ -462,103 +488,226 @@ Multiple:
 
 ---
 
-# 12. Deployment Environment Variables from File
+# 7. Build-Time Configuration
 
-### `--env-file`
+Variables required during image creation.
+
+---
+
+## Build Environment Variables
+
+Option:
+
+```bash
+--build-env
+```
+
+Example:
+
+```bash
+oc new-app \
+https://github.com/user/app \
+--build-env NODE_ENV=production
+```
+
+Used during:
+
+```
+Build Stage
+```
+
+---
+
+## Build Arguments
+
+Option:
+
+```bash
+--build-arg
+```
+
+Example:
+
+```bash
+oc new-app \
+https://github.com/user/app \
+--build-arg VERSION=1.0
+```
+
+Passed to:
+
+```
+Docker/Containerfile build
+```
+
+---
+
+# 8. Runtime Configuration
+
+Variables required after deployment.
+
+---
+
+## Environment Variables
+
+Option:
+
+```bash
+-e
+```
+
+Example:
+
+```bash
+oc new-app mysql \
+-e MYSQL_USER=admin \
+-e MYSQL_PASSWORD=password
+```
+
+Used inside running container.
+
+---
+
+Difference:
+
+| Option        | Stage               |
+| ------------- | ------------------- |
+| `--build-env` | Image creation      |
+| `--build-arg` | Container build     |
+| `-e`          | Running application |
+
+---
+
+## Environment File
+
+Option:
+
+```bash
+--env-file
+```
 
 Example:
 
 File:
 
 ```
-environment.txt
+database.env
 ```
 
 Content:
 
 ```
 USER=admin
-PASSWORD=test123
+PASSWORD=password
 ```
 
 Command:
 
 ```bash
 oc new-app mysql \
---env-file=environment.txt
+--env-file=database.env
 ```
 
 ---
 
-# 13. Create App in Specific Namespace
+# 9. Deployment Options
 
-Usually switch project:
+---
 
-```bash
-oc project dev
-```
+## Deployment Type
 
-Then:
+Option:
 
 ```bash
-oc new-app nginx
+--as-deployment-config=false
 ```
 
-or:
+Old OpenShift default:
+
+```
+DeploymentConfig
+```
+
+Modern Kubernetes style:
 
 ```bash
 oc new-app nginx \
--n dev
+--as-deployment-config=false
+```
+
+Creates:
+
+```
+Deployment
 ```
 
 ---
 
-# 14. Dry Run (See YAML Before Creating)
+# 10. Networking Options
 
-Very useful.
+---
+
+## Expose Application Ports
+
+Option:
 
 ```bash
-oc new-app nginx \
---dry-run=client -o yaml
+--ports
 ```
-
-Output:
-
-```yaml
-apiVersion: apps/v1
-kind: Deployment
-...
-```
-
-Nothing is created.
-
----
-
-# 15. Import Image from Private Registry
 
 Example:
 
 ```bash
-oc new-app \
-registry.example.com/myimage:v1
+oc new-app nginx \
+--ports=8080
 ```
 
-Private registry:
+Creates:
 
-```bash
-oc create secret docker-registry mysecret \
---docker-server=registry.example.com
+```
+Service
+ |
+8080/TCP
 ```
 
-Then:
+Multiple:
 
 ```bash
-oc new-app registry.example.com/myimage:v1
+--ports=8080,8443
 ```
 
 ---
 
-# 16. Multiple Components Together
+## Create Route Automatically
+
+Option:
+
+```bash
+--route
+```
+
+Example:
+
+```bash
+oc new-app nginx \
+--route
+```
+
+Creates:
+
+```
+User
+ |
+Route
+ |
+Service
+ |
+Pod
+```
+
+---
+
+# 11. Multiple Components
 
 Example:
 
@@ -573,131 +722,97 @@ mysql
 Creates:
 
 ```
-frontend
-   |
-mysql database
+Frontend Application
+        |
+        |
+        ↓
+MySQL Database
+```
+
+Architecture:
+
+```
+User
+ |
+Route
+ |
+Node.js Frontend
+ |
+MySQL Service
+ |
+MySQL Pod
 ```
 
 ---
 
-# 17. Build Arguments
+# 12. Preview Before Creating
+
+## Dry Run
+
+Option:
+
+```bash
+--dry-run
+```
 
 Example:
 
 ```bash
-oc new-app \
-https://github.com/user/app \
---build-arg VERSION=1.0
+oc new-app nginx \
+--dry-run=client -o yaml
 ```
 
-Passes arguments during Docker build.
+Shows YAML:
+
+```yaml
+kind: Deployment
+kind: Service
+```
+
+without creating resources.
 
 ---
 
-# 18. Git Branch Selection
-
-### `--branch`
+# 13. Namespace / Project Selection
 
 Example:
 
 ```bash
-oc new-app \
-https://github.com/user/app \
---branch=develop
+oc new-app nginx \
+-n development
 ```
 
-Uses:
+Creates application in:
 
 ```
-develop branch
-```
-
-instead of:
-
-```
-main/master
+development project
 ```
 
 ---
 
-# 19. Git Context Directory
-
-### `--context-dir`
-
-Example:
-
-Repository:
-
-```
-repo/
- ├── backend/
- └── frontend/
-```
-
-Command:
-
-```bash
-oc new-app \
-https://github.com/user/repo \
---context-dir=backend
-```
-
-Builds only:
-
-```
-backend/
-```
+# 14. Complete Real Examples
 
 ---
 
-# 20. Specify Image Stream
-
-Example:
+## Node.js Application using S2I
 
 ```bash
 oc new-app \
---image-stream=nodejs:18
-```
-
-Uses OpenShift internal image stream.
-
----
-
-# 21. List Available Options
-
-The complete built-in help:
-
-```bash
-oc new-app --help
-```
-
-Short version:
-
-```bash
-oc new-app -h
-```
-
----
-
-# Common Real Production Examples
-
-## Node.js Application
-
-```bash
-oc new-app \
-https://github.com/company/node-app \
+nodejs~https://github.com/company/node-app \
 --name=node-api \
 --strategy=source \
---env=NODE_ENV=production \
+-e NODE_ENV=production \
 --route
 ```
 
-Creates:
+Flow:
 
 ```
 Git
  |
-S2I Build
+S2I
+ |
+BuildConfig
  |
 ImageStream
  |
@@ -706,6 +821,31 @@ Deployment
 Service
  |
 Route
+```
+
+---
+
+## Application using Containerfile
+
+```bash
+oc new-app \
+https://github.com/company/app \
+--strategy=docker \
+--name=custom-app
+```
+
+Flow:
+
+```
+Git
+ |
+Containerfile
+ |
+Image
+ |
+Deployment
+ |
+Pod
 ```
 
 ---
@@ -721,44 +861,84 @@ oc new-app nginx \
 
 ---
 
-## Deploy Java Spring Boot
-
-```bash
-oc new-app \
-https://github.com/company/spring-app \
---strategy=source \
---name=payment-service \
---route
-```
-
----
-
-## Database Example
+## Deploy MySQL
 
 ```bash
 oc new-app mysql \
 -e MYSQL_DATABASE=testdb \
 -e MYSQL_USER=user \
--e MYSQL_PASSWORD=password \
--e MYSQL_ROOT_PASSWORD=root123
+-e MYSQL_PASSWORD=password
 ```
 
 ---
 
-## Most Important Options for Interviews
+# Most Important DO288 Interview Options
 
-| Option          | Purpose                       |
-| --------------- | ----------------------------- |
-| `--name`        | Application name              |
-| `-e`            | Runtime environment variables |
-| `--strategy`    | Build method                  |
-| `--image`       | Use container image           |
-| `--route`       | Create external URL           |
-| `--ports`       | Expose ports                  |
-| `--labels`      | Add metadata                  |
-| `--branch`      | Git branch                    |
-| `--context-dir` | Build subdirectory            |
-| `--dry-run`     | Preview YAML                  |
-| `-f`            | Create from template          |
+| Option           | Purpose                    |
+| ---------------- | -------------------------- |
+| Git URL          | Create from source         |
+| `--branch`       | Select Git branch          |
+| `--context-dir`  | Select folder              |
+| `--strategy`     | Choose S2I/Docker build    |
+| `nodejs~giturl`  | Use S2I builder            |
+| `--image`        | Use container image        |
+| `--image-stream` | Use OpenShift image stream |
+| `-f`             | Create from template       |
+| `--name`         | Application name           |
+| `-e`             | Runtime variables          |
+| `--build-env`    | Build variables            |
+| `--build-arg`    | Build arguments            |
+| `--ports`        | Expose ports               |
+| `--route`        | Create external URL        |
+| `--labels`       | Add metadata               |
+| `--dry-run`      | Preview resources          |
 
-For OpenShift administrator interviews, `oc new-app`, `oc expose`, `oc create`, `oc apply`, `oc rollout`, and `oc adm` commands are the core survival kit. The cluster will not care that we memorized 300 commands, naturally, because computers have the emotional range of a brick.
+---
+
+## Final Mental Model
+
+```
+SOURCE
+ |
+ |-- Git
+ |     |
+ |     |-- S2I
+ |     |
+ |     |-- Containerfile/Dockerfile
+ |
+ |-- Container Image
+ |
+ |-- ImageStream
+ |
+ |-- Template
+
+        ↓
+
+BUILD
+
+        ↓
+
+IMAGE
+
+        ↓
+
+DEPLOYMENT
+
+        ↓
+
+POD
+
+        ↓
+
+SERVICE
+
+        ↓
+
+ROUTE
+
+        ↓
+
+USER
+```
+
+This sequence is the one to remember for DO288: **where code comes from → how image is built → where image comes from → how application runs → how users access it.**
