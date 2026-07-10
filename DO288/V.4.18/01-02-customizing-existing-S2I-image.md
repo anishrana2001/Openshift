@@ -84,6 +84,22 @@ Login Succeeded!
 
 ---
 
+### 2.1.1 Create a directory on `workstation` VM.
+```
+mkdir -p /home/student/task1-customizing-existing-S2I-image/
+```
+### 2.1.2 Identify the location?
+```
+podman inspect \
+  --format='{{ index .Config.Labels "io.openshift.s2i.scripts-url"}}' \
+ ubi9/httpd-24
+```
+
+**OUTPUT**
+```
+image:///usr/libexec/s2i
+```
+
 ### 2.2 Run a Container from the `httpd-24` Builder Image
 
 Use Podman to create a container from the `httpd-24` builder image.
@@ -95,17 +111,6 @@ Override the container entry point to run an interactive shell:
 ```
 
 ### 2.3 Inspect the Default S2I Scripts
-### 2.3.1 Identify the location?
-```
-podman inspect \
-  --format='{{ index .Config.Labels "io.openshift.s2i.scripts-url"}}' \
- ubi9/httpd-24
-```
-
-**OUTPUT**
-```
-image:///usr/libexec/s2i
-```
 
 ### 2.3.2 Navigate to the S2I scripts directory **inside the container** and inspect the default scripts:
 
@@ -145,25 +150,17 @@ bash-5.1$ exit
 Change to the directory containing the application source code:
 
 ```bash
-[student@workstation ~]$ cd ~/DO288/labs/builds-s2i/s2i-scripts
+[student@workstation ~]$ cd /home/student/task1-customizing-existing-S2I-image/
 ```
-
-> No output is expected.
 
 ---
 
-### 3.2 Inspect the Application's `index.html`
+### 3.2 Create a new file `index.html`
 
-Review the main HTML file served by the application:
+
 
 ```bash
-[student@workstation s2i-scripts]$ cat index.html
-```
-
-**Expected Output:**
-
-```
-Hello Class! DO288 rocks!!!
+[student@workstation s2i-scripts]$ echo "Hello Class! DO288 rocks!!!" /home/student/task1-customizing-existing-S2I-image/index.html
 ```
 
 ---
