@@ -29,6 +29,11 @@ external dependencies managed by **Maven**. Over time, the developer:
 - Updates the source code while keeping the **same dependencies**
 - Updates the source code and **adds a new dependency**
 
+Apache Maven is the industry-standard build automation and project management tool for Java. 
+It uses a declarative XML file called pom.xml (Project Object Model) to automatically 
+download libraries (dependencies), compile source code, run tests, 
+and package your application into executable .jar or .war files.
+
 S2I **Incremental Builds** are used to reduce build time by caching
 previously downloaded dependencies, avoiding redundant downloads in
 every build cycle.
