@@ -286,7 +286,7 @@ oc -n openshift get is/httpd
 ```
 ### Or you can execute this command.
 ```
-[student@workstation s2i-scripts]$ oc -n openshift get is/httpd -o \
+oc -n openshift get is/httpd -o \
   jsonpath='{.spec.tags[?(@.name == "2.4-ubi9")].from}' | jq
 ```
 
@@ -314,7 +314,7 @@ code. Use the tilde (`~`) notation to prefix the Git URL with the
 `ubi9/httpd-24` builder image:
 
 ```bash
-[student@workstation s2i-scripts]$ oc new-app --name hello-web \
+oc new-app --name hello-web \
   --context-dir labs/builds-s2i/s2i-scripts \
   httpd:2.4-ubi9~https://git.ocp4.example.com/developer/DO288-apps
 ```
@@ -344,14 +344,15 @@ Wait until the build finishes and the application container image
 is pushed to the OpenShift internal registry:
 
 ```bash
-[student@workstation s2i-scripts]$ oc get build
+oc get build
 ```
 
 **Expected Output:**
 
 ```
-NAME          ...  STATUS     ...
-hello-web-1   ...  Complete   ...
+[student@workstation task1-customizing-existing-S2I-image]$ oc get build
+NAME          TYPE     FROM          STATUS     STARTED              DURATION
+hello-web-1   Source   Git@4ed44b1   Complete   About a minute ago   28s
 ```
 
 ---
@@ -362,7 +363,7 @@ View the build logs to confirm that the custom S2I scripts were
 executed during the build process:
 
 ```bash
-[student@workstation s2i-scripts]$ oc logs -f bc/hello-web
+oc logs -f bc/hello-web
 ```
 
 **Expected Output:**
