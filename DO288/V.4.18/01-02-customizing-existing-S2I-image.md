@@ -88,11 +88,18 @@ Login Succeeded!
 ```
 mkdir -p /home/student/task1-customizing-existing-S2I-image/
 ```
-### 2.1.2 Download image and Identify the location?
+### 2.1.2 Download image
 
 ```bash
 podman pull docker://registry.ocp4.example.com:8443/ubi9/httpd-24
 ```
+### 2.1.3 Identify the location?
+
+```
+skopeo inspect  docker://registry.ocp4.example.com:8443/ubi9/httpd-24 | grep io.openshift.s2i
+```
+
+Or you can use below command:
 
 ```
 podman inspect \
