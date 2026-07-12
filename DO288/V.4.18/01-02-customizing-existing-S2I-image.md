@@ -140,7 +140,7 @@ bash-5.1$ cat usage
 ```
 
 
-> **Why this step?**
+> **Why these steps?**
 > Inspecting the default S2I scripts helps you understand what the
 > builder image does by default, so you can create effective wrapper
 > or override scripts.
@@ -172,7 +172,7 @@ Change to the directory containing the application source code:
 
 
 ```bash
-[student@workstation s2i-scripts]$ echo "Hello Class! DO288 rocks!!!" /home/student/task1-customizing-existing-S2I-image/index.html
+[student@workstation s2i-scripts]$ echo "Hello Class! DO288 rocks!!!" > /home/student/task1-customizing-existing-S2I-image/index.html
 ```
 
 ---
@@ -282,6 +282,10 @@ Confirm that the image stream tag `httpd:2.4-ubi9` points to the
 correct image in the classroom registry:
 
 ```bash
+oc -n openshift get is/httpd
+```
+### Or you can execute this command.
+```
 [student@workstation s2i-scripts]$ oc -n openshift get is/httpd -o \
   jsonpath='{.spec.tags[?(@.name == "2.4-ubi9")].from}' | jq
 ```
