@@ -88,7 +88,12 @@ Login Succeeded!
 ```
 mkdir -p /home/student/task1-customizing-existing-S2I-image/
 ```
-### 2.1.2 Identify the location?
+### 2.1.2 Download image and Identify the location?
+
+```bash
+podman pull docker://registry.ocp4.example.com:8443/ubi9/httpd-24
+```
+
 ```
 podman inspect \
   --format='{{ index .Config.Labels "io.openshift.s2i.scripts-url"}}' \
