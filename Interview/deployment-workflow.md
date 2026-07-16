@@ -1,33 +1,18 @@
-# What Happens Inside a Kubernetes Cluster When You Run `kubectl apply -f deployment.yaml`?
+# What Happens When `kubectl apply` Creates a New Deployment?
 
-> **Core idea:** `kubectl apply` does not directly create containers. It submits a desired Kubernetes object to the API server. After that object is accepted and stored, a chain of independent control loops creates or updates ReplicaSets, Pods, node assignments, networks, volumes, and containers until the observed state matches the declared state.
+This guide explains only the following case:
 
----
+- The Deployment does **not** already exist.
+- You run `kubectl apply -f deployment.yaml`.
+- Kubernetes creates the Deployment for the first time.
 
-## Table of Contents
-
-1. [Example Deployment](#1-example-deployment)
-2. [End-to-End Architecture Diagram](#2-end-to-end-architecture-diagram)
-3. [Detailed Sequence Diagram](#3-detailed-sequence-diagram)
-4. [Phase 1: What Happens on the Client Machine](#4-phase-1-what-happens-on-the-client-machine)
-5. [Phase 2: The Request Enters the API Server](#5-phase-2-the-request-enters-the-api-server)
-6. [Phase 3: The Deployment Is Stored](#6-phase-3-the-deployment-is-stored)
-7. [Phase 4: Controllers Start Reconciling](#7-phase-4-controllers-start-reconciling)
-8. [Phase 5: Pods Are Scheduled](#8-phase-5-pods-are-scheduled)
-9. [Phase 6: Kubelet Starts the Containers](#9-phase-6-kubelet-starts-the-containers)
-10. [Phase 7: Status Flows Back to the Control Plane](#10-phase-7-status-flows-back-to-the-control-plane)
-11. [What Changes Cause a New Rollout?](#11-what-changes-cause-a-new-rollout)
-12. [Client-Side Apply vs Server-Side Apply](#12-client-side-apply-vs-server-side-apply)
-13. [What `kubectl apply` Does Not Wait For](#13-what-kubectl-apply-does-not-wait-for)
-14. [Failure Points and Troubleshooting](#14-failure-points-and-troubleshooting)
-15. [Useful Commands to Watch Every Stage](#15-useful-commands-to-watch-every-stage)
-16. [Compact Interview Answer](#16-compact-interview-answer)
+It does not cover updating, patching, scaling, or rolling out changes to an existing Deployment.
 
 ---
 
-## 1. Example Deployment
+## Example Deployment
 
-Assume that `deployment.yaml` contains:
+Assume `deployment.yaml` contains:
 
 ```yaml
 apiVersion: apps/v1
@@ -40,11 +25,6 @@ spec:
   selector:
     matchLabels:
       app: web
-  strategy:
-    type: RollingUpdate
-    rollingUpdate:
-      maxSurge: 1
-      maxUnavailable: 0
   template:
     metadata:
       labels:
@@ -63,106 +43,99 @@ spec:
             periodSeconds: 5
 ```
 
-You run:
+The command is:
 
 ```bash
 kubectl apply -f deployment.yaml
 ```
 
-Possible immediate output:
+Because the Deployment does not exist, the expected output is:
 
 ```text
 deployment.apps/web created
 ```
 
-On a later apply:
+This output means that the Deployment object was accepted and stored by the Kubernetes API server.
 
-```text
-deployment.apps/web configured
-```
-
-If the effective configuration has not changed:
-
-```text
-deployment.apps/web unchanged
-```
-
-These messages mean that the API operation succeeded. They do **not** necessarily mean that all application Pods are already running and ready.
+It does not necessarily mean that all Pods are already running and ready.
 
 ---
 
-## 2. End-to-End Architecture Diagram
+# Complete Creation Flow
 
 ```mermaid
 flowchart TB
-    U["User runs:<br/><code>kubectl apply -f deployment.yaml</code>"]
+    USER["User runs:<br/><code>kubectl apply -f deployment.yaml</code>"]
 
     subgraph CLIENT["Client machine"]
-        K["kubectl"]
-        CFG["kubeconfig<br/>cluster, user, context, namespace"]
-        YAML["deployment.yaml"]
-        DISC["API discovery and schema information"]
-        MERGE["Apply logic<br/>create or calculate patch"]
+        FILE["deployment.yaml"]
+        KUBECTL["kubectl"]
+        CONFIG["kubeconfig"]
+        DISCOVERY["API discovery"]
     end
 
-    subgraph CP["Kubernetes control plane"]
+    subgraph CONTROL["Kubernetes control plane"]
         API["kube-apiserver"]
         AUTHN["Authentication"]
-        AUTHZ["Authorization / RBAC"]
-        ADM1["Mutating admission"]
-        ADM2["Validating admission"]
-        VALID["API schema and semantic validation"]
-        ETCD[("etcd<br/>persistent cluster state")]
-        DCTRL["Deployment controller"]
+        AUTHZ["Authorization"]
+        MUTATE["Mutating admission"]
+        VALIDATE["Validating admission"]
+        SCHEMA["Schema and semantic validation"]
+        ETCD[("etcd")]
+        DEPLOYCTRL["Deployment controller"]
         RSCTRL["ReplicaSet controller"]
-        SCHED["kube-scheduler"]
+        SCHEDULER["kube-scheduler"]
     end
 
-    subgraph NODE["Worker node"]
+    subgraph WORKER["Worker node"]
         KUBELET["kubelet"]
+        CSI["CSI volume handling<br/>when required"]
         CRI["Container runtime through CRI"]
-        CNI["Pod network through CNI"]
-        CSI["Volumes through CSI, when required"]
-        POD["Running Pod<br/>application container"]
+        CNI["Pod networking through CNI"]
+        CONTAINER["Application container"]
     end
 
-    U --> K
-    YAML --> K
-    CFG --> K
-    K --> DISC
-    K --> MERGE
-    MERGE -->|"HTTPS POST or PATCH"| API
-    API --> AUTHN --> AUTHZ --> ADM1 --> ADM2 --> VALID --> ETCD
-    ETCD -->|"Deployment becomes visible through API watches"| DCTRL
-    DCTRL -->|"creates or updates ReplicaSet through API"| API
-    ETCD -->|"ReplicaSet becomes visible"| RSCTRL
-    RSCTRL -->|"creates Pods through API"| API
-    ETCD -->|"unscheduled Pods become visible"| SCHED
-    SCHED -->|"binds Pod to a Node through API"| API
-    ETCD -->|"assigned Pod becomes visible"| KUBELET
+    USER --> KUBECTL
+    FILE --> KUBECTL
+    CONFIG --> KUBECTL
+    KUBECTL --> DISCOVERY
+
+    KUBECTL -->|"GET Deployment"| API
+    API --> ETCD
+    ETCD -->|"NotFound"| API
+    API -->|"404 NotFound"| KUBECTL
+
+    KUBECTL -->|"POST new Deployment"| API
+    API --> AUTHN
+    AUTHN --> AUTHZ
+    AUTHZ --> MUTATE
+    MUTATE --> VALIDATE
+    VALIDATE --> SCHEMA
+    SCHEMA --> ETCD
+
+    API -->|"Deployment created"| KUBECTL
+    KUBECTL -->|"created"| USER
+
+    ETCD -->|"Deployment watch event"| DEPLOYCTRL
+    DEPLOYCTRL -->|"Create ReplicaSet through API"| API
+    ETCD -->|"ReplicaSet watch event"| RSCTRL
+    RSCTRL -->|"Create Pod objects through API"| API
+    ETCD -->|"Unscheduled Pods"| SCHEDULER
+    SCHEDULER -->|"Bind Pods to nodes"| API
+    ETCD -->|"Assigned Pods"| KUBELET
+
     KUBELET --> CSI
     KUBELET --> CRI
     CRI --> CNI
-    CRI --> POD
-    KUBELET -->|"Pod status, conditions and container status"| API
-    DCTRL -->|"Deployment status"| API
+    CRI --> CONTAINER
+
+    KUBELET -->|"Pod status"| API
+    DEPLOYCTRL -->|"Deployment status"| API
 ```
-
-### The most important architectural fact
-
-Every major component talks through the **Kubernetes API**.
-
-- The Deployment controller does not directly contact a worker node.
-- The scheduler does not directly start a container.
-- The API server does not directly run the application.
-- etcd does not run controllers.
-- Controllers read desired and observed state through the API, make a decision, and write a new object or status back through the API.
-
-Kubernetes is therefore an **API-driven, asynchronous, eventually consistent control system**.
 
 ---
 
-## 3. Detailed Sequence Diagram
+# Detailed Sequence Diagram
 
 ```mermaid
 sequenceDiagram
@@ -172,109 +145,76 @@ sequenceDiagram
     participant Kubectl as kubectl
     participant API as kube-apiserver
     participant Etcd as etcd
-    participant DeployCtrl as Deployment controller
-    participant RSCtrl as ReplicaSet controller
+    participant DeploymentController as Deployment controller
+    participant ReplicaSetController as ReplicaSet controller
     participant Scheduler as kube-scheduler
     participant Kubelet as kubelet
     participant Runtime as Container runtime
-    participant App as Application container
+    participant Container as Application container
 
     User->>Kubectl: kubectl apply -f deployment.yaml
     Kubectl->>Kubectl: Read YAML and kubeconfig
-    Kubectl->>API: Discover API resources and schema, as required
-    Kubectl->>API: GET existing Deployment
-    API->>Etcd: Read Deployment
-    Etcd-->>API: Existing object or NotFound
-    API-->>Kubectl: Live object or NotFound
+    Kubectl->>API: GET Deployment web in namespace demo
+    API->>Etcd: Look for Deployment
+    Etcd-->>API: Deployment not found
+    API-->>Kubectl: 404 NotFound
 
-    alt Deployment does not exist
-        Kubectl->>API: POST new Deployment
-    else Deployment already exists
-        Kubectl->>Kubectl: Calculate apply patch
-        Kubectl->>API: PATCH existing Deployment
-    end
+    Kubectl->>Kubectl: Prepare new Deployment object
+    Kubectl->>API: POST Deployment
 
-    API->>API: Authenticate and authorize
-    API->>API: Mutate, validate, default and admit
-    API->>Etcd: Persist accepted Deployment
+    API->>API: Authenticate user
+    API->>API: Authorize create operation
+    API->>API: Run mutating admission
+    API->>API: Run validating admission
+    API->>API: Validate and default object
+
+    API->>Etcd: Store Deployment
     Etcd-->>API: Write committed
-    API-->>Kubectl: Created or updated object
-    Kubectl-->>User: created, configured or unchanged
+    API-->>Kubectl: Deployment created
+    Kubectl-->>User: deployment.apps/web created
 
-    Note over User,App: kubectl may already have returned here
+    Note over User,Container: kubectl can return before Pods are ready
 
-    API-->>DeployCtrl: Deployment watch event
-    DeployCtrl->>API: Create or update ReplicaSet
-    API->>Etcd: Persist ReplicaSet
+    API-->>DeploymentController: New Deployment observed
+    DeploymentController->>API: Create ReplicaSet
+    API->>Etcd: Store ReplicaSet
 
-    API-->>RSCtrl: ReplicaSet watch event
-    RSCtrl->>API: Create missing Pod objects
-    API->>Etcd: Persist Pods
+    API-->>ReplicaSetController: New ReplicaSet observed
+    ReplicaSetController->>API: Create three Pod objects
+    API->>Etcd: Store Pods
 
-    API-->>Scheduler: Unscheduled Pod watch events
-    Scheduler->>Scheduler: Filter and score Nodes
-    Scheduler->>API: Bind each Pod to a Node
-    API->>Etcd: Persist node assignment
+    API-->>Scheduler: New unscheduled Pods observed
+    Scheduler->>Scheduler: Filter and score worker nodes
+    Scheduler->>API: Bind each Pod to a node
+    API->>Etcd: Store node assignments
 
-    API-->>Kubelet: Assigned Pod becomes visible
-    Kubelet->>Runtime: Create Pod sandbox and containers
-    Runtime->>Runtime: Pull image if required
-    Runtime->>App: Start container
-    Kubelet->>App: Run startup, readiness and liveness probes
+    API-->>Kubelet: Assigned Pods observed
+    Kubelet->>Runtime: Create Pod sandbox
+    Runtime->>Runtime: Configure networking
+    Runtime->>Runtime: Pull nginx:1.27 if required
+    Runtime->>Container: Create and start container
 
-    Kubelet->>API: Update Pod status
-    API->>Etcd: Persist status
-    API-->>DeployCtrl: Pod and ReplicaSet status changes
-    DeployCtrl->>API: Update Deployment status
+    Kubelet->>Container: Run readiness probe
+    Kubelet->>API: Report Pod status
+    API->>Etcd: Store status
+
+    API-->>DeploymentController: Pod and ReplicaSet status changes
+    DeploymentController->>API: Update Deployment status
 ```
 
 ---
 
-## 4. Phase 1: What Happens on the Client Machine
+# Step 1: `kubectl` Reads the Manifest
 
-## 4.1 `kubectl` resolves the target cluster
-
-`kubectl` reads its configuration from one or more of these sources:
-
-- The file specified by `--kubeconfig`
-- Files listed in the `KUBECONFIG` environment variable
-- By default, `$HOME/.kube/config`
-
-The selected context supplies:
-
-```text
-Context
-├── Cluster
-│   ├── API server URL
-│   └── Certificate authority information
-├── User
-│   └── Client certificate, token, exec plugin or another credential
-└── Namespace
-    └── Default namespace for namespaced resources
-```
-
-Command-line options override the context:
+When you run:
 
 ```bash
-kubectl apply -f deployment.yaml \
-  --context=production \
-  --namespace=demo
+kubectl apply -f deployment.yaml
 ```
 
-For a namespaced object, the namespace is determined from:
+`kubectl` reads the YAML file and converts it into a Kubernetes object.
 
-1. `metadata.namespace` in the file, when present
-2. `--namespace` / `-n`
-3. The namespace configured in the current context
-4. Usually `default` when no other namespace is selected
-
----
-
-## 4.2 `kubectl` reads and decodes the YAML
-
-The YAML is converted into a Kubernetes object representation.
-
-Important identity fields are:
+The most important fields are:
 
 ```yaml
 apiVersion: apps/v1
@@ -284,384 +224,468 @@ metadata:
   namespace: demo
 ```
 
-Together, these tell `kubectl` and the API server:
+These fields identify:
 
 - API group: `apps`
 - API version: `v1`
-- Resource kind: `Deployment`
-- Object name: `web`
+- Resource type: `Deployment`
+- Deployment name: `web`
 - Namespace: `demo`
 
-The REST endpoint is conceptually:
+The corresponding API location is conceptually:
 
 ```text
-/apis/apps/v1/namespaces/demo/deployments/web
+/apis/apps/v1/namespaces/demo/deployments
 ```
 
-The file can also contain multiple YAML documents separated by `---`. Each object is processed as its own API operation. Applying ten objects is not a single atomic database transaction. Earlier objects may succeed even if a later object fails.
+---
+
+# Step 2: `kubectl` Reads the Kubeconfig
+
+`kubectl` reads the kubeconfig to determine:
+
+- Which cluster to contact
+- The Kubernetes API server address
+- Which user credentials to use
+- The certificate authority
+- The active context
+- The default namespace
+
+The default kubeconfig file is usually:
+
+```text
+$HOME/.kube/config
+```
+
+A context connects three pieces of information:
+
+```text
+Context
+├── Cluster
+├── User
+└── Namespace
+```
+
+For example:
+
+```bash
+kubectl config current-context
+```
+
+You can inspect the active connection details with:
+
+```bash
+kubectl config view --minify
+```
 
 ---
 
-## 4.3 API discovery and schema information are used
+# Step 3: `kubectl` Discovers the Kubernetes API
 
-`kubectl` may use cached or freshly retrieved discovery information to determine:
+`kubectl` uses API discovery information to determine:
 
-- Whether `apps/v1` exists
-- Whether `Deployment` is namespaced
-- Its plural REST resource name, `deployments`
+- Whether `apps/v1` is supported
+- Whether a Deployment is namespaced
+- The REST resource name
 - Supported operations
-- Schema information used for validation and patch construction
+- Available schema information
 
-The API server remains authoritative. A locally valid-looking manifest can still be rejected because of:
+For this object:
 
-- RBAC
-- Admission policies
-- Resource quotas
-- Invalid immutable-field changes
-- Cluster-specific webhooks
-- Unsupported API versions
-- Semantic validation errors
-
-By default, current `kubectl apply` uses strict field validation. Unknown or duplicate fields can therefore cause the request to fail instead of becoming an exciting typo-shaped production incident.
+```text
+Kind: Deployment
+Resource: deployments
+API group: apps
+Version: v1
+Namespaced: yes
+```
 
 ---
 
-## 4.4 `kubectl` determines whether this is a create or update
+# Step 4: `kubectl` Checks Whether the Deployment Exists
 
-For ordinary client-side apply, `kubectl` checks the live object.
+Before creating the object, `kubectl apply` checks the live state.
 
-### Case A: The object does not exist
+Conceptually, it sends:
 
-The API returns `NotFound`.
+```http
+GET /apis/apps/v1/namespaces/demo/deployments/web
+```
 
-`kubectl` sends a `POST` request to create the Deployment. It also records the submitted configuration in this annotation:
+Because the Deployment does not exist, the API server returns:
+
+```text
+404 NotFound
+```
+
+This tells `kubectl` to use the creation path.
+
+There is no existing Deployment to patch or merge.
+
+---
+
+# Step 5: `kubectl` Prepares a New Deployment Object
+
+Because this is the first client-side apply, `kubectl` prepares the complete Deployment for creation.
+
+It also normally stores the applied configuration in an annotation:
 
 ```yaml
 metadata:
   annotations:
     kubectl.kubernetes.io/last-applied-configuration: |
-      {...JSON representation of the applied manifest...}
+      {...}
 ```
 
-### Case B: The object already exists
+This annotation can be used by later client-side apply operations.
 
-`kubectl` obtains three pieces of information:
+In this guide, however, only the initial creation is being considered.
 
-1. **Desired configuration**  
-   The current `deployment.yaml`
+---
 
-2. **Live configuration**  
-   The Deployment currently stored in the cluster
+# Step 6: `kubectl` Sends a Create Request
 
-3. **Last-applied configuration**  
-   The configuration saved during the previous client-side apply
-
-It then performs a **three-way comparison**.
-
-```mermaid
-flowchart LR
-    OLD["Last applied<br/>what kubectl previously managed"]
-    NEW["New manifest<br/>what you want now"]
-    LIVE["Live object<br/>what exists now"]
-    PATCH["Calculated patch"]
-
-    OLD --> PATCH
-    NEW --> PATCH
-    LIVE --> PATCH
-```
+`kubectl` sends an HTTPS `POST` request to the API server.
 
 Conceptually:
 
-- A field present in the new manifest is set to the desired value.
-- A field that was previously managed by apply but has now been removed can be cleared.
-- A live field that was never managed by this manifest can often remain untouched.
-
-### Example
-
-Previous manifest:
-
-```yaml
-spec:
-  replicas: 3
-  minReadySeconds: 10
+```http
+POST /apis/apps/v1/namespaces/demo/deployments
+Content-Type: application/json
 ```
 
-Current manifest:
+The request body contains the Deployment object.
 
-```yaml
-spec:
-  replicas: 5
-```
-
-Possible patch intent:
+The important point is:
 
 ```text
-Set spec.replicas to 5
-Remove spec.minReadySeconds
-Update last-applied-configuration
+The request is sent to the API server.
+It is not sent directly to a worker node.
 ```
-
-The update is sent as a scoped `PATCH`, not usually as a blind replacement of the entire Deployment.
 
 ---
 
-## 5. Phase 2: The Request Enters the API Server
-
-The API server is the front door of the cluster. A write request must pass several gates.
-
-```mermaid
-flowchart LR
-    REQ["HTTPS request"]
-    TLS["TLS connection"]
-    AUTHN["Authentication<br/>Who are you?"]
-    AUTHZ["Authorization<br/>May you do this?"]
-    MUTATE["Mutating admission<br/>Modify/default request"]
-    VALIDATE["Validating admission<br/>Accept or reject"]
-    SCHEMA["Object validation"]
-    STORE["Persist object"]
-    RESP["Return response"]
-
-    REQ --> TLS --> AUTHN --> AUTHZ --> MUTATE --> VALIDATE --> SCHEMA --> STORE --> RESP
-```
-
-## 5.1 TLS
-
-`kubectl` normally communicates with the API server over HTTPS.
-
-It verifies the server certificate using the configured certificate authority unless insecure verification was explicitly enabled, which is generally a poor life choice.
-
----
-
-## 5.2 Authentication
+# Step 7: The API Server Authenticates the User
 
 Authentication answers:
 
-> Who made this request?
-
-The identity may come from:
-
-- A client certificate
-- A bearer token
-- An OpenID Connect token
-- A cloud authentication plugin
-- An executable credential plugin
-- Another configured authenticator
-
-The result is a user identity plus groups.
-
-Example:
-
 ```text
-User: alice@example.com
-Groups:
-- developers
-- system:authenticated
+Who is making this request?
 ```
 
-If authentication fails, `kubectl` receives an error such as:
+The API server may authenticate the request using:
+
+- Client certificate
+- Bearer token
+- OpenID Connect token
+- Cloud authentication plugin
+- Executable credential plugin
+- Service account token
+
+If authentication fails, the request stops.
+
+Example error:
 
 ```text
 Unauthorized
 ```
 
-No Deployment is stored, and no controller work begins.
+No Deployment is created.
 
 ---
 
-## 5.3 Authorization
+# Step 8: The API Server Authorizes the Request
 
 Authorization answers:
 
-> Is this identity permitted to create or patch this Deployment in this namespace?
+```text
+Is this user allowed to create Deployments in namespace demo?
+```
 
-In many clusters this is handled by RBAC.
-
-Conceptual permission check:
+The permission is conceptually:
 
 ```text
-verb: patch or create
+verb: create
 apiGroup: apps
 resource: deployments
 namespace: demo
-name: web
 ```
 
-A denied request commonly produces:
+In most clusters, RBAC handles this decision.
 
-```text
-Error from server (Forbidden): deployments.apps "web" is forbidden
-```
-
-You can inspect the effective permission with:
+You can test the permission with:
 
 ```bash
-kubectl auth can-i patch deployments -n demo
 kubectl auth can-i create deployments -n demo
 ```
 
+A denied request produces an error similar to:
+
+```text
+Error from server (Forbidden): deployments.apps is forbidden
+```
+
+If authorization fails:
+
+- The Deployment is not stored.
+- No ReplicaSet is created.
+- No Pods are created.
+
 ---
 
-## 5.4 Mutating admission
+# Step 9: Mutating Admission Runs
 
-Mutating admission runs after authentication and authorization but before persistence.
+Mutating admission can modify the object before it is stored.
 
-It may modify the incoming object. Examples include:
+Examples include:
 
+- Adding labels
+- Adding annotations
 - Injecting a sidecar
-- Adding labels or annotations
-- Setting defaults
-- Applying security-related settings
-- Injecting environment variables
-- Modifying resource requests
-- Applying cluster-specific policy
+- Adding environment variables
+- Setting security fields
+- Adding resource requests
+- Applying cluster-specific defaults
 
-Therefore, the stored Deployment can contain fields that were not present in your original YAML.
+Therefore, the final stored Deployment may not be byte-for-byte identical to the YAML file.
 
-This is one reason to inspect the live object:
+Conceptually:
 
-```bash
-kubectl get deployment web -n demo -o yaml
+```text
+Original object
+      ↓
+Mutating admission
+      ↓
+Modified object
 ```
 
 ---
 
-## 5.5 Validating admission
+# Step 10: Validating Admission Runs
 
-Validating admission can accept or reject the final proposed object.
+Validating admission checks whether the object complies with cluster policy.
 
-It can enforce rules such as:
+It may reject the Deployment when:
 
-- Only approved image registries are allowed
-- Every container must have CPU and memory requests
-- Privileged containers are forbidden
-- Required labels must be present
-- Replica counts must remain within an organizational limit
+- Images come from an unapproved registry
+- Resource requests are missing
+- Required labels are absent
+- Security rules are violated
+- Replica limits are exceeded
+- Organizational policies are not satisfied
 
-If a validating policy or webhook rejects the request, the object is not persisted.
-
----
-
-## 5.6 Built-in API validation
-
-The API server checks the resource's schema and semantic rules.
-
-For a Deployment, examples include:
-
-- `spec.selector` must match the Pod template labels
-- Required fields must exist
-- Field types must be correct
-- Values must be within valid ranges
-- Immutable fields cannot be changed
-- The object name must be valid
-
-For example, changing an immutable Deployment selector after creation is normally rejected.
+If validating admission rejects the request, the Deployment is not stored.
 
 ---
 
-## 5.7 Defaulting and API conversion
+# Step 11: Kubernetes Validates the Deployment
 
-Kubernetes can fill omitted defaults and convert the external API representation into its internal form.
+The API server validates the Deployment schema and semantic rules.
 
-Examples of defaults may include:
+For example, it checks that:
 
-- Deployment strategy defaults
+- Required fields are present
+- Field types are correct
+- The Deployment name is valid
+- `spec.replicas` is valid
+- The selector is valid
+- The selector matches the Pod template labels
+- Container definitions are valid
+
+For this example:
+
+```yaml
+selector:
+  matchLabels:
+    app: web
+```
+
+must match:
+
+```yaml
+template:
+  metadata:
+    labels:
+      app: web
+```
+
+If they do not match, the Deployment is rejected.
+
+---
+
+# Step 12: Default Values Are Added
+
+Kubernetes may add default values to fields that were omitted.
+
+Examples can include:
+
+- Deployment update strategy
 - Revision history limit
 - Progress deadline
 - Pod restart policy
 - DNS policy
 - Scheduler name
+- Image pull policy
 - Termination grace period
-- Image pull policy, based partly on the image reference
 
-Exact defaults depend on the API type and Kubernetes version.
+The exact defaults depend on the Kubernetes API and version.
+
+The object stored in Kubernetes can therefore contain more fields than the original YAML.
 
 ---
 
-## 6. Phase 3: The Deployment Is Stored
+# Step 13: The Deployment Is Stored in etcd
 
-Once accepted, the API server persists the Deployment's desired state in **etcd**, Kubernetes' backing key-value store.
+After authentication, authorization, admission, and validation succeed, the API server stores the Deployment in etcd.
 
-Stored metadata includes fields such as:
+etcd is the persistent data store for Kubernetes cluster state.
+
+The stored Deployment receives server-generated metadata such as:
 
 ```yaml
 metadata:
   uid: 2af2...
   resourceVersion: "481923"
   generation: 1
-  creationTimestamp: "..."
+  creationTimestamp: "2026-07-16T..."
 ```
 
-### Important metadata
+Important fields:
 
 | Field | Meaning |
 |---|---|
-| `uid` | Unique identity for this exact object instance |
-| `resourceVersion` | Version used for watches and optimistic concurrency |
-| `generation` | Version of the object's desired specification |
-| `creationTimestamp` | Server-recorded creation time |
+| `uid` | Unique identity of this Deployment instance |
+| `resourceVersion` | Version used for watches and concurrency |
+| `generation` | Version of the desired specification |
+| `creationTimestamp` | Time recorded by the API server |
 | `managedFields` | Field-management information |
-| `annotations` | Includes the last-applied configuration for client-side apply |
 
-The API server then returns a response to `kubectl`.
+At this point, the Deployment exists in Kubernetes.
 
-At this moment:
+However:
 
-- The Deployment object exists.
-- It may have no ReplicaSet yet.
-- It may have no Pods yet.
-- No image may have been pulled yet.
-- The application may be completely unavailable.
-
-The declaration has been accepted. Reconciliation comes next.
+- A ReplicaSet may not exist yet.
+- Pods may not exist yet.
+- No node may have been selected.
+- No image may have been pulled.
+- The application may not be ready.
 
 ---
 
-## 7. Phase 4: Controllers Start Reconciling
+# Step 14: The API Server Returns Success
 
-Controllers run inside `kube-controller-manager` or as separate controller processes. They continuously compare:
+After the Deployment is stored, the API server returns the created object to `kubectl`.
 
-```text
-Desired state
-versus
-Observed state
-```
-
-Their basic pattern is:
+`kubectl` prints:
 
 ```text
-watch → compare → act → update status → repeat
+deployment.apps/web created
 ```
 
-This is called a **reconciliation loop**.
+This means:
 
-Controllers are generally level-driven. They care about the state that should exist, not merely about receiving one perfect event. If a watch event is missed, a later list or resync can still reveal the mismatch.
+```text
+The Deployment resource was successfully created in the Kubernetes API.
+```
+
+It does not mean:
+
+```text
+All three Pods are already running and ready.
+```
+
+Kubernetes reconciliation continues asynchronously after the command returns.
 
 ---
 
-## 7.1 Deployment controller observes the Deployment
+# Step 15: The Deployment Controller Notices the New Deployment
 
-The Deployment controller watches Deployment and ReplicaSet objects through the API server.
+The Deployment controller watches Deployment resources through the API server.
 
-For the example:
+It sees:
 
 ```yaml
 spec:
   replicas: 3
-  template:
-    ...
 ```
 
-It determines that a ReplicaSet representing the Pod template must exist.
+and the Pod template:
 
-### On initial creation
+```yaml
+spec:
+  template:
+    metadata:
+      labels:
+        app: web
+    spec:
+      containers:
+        - name: web
+          image: nginx:1.27
+```
 
-The controller creates a ReplicaSet whose name includes a hash:
+The controller determines that a ReplicaSet must be created.
+
+The Deployment controller does not create containers directly.
+
+Its responsibility is to create and manage ReplicaSets.
+
+---
+
+# Step 16: A ReplicaSet Is Created
+
+The Deployment controller creates a ReplicaSet through the API server.
+
+The ReplicaSet name contains a hash derived from the Pod template.
+
+Example:
 
 ```text
 web-7c8f6d9b64
 ```
 
-Simplified ownership:
+The ownership relationship becomes:
+
+```text
+Deployment/web
+└── ReplicaSet/web-7c8f6d9b64
+```
+
+The ReplicaSet contains:
+
+- A reference to the Deployment
+- The desired replica count
+- The Pod template
+- A selector
+- A Pod-template hash
+
+A simplified owner reference looks like:
+
+```yaml
+metadata:
+  ownerReferences:
+    - kind: Deployment
+      name: web
+```
+
+The ReplicaSet is then stored through the API server in etcd.
+
+---
+
+# Step 17: The ReplicaSet Controller Creates Pods
+
+The ReplicaSet controller watches ReplicaSets and Pods.
+
+It compares:
+
+```text
+Desired Pods: 3
+Existing Pods: 0
+Missing Pods: 3
+```
+
+It therefore creates three Pod objects through the API server.
+
+The object hierarchy becomes:
 
 ```text
 Deployment/web
@@ -671,139 +695,88 @@ Deployment/web
     └── Pod/web-7c8f6d9b64-g5h6i
 ```
 
-The ReplicaSet contains:
-
-- An `ownerReference` pointing to the Deployment
-- A label and selector containing a Pod-template hash
-- The Pod template copied from the Deployment
-- A desired replica count controlled by the Deployment rollout strategy
-
-The ownership chain is important for garbage collection and rollout management.
-
----
-
-## 7.2 Does every Deployment update create a new ReplicaSet?
-
-No.
-
-A new ReplicaSet is normally created when the Deployment's **Pod template** changes:
-
-```text
-.spec.template
-```
-
-Examples:
-
-- Container image changes
-- Environment variable changes
-- Command or arguments change
-- Resource requests or limits change
-- Probe configuration changes
-- Pod-template labels or annotations change
-- Volume mounts change
-- Security context changes
-
-A pure change to `spec.replicas` normally scales the relevant ReplicaSet and does not require a new Pod-template revision.
-
-A change only to Deployment metadata, outside `.spec.template`, does not by itself replace Pods.
-
----
-
-## 7.3 ReplicaSet controller creates Pod objects
-
-The ReplicaSet controller watches ReplicaSets and Pods.
-
-Suppose it sees:
-
-```text
-Desired Pods: 3
-Existing matching Pods: 0
-Difference: 3
-```
-
-It creates three Pod API objects.
-
-At this stage, those Pods usually have no assigned node:
+At first, these Pods are normally unscheduled:
 
 ```yaml
-spec:
-  nodeName: ""
 status:
   phase: Pending
 ```
 
-The ReplicaSet controller creates Pod records. It still does not directly start containers.
+and:
+
+```yaml
+spec:
+  nodeName: ""
+```
+
+The ReplicaSet controller creates Pod API objects.
+
+It does not choose nodes and does not start containers.
 
 ---
 
-## 7.4 Rolling update behavior
+# Step 18: The Scheduler Finds the Unscheduled Pods
 
-When `.spec.template` changes, the Deployment controller creates a new ReplicaSet and gradually shifts replicas.
+The kube-scheduler watches for Pods without an assigned node.
+
+For each Pod, it performs:
+
+```text
+Filtering
+   ↓
+Scoring
+   ↓
+Binding
+```
+
+---
+
+## Filtering Nodes
+
+The scheduler removes nodes that cannot run the Pod.
+
+Reasons can include:
+
+- Insufficient CPU
+- Insufficient memory
+- Node selector mismatch
+- Node affinity mismatch
+- Untolerated taints
+- Volume restrictions
+- Host port conflicts
+- Unschedulable node
+- Pod anti-affinity rules
 
 Example:
 
 ```text
-Old ReplicaSet: nginx:1.26
-New ReplicaSet: nginx:1.27
-Desired replicas: 3
-maxSurge: 1
-maxUnavailable: 0
+Worker 1: rejected because of insufficient memory
+Worker 2: accepted
+Worker 3: rejected because of an untolerated taint
 ```
-
-Possible progression:
-
-```text
-Step 0: old=3, new=0, available=3
-Step 1: old=3, new=1, available=3 or 4
-Step 2: old=2, new=2, available=3 or 4
-Step 3: old=1, new=3, available=3 or 4
-Step 4: old=0, new=3, available=3
-```
-
-The exact sequence depends on readiness, scheduling, termination, and controller timing.
-
-Kubernetes does not simply delete every old Pod and then hope the new version develops confidence.
 
 ---
 
-## 8. Phase 5: Pods Are Scheduled
+## Scoring Nodes
 
-The scheduler watches for Pods that have no assigned node.
+The remaining nodes are scored.
 
-For every pending Pod, it performs two broad steps.
-
-## 8.1 Filtering
-
-Nodes that cannot run the Pod are removed from consideration.
-
-Reasons can include:
-
-- Insufficient CPU or memory
-- Node selector mismatch
-- Required node affinity mismatch
-- Taints not tolerated
-- Pod anti-affinity requirements
-- Volume topology restrictions
-- Unschedulable or unhealthy node
-- Host port conflicts
-- Other scheduling constraints
-
-## 8.2 Scoring
-
-The remaining feasible nodes are scored according to configured scheduling plugins.
-
-Factors can include:
+Factors may include:
 
 - Resource balance
+- Requested CPU and memory
 - Affinity preferences
+- Topology spread
 - Image locality
-- Topology spreading
-- Requested resource fit
-- Custom scheduler configuration
+- Scheduler plugin configuration
 
-## 8.3 Binding
+The highest-scoring suitable node is selected.
 
-The scheduler writes a binding decision through the API server.
+---
+
+## Binding the Pod
+
+The scheduler records the chosen node through the API server.
 
 Conceptually:
 
@@ -812,168 +785,174 @@ spec:
   nodeName: worker-2
 ```
 
-The updated Pod assignment is persisted. The scheduler's responsibility is now largely complete for that Pod.
+The assignment is persisted in etcd.
 
-If no node is suitable, the Pod remains `Pending`, commonly with an event such as:
-
-```text
-0/5 nodes are available: 3 Insufficient memory, 2 node(s) had untolerated taint
-```
+The scheduler does not contact the container runtime directly.
 
 ---
 
-## 9. Phase 6: Kubelet Starts the Containers
+# Step 19: Kubelet Notices the Assigned Pod
 
 Every worker node runs a kubelet.
 
-The kubelet watches for Pods assigned to its node. When it notices the newly assigned Pod, it works to realize that Pod specification locally.
+The kubelet watches for Pods assigned to its node.
 
-```mermaid
-flowchart TB
-    PODSPEC["Assigned Pod specification"]
-    K["kubelet"]
-    VOL["Prepare Secrets, ConfigMaps and volumes"]
-    SANDBOX["Create Pod sandbox"]
-    NET["Configure network and Pod IP"]
-    IMG["Pull container image if required"]
-    CREATE["Create container"]
-    START["Start container"]
-    PROBE["Run startup, readiness and liveness probes"]
-    STATUS["Report status to API server"]
+When `worker-2` sees:
 
-    PODSPEC --> K
-    K --> VOL
-    VOL --> SANDBOX
-    SANDBOX --> NET
-    NET --> IMG
-    IMG --> CREATE
-    CREATE --> START
-    START --> PROBE
-    PROBE --> STATUS
+```yaml
+spec:
+  nodeName: worker-2
 ```
 
-## 9.1 Volumes and configuration are prepared
+it begins creating the Pod locally.
 
-Depending on the Pod, kubelet may need to:
-
-- Retrieve referenced Secrets and ConfigMaps
-- Mount projected service-account credentials
-- Mount local or network volumes
-- Coordinate with CSI node plugins
-- Wait for a volume attachment controller and CSI attach operation
-- Create container filesystem mounts
-
-A missing Secret or unmountable volume can prevent the container from starting even though the Deployment was accepted successfully.
+The kubelet is responsible for making the Pod specification real on that node.
 
 ---
 
-## 9.2 Pod sandbox is created
+# Step 20: Volumes and Configuration Are Prepared
 
-The kubelet asks the container runtime through the Container Runtime Interface, or CRI, to create the Pod sandbox.
+Before starting the container, the kubelet may prepare:
 
-The sandbox normally supplies the shared Pod-level environment, including:
+- ConfigMaps
+- Secrets
+- Service account credentials
+- Persistent volumes
+- Projected volumes
+- Empty directories
+- Container filesystem mounts
+
+When persistent storage is used, Kubernetes may involve CSI components.
+
+If a required Secret, ConfigMap, or volume is unavailable, the Pod can remain pending or fail during startup.
+
+---
+
+# Step 21: The Pod Sandbox Is Created
+
+The kubelet asks the container runtime through the Container Runtime Interface, or CRI, to create a Pod sandbox.
+
+The Pod sandbox normally provides:
 
 - Network namespace
+- Shared Pod environment
 - Pod IP context
-- Linux namespaces
-- Shared settings used by containers in the Pod
+- Linux namespace setup
+- Infrastructure needed by containers in the Pod
+
+Common runtimes include containerd and CRI-O.
+
+The kubelet does not directly execute the container image itself.
 
 ---
 
-## 9.3 Networking is configured
+# Step 22: Pod Networking Is Configured
 
-The runtime and node networking stack invoke the configured CNI implementation.
+The container runtime invokes the configured CNI networking plugin.
 
-This can involve:
+The network setup may include:
 
-- Allocating a Pod IP address
-- Creating virtual interfaces
+- Allocating a Pod IP
+- Creating virtual network interfaces
 - Connecting the Pod to the node network
 - Installing routes
-- Applying network policy or dataplane rules
-- Configuring overlay or routed networking
+- Configuring an overlay network
+- Applying network-policy rules
+- Configuring the networking dataplane
 
-The exact implementation differs among CNI plugins.
+The result is that the Pod receives network connectivity according to the cluster's CNI implementation.
 
 ---
 
-## 9.4 Image is pulled
+# Step 23: The Container Image Is Pulled
 
-If the image is not usable from the local cache, the runtime pulls it from the registry:
+The runtime checks whether the image is already available locally:
 
 ```text
 nginx:1.27
 ```
 
+If required, it pulls the image from a registry.
+
 Possible failures include:
-
-- Wrong image name or tag
-- Registry authentication failure
-- Rate limiting
-- Network failure
-- Missing architecture variant
-- Invalid image
-- Certificate problems
-
-These often appear as:
 
 ```text
 ErrImagePull
 ImagePullBackOff
 ```
 
+Common causes are:
+
+- Wrong image name
+- Wrong tag
+- Private registry authentication failure
+- Registry unavailable
+- Network failure
+- Unsupported image architecture
+
 ---
 
-## 9.5 Containers are created and started
+# Step 24: The Container Is Created
 
-The runtime creates the container with:
+The runtime creates the container with settings from the Pod specification.
 
-- Command and arguments
+These can include:
+
+- Container command
+- Arguments
 - Environment variables
-- Resource constraints
-- Mounts
-- Linux security settings
-- User and group settings
-- Capabilities
-- Namespace configuration
+- CPU requests and limits
+- Memory requests and limits
+- Volume mounts
+- Security context
+- User and group
+- Linux capabilities
+- Container ports
 
-It then starts the container process.
-
----
-
-## 9.6 Probes determine health and readiness
-
-The kubelet executes configured probes.
-
-### Startup probe
-
-Answers:
-
-> Has the application completed startup?
-
-While a startup probe is failing, liveness and readiness handling can be delayed according to probe semantics.
-
-### Readiness probe
-
-Answers:
-
-> Should this Pod currently receive normal traffic?
-
-A running container can still be **NotReady**.
-
-### Liveness probe
-
-Answers:
-
-> Is the container unhealthy enough that kubelet should restart it?
-
-The Deployment's availability depends heavily on readiness, not merely on whether a process exists.
+The runtime then starts the container process.
 
 ---
 
-## 10. Phase 7: Status Flows Back to the Control Plane
+# Step 25: Probes Are Executed
 
-Kubelet reports Pod status through the API server.
+The kubelet runs the configured health probes.
+
+For the example, a readiness probe is configured:
+
+```yaml
+readinessProbe:
+  httpGet:
+    path: /
+    port: 80
+```
+
+The readiness probe answers:
+
+```text
+Should this Pod receive normal application traffic?
+```
+
+A container can be running while the Pod is still not ready.
+
+Possible Pod state:
+
+```text
+STATUS: Running
+READY: 0/1
+```
+
+After readiness succeeds:
+
+```text
+STATUS: Running
+READY: 1/1
+```
+
+---
+
+# Step 26: Kubelet Reports Pod Status
+
+The kubelet sends Pod status updates to the API server.
 
 Example:
 
@@ -992,9 +971,28 @@ status:
       status: "True"
 ```
 
-The status is persisted separately from the user's desired specification.
+The API server stores the status in etcd.
 
-Controllers then aggregate state upward:
+---
+
+# Step 27: ReplicaSet and Deployment Status Are Updated
+
+The ReplicaSet controller observes that the Pods now exist and become ready.
+
+The Deployment controller updates the Deployment status.
+
+Example:
+
+```yaml
+status:
+  observedGeneration: 1
+  replicas: 3
+  updatedReplicas: 3
+  readyReplicas: 3
+  availableReplicas: 3
+```
+
+The status flows upward:
 
 ```text
 Container status
@@ -1006,180 +1004,36 @@ ReplicaSet status
 Deployment status
 ```
 
-A Deployment status can include:
-
-```yaml
-status:
-  observedGeneration: 1
-  replicas: 3
-  updatedReplicas: 3
-  readyReplicas: 3
-  availableReplicas: 3
-```
-
-### `generation` vs `observedGeneration`
-
-- `metadata.generation` represents a version of desired specification.
-- `status.observedGeneration` indicates the generation the controller has processed.
-
-If:
+The cluster has now converged toward the requested state:
 
 ```text
-observedGeneration < generation
+Desired replicas: 3
+Available replicas: 3
 ```
-
-the controller has not yet fully observed the newest desired specification.
-
-### Optional Service integration
-
-A Deployment does not automatically create a Service.
-
-If a matching Service already exists:
-
-- EndpointSlice controllers track matching Pods.
-- Readiness normally affects whether a Pod is considered a usable endpoint.
-- The cluster networking dataplane routes Service traffic to eligible endpoints.
-
-Without a Service or another ingress mechanism, the Pods can be healthy but not conveniently reachable by clients.
 
 ---
 
-## 11. What Changes Cause a New Rollout?
+# Important Distinction
 
-| Manifest change | Deployment API updated? | New ReplicaSet? | Existing Pods replaced? |
-|---|---:|---:|---:|
-| First creation | Yes | Yes | New Pods created |
-| Change container image | Yes | Yes | Yes, according to strategy |
-| Change environment variable | Yes | Yes | Yes |
-| Change CPU or memory settings | Yes | Yes | Yes |
-| Change readiness probe | Yes | Yes | Yes |
-| Change `.spec.template.metadata.annotations` | Yes | Yes | Yes |
-| Change only `spec.replicas` | Yes | Usually no | Pods added or removed |
-| Change only Deployment metadata label | Yes | No | No |
-| Reapply identical effective manifest | No meaningful spec change | No | No |
-| Keep the same image tag without changing template | Possibly unchanged | No | Existing Pods are not restarted |
-| Attempt to change immutable selector | Rejected | No | No |
-
-### Important image-tag trap
-
-Assume the Deployment still contains:
-
-```yaml
-image: myapp:latest
-```
-
-You push a new image to the same tag and run:
-
-```bash
-kubectl apply -f deployment.yaml
-```
-
-If the Pod template did not change, Kubernetes may report:
+A successful command:
 
 ```text
-unchanged
+deployment.apps/web created
 ```
 
-Existing Pods are not restarted merely because a registry tag now points to different bytes.
-
-To deliberately trigger a restart:
-
-```bash
-kubectl rollout restart deployment/web -n demo
-```
-
-A stronger production practice is to use immutable image references, such as a unique version tag or digest.
-
----
-
-## 12. Client-Side Apply vs Server-Side Apply
-
-The plain command:
-
-```bash
-kubectl apply -f deployment.yaml
-```
-
-uses the traditional client-side apply behavior unless server-side apply is requested.
-
-## 12.1 Client-side apply
-
-```bash
-kubectl apply -f deployment.yaml
-```
-
-Main characteristics:
-
-- `kubectl` calculates the patch.
-- It compares the new manifest, live object, and last-applied annotation.
-- It stores `kubectl.kubernetes.io/last-applied-configuration`.
-- The default field manager is associated with client-side apply.
-- Field ownership is less precise than server-side apply.
-
-## 12.2 Server-side apply
-
-```bash
-kubectl apply --server-side -f deployment.yaml
-```
-
-Main characteristics:
-
-- The API server performs apply merging.
-- Field ownership is tracked in `metadata.managedFields`.
-- Multiple managers can own different fields.
-- Conflicting changes to another manager's field can be rejected.
-- A conflict can be overridden explicitly, with care:
-
-```bash
-kubectl apply \
-  --server-side \
-  --force-conflicts \
-  --field-manager=my-deployer \
-  -f deployment.yaml
-```
-
-## 12.3 Comparison
-
-| Area | Client-side apply | Server-side apply |
-|---|---|---|
-| Merge performed by | `kubectl` | API server |
-| Historical basis | Last-applied annotation | Managed field ownership |
-| Ownership granularity | Less explicit | Field-level |
-| Conflict behavior | Often overwrite-oriented | Explicit ownership conflicts |
-| Collaboration among tools | Easier to trip over | Better modeled |
-| Command | `kubectl apply -f ...` | `kubectl apply --server-side -f ...` |
-
-Whichever mode is used, the downstream Deployment, ReplicaSet, scheduler, kubelet, runtime, CNI, and status-reconciliation path is broadly the same after the object is stored.
-
----
-
-## 13. What `kubectl apply` Does Not Wait For
-
-`kubectl apply` primarily waits for the API request to be accepted or rejected.
-
-It does not normally wait until:
-
-- The Deployment controller creates the ReplicaSet
-- The ReplicaSet controller creates all Pods
-- The scheduler assigns nodes
-- Images finish pulling
-- Volumes finish mounting
-- Containers start
-- Readiness probes succeed
-- The Deployment reaches full availability
-
-Therefore this can happen:
+means:
 
 ```text
-$ kubectl apply -f deployment.yaml
-deployment.apps/web configured
-
-$ kubectl get pods -n demo
-NAME                   READY   STATUS             RESTARTS   AGE
-web-7c8f6d9b64-x2abc   0/1     ImagePullBackOff   0          8s
+The Deployment object was created successfully.
 ```
 
-The first command was not lying. The desired object was accepted. It simply did not promise that the application would behave itself.
+It does not guarantee:
+
+- Pods have been scheduled
+- Images have been pulled
+- Containers have started
+- Readiness probes have passed
+- The application is available
 
 To wait for rollout completion:
 
@@ -1187,7 +1041,7 @@ To wait for rollout completion:
 kubectl rollout status deployment/web -n demo --timeout=5m
 ```
 
-Or wait for the Deployment's Available condition:
+To wait for the Deployment to become available:
 
 ```bash
 kubectl wait \
@@ -1197,78 +1051,167 @@ kubectl wait \
   --timeout=5m
 ```
 
-A practical CI/CD pattern is:
+---
+
+# Object Ownership Diagram
+
+```mermaid
+flowchart TB
+    DEPLOY["Deployment<br/>web"]
+    RS["ReplicaSet<br/>web-7c8f6d9b64"]
+    POD1["Pod 1"]
+    POD2["Pod 2"]
+    POD3["Pod 3"]
+
+    DEPLOY -->|"owns"| RS
+    RS -->|"owns"| POD1
+    RS -->|"owns"| POD2
+    RS -->|"owns"| POD3
+```
+
+The ownership chain enables Kubernetes to:
+
+- Track resources belonging to the Deployment
+- Aggregate status
+- Scale the correct Pods
+- Clean up dependent resources
+- Manage future revisions
+
+---
+
+# Component Responsibilities
+
+| Component | Responsibility |
+|---|---|
+| `kubectl` | Reads the manifest and sends the create request |
+| kube-apiserver | Authenticates, authorizes, admits, validates, and stores API objects |
+| etcd | Persists Kubernetes cluster state |
+| Deployment controller | Creates and manages the ReplicaSet |
+| ReplicaSet controller | Creates the requested number of Pods |
+| kube-scheduler | Selects a worker node for each Pod |
+| kubelet | Makes assigned Pods run on its node |
+| Container runtime | Pulls images and creates containers |
+| CNI plugin | Configures Pod networking |
+| CSI components | Handle volumes when required |
+| Probe manager in kubelet | Checks startup, readiness, and liveness |
+| Controllers and kubelet | Continuously report and reconcile status |
+
+---
+
+# What Is Not Created Automatically?
+
+A Deployment automatically leads to:
+
+```text
+Deployment
+→ ReplicaSet
+→ Pods
+```
+
+A Deployment does not automatically create:
+
+- Service
+- Ingress
+- ConfigMap
+- Secret
+- PersistentVolumeClaim
+- NetworkPolicy
+- HorizontalPodAutoscaler
+
+These resources must be defined separately when required.
+
+For example, without a Service, the Pods can run successfully but may not have a stable virtual IP or DNS name for clients.
+
+---
+
+# Commands to Observe the Creation Process
+
+## Apply the Deployment
 
 ```bash
-set -euo pipefail
-
 kubectl apply -f deployment.yaml
+```
+
+## Watch the Deployment
+
+```bash
+kubectl get deployment web -n demo -w
+```
+
+## Watch ReplicaSets
+
+```bash
+kubectl get replicasets -n demo -w
+```
+
+## Watch Pods
+
+```bash
+kubectl get pods -n demo -w
+```
+
+## Watch Pods with node placement
+
+```bash
+kubectl get pods -n demo -o wide -w
+```
+
+## Wait for rollout completion
+
+```bash
 kubectl rollout status deployment/web -n demo --timeout=5m
+```
+
+## Inspect the Deployment
+
+```bash
+kubectl describe deployment web -n demo
+```
+
+## Inspect the ReplicaSet
+
+```bash
+kubectl get rs -n demo
+kubectl describe rs <replicaset-name> -n demo
+```
+
+## Inspect a Pod
+
+```bash
+kubectl describe pod <pod-name> -n demo
+```
+
+## Check container logs
+
+```bash
+kubectl logs <pod-name> -n demo
+```
+
+## Check recent events
+
+```bash
+kubectl get events -n demo --sort-by=.metadata.creationTimestamp
 ```
 
 ---
 
-## 14. Failure Points and Troubleshooting
+# Common Creation Failures
 
-## 14.1 Local YAML or client validation failure
+## Authentication Failure
 
 Example:
 
 ```text
-error: error parsing deployment.yaml
+Unauthorized
 ```
 
-Check:
-
-```bash
-kubectl apply --dry-run=client -f deployment.yaml
-```
-
-This checks client-side processing but does not exercise all server policies.
+The request is stopped before creation.
 
 ---
 
-## 14.2 Server-side schema or admission rejection
+## Authorization Failure
 
-Check without persisting:
-
-```bash
-kubectl apply --dry-run=server -f deployment.yaml
-```
-
-This sends the request through server-side processing but does not store it.
-
-Useful because it can catch:
-
-- Admission policy failures
-- Unsupported fields
-- Namespace-specific restrictions
-- Cluster-side validation
-- Defaults and mutations
-
----
-
-## 14.3 Authentication failure
-
-Typical symptom:
-
-```text
-You must be logged in to the server
-```
-
-Check:
-
-```bash
-kubectl config current-context
-kubectl config view --minify
-kubectl cluster-info
-```
-
----
-
-## 14.4 Authorization failure
-
-Typical symptom:
+Example:
 
 ```text
 Error from server (Forbidden)
@@ -1278,66 +1221,54 @@ Check:
 
 ```bash
 kubectl auth can-i create deployments -n demo
-kubectl auth can-i patch deployments -n demo
 ```
 
 ---
 
-## 14.5 Admission webhook failure
+## Admission Rejection
 
-Typical symptoms:
+Example reasons:
 
-```text
-failed calling webhook
-context deadline exceeded
-admission webhook denied the request
-```
+- Missing resource limits
+- Disallowed image registry
+- Missing required labels
+- Security-policy violation
 
-The API object is not stored if the request is rejected.
-
----
-
-## 14.6 ResourceQuota or LimitRange rejection
-
-Typical symptoms:
-
-```text
-exceeded quota
-must specify limits.cpu
-```
-
-Check:
-
-```bash
-kubectl get resourcequota -n demo
-kubectl describe resourcequota -n demo
-kubectl get limitrange -n demo
-kubectl describe limitrange -n demo
-```
+The Deployment is not stored.
 
 ---
 
-## 14.7 Deployment accepted but Pod is Pending
+## Invalid Deployment
+
+Example reasons:
+
+- Selector does not match Pod labels
+- Invalid field type
+- Missing container image
+- Invalid resource name
+
+The API server rejects the request.
+
+---
+
+## Pods Remain Pending
 
 Possible reasons:
 
-- Insufficient resources
-- Taints and tolerations
-- Affinity rules
-- Unbound persistent volume claim
-- Topology restrictions
-- No suitable node
+- No node has enough resources
+- Taints are not tolerated
+- Volume cannot be mounted
+- Affinity rules cannot be satisfied
 
 Check:
 
 ```bash
 kubectl describe pod <pod-name> -n demo
-kubectl get events -n demo --sort-by=.lastTimestamp
 ```
 
 ---
 
-## 14.8 Image pull failure
+## Image Pull Failure
 
 Possible statuses:
 
@@ -1350,20 +1281,11 @@ Check:
 
 ```bash
 kubectl describe pod <pod-name> -n demo
-kubectl get secret -n demo
 ```
-
-Inspect:
-
-- Image name
-- Tag or digest
-- Registry credentials
-- `imagePullSecrets`
-- Node-to-registry connectivity
 
 ---
 
-## 14.9 Container starts but crashes
+## Container Crash
 
 Possible statuses:
 
@@ -1378,151 +1300,32 @@ Check:
 ```bash
 kubectl logs <pod-name> -n demo
 kubectl logs <pod-name> -n demo --previous
-kubectl describe pod <pod-name> -n demo
 ```
 
 ---
 
-## 14.10 Pod runs but is not Ready
+## Pod Is Running but Not Ready
 
 Check:
 
 ```bash
-kubectl get pod <pod-name> -n demo
 kubectl describe pod <pod-name> -n demo
 kubectl logs <pod-name> -n demo
 ```
 
-Common reasons:
+Common causes:
 
-- Readiness endpoint returns failure
-- Wrong probe port
-- Application startup takes longer than probe settings allow
+- Incorrect readiness path
+- Incorrect readiness port
+- Application still starting
 - Dependency unavailable
-- Network policy blocks a dependency
-- Required configuration is missing
+- Configuration missing
 
 ---
 
-## 14.11 Rollout stalls
+# Compact Interview Answer
 
-Check:
-
-```bash
-kubectl rollout status deployment/web -n demo
-kubectl describe deployment web -n demo
-kubectl get rs -n demo
-kubectl get pods -n demo -o wide
-```
-
-A stalled Deployment can be marked as failing to progress after `progressDeadlineSeconds`.
-
-Rollback:
-
-```bash
-kubectl rollout undo deployment/web -n demo
-```
-
----
-
-## 15. Useful Commands to Watch Every Stage
-
-## 15.1 Preview the difference
-
-```bash
-kubectl diff -f deployment.yaml
-```
-
-## 15.2 Server-side validation without persistence
-
-```bash
-kubectl apply --dry-run=server -f deployment.yaml
-```
-
-## 15.3 Apply the Deployment
-
-```bash
-kubectl apply -f deployment.yaml
-```
-
-## 15.4 Watch the Deployment
-
-```bash
-kubectl get deployment web -n demo -w
-```
-
-## 15.5 Watch ReplicaSets
-
-```bash
-kubectl get replicasets -n demo -w
-```
-
-## 15.6 Watch Pods
-
-```bash
-kubectl get pods -n demo -w
-```
-
-## 15.7 Follow rollout progress
-
-```bash
-kubectl rollout status deployment/web -n demo --timeout=5m
-```
-
-## 15.8 Inspect ownership
-
-```bash
-kubectl get deployment web -n demo -o yaml
-kubectl get rs -n demo -o yaml
-kubectl get pods -n demo -o yaml
-```
-
-Look for:
-
-```yaml
-metadata:
-  ownerReferences:
-```
-
-## 15.9 Inspect events
-
-```bash
-kubectl get events -n demo --sort-by=.metadata.creationTimestamp
-```
-
-## 15.10 Inspect the three apply states
-
-Current manifest:
-
-```bash
-cat deployment.yaml
-```
-
-Live object:
-
-```bash
-kubectl get deployment web -n demo -o yaml
-```
-
-Last client-side applied configuration:
-
-```bash
-kubectl apply view-last-applied deployment/web -n demo
-```
-
-## 15.11 Inspect server-side field ownership
-
-```bash
-kubectl get deployment web -n demo \
-  -o yaml \
-  --show-managed-fields
-```
-
----
-
-## 16. Compact Interview Answer
-
-When I run:
+When the Deployment does not already exist and I run:
 
 ```bash
 kubectl apply -f deployment.yaml
@@ -1531,44 +1334,61 @@ kubectl apply -f deployment.yaml
 the following happens:
 
 1. `kubectl` reads the YAML and kubeconfig.
-2. It resolves the Deployment's API endpoint, namespace, and credentials.
-3. For client-side apply, it compares the new manifest with the live object and the previous last-applied configuration.
-4. It sends either a create request or an apply patch to the Kubernetes API server over HTTPS.
-5. The API server authenticates the caller and authorizes the operation.
-6. Mutating and validating admission controls process the request.
-7. The API server performs object validation, defaulting, and conversion.
-8. The accepted Deployment is persisted in etcd.
-9. The Deployment controller observes it and creates or updates a ReplicaSet.
-10. The ReplicaSet controller creates the required Pod objects.
-11. The scheduler assigns each unscheduled Pod to a suitable node.
-12. The kubelet on that node prepares volumes and networking, asks the container runtime to pull the image, and starts the containers.
-13. The kubelet reports Pod conditions and container status back through the API server.
-14. ReplicaSet and Deployment controllers update their status until the observed state matches the declared state.
-
-The central point is that `kubectl apply` changes the **desired state** stored in the cluster. Controllers and node agents then reconcile the real system asynchronously. A successful `apply` confirms API acceptance, not necessarily application readiness.
+2. It discovers the Deployment API endpoint.
+3. It checks for the Deployment and receives `NotFound`.
+4. It prepares a new Deployment object.
+5. It sends an HTTPS `POST` request to the API server.
+6. The API server authenticates the user.
+7. The API server authorizes the `create` operation.
+8. Mutating and validating admission controls process the object.
+9. Kubernetes validates and defaults the Deployment.
+10. The API server stores the Deployment in etcd.
+11. `kubectl` prints `deployment.apps/web created`.
+12. The Deployment controller creates a ReplicaSet.
+13. The ReplicaSet controller creates the required Pods.
+14. The scheduler assigns each Pod to a worker node.
+15. The kubelet on each selected node prepares volumes and networking.
+16. The container runtime pulls the image and starts the container.
+17. The kubelet runs health probes.
+18. Pod status is reported through the API server.
+19. ReplicaSet and Deployment status are updated.
+20. Reconciliation continues until the requested replicas are available.
 
 ---
 
-## One-Line Mental Model
+# One-Line Mental Model
 
 ```text
-YAML → API request → authenticated and admitted object → etcd → controllers → ReplicaSet → Pods → scheduler → kubelet → runtime → ready application
+Manifest → GET returns NotFound → POST Deployment → API validation → etcd → Deployment controller → ReplicaSet → Pods → scheduler → kubelet → runtime → ready application
 ```
 
 ---
 
-## Reference Basis
+# Final Summary
 
-This guide was checked against the official Kubernetes documentation for:
+For a new Deployment, `kubectl apply` performs a create operation.
 
-- `kubectl apply`
-- Declarative management of Kubernetes objects
-- Kubernetes components and cluster architecture
-- Admission control
-- Deployments and ReplicaSets
-- Kubernetes scheduler
-- Pod lifecycle
-- Server-Side Apply
-- `kubectl rollout status`
+The command creates only the Deployment API object directly.
 
-Checked in July 2026.
+The remaining resources are created asynchronously by Kubernetes control loops:
+
+```text
+kubectl
+   ↓
+Deployment
+   ↓
+ReplicaSet
+   ↓
+Pods
+   ↓
+Node assignment
+   ↓
+Containers
+```
+
+The most important point is:
+
+```text
+kubectl apply declares the desired state.
+Kubernetes controllers and node agents make that state real.
+```
