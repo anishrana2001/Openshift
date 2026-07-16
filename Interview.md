@@ -110,21 +110,33 @@ OpenShift includes all Kubernetes core components plus OpenShift-specific operat
 
 ---
 
-## 1.4 Is Project and Namespace same in OpenShift?
+### 1.4 Are Project and Namespace the Same in OpenShift?
 
-### Interview Answer
+**Interview Answer:**
 
-Technically, an OpenShift Project is backed by a Kubernetes Namespace. So at the Kubernetes level, they are closely related.
+They are almost the same, but the terminology is different.
 
-But in OpenShift, a Project is a user-facing abstraction around a Namespace. It includes additional OpenShift behavior such as project templates, display names, annotations, self-service project creation, and role bindings.
+A **Namespace** is the Kubernetes resource used to separate applications, users, and resources inside a cluster.
 
-### Good Interview Line
+A **Project** is OpenShift’s user-friendly representation of a Kubernetes Namespace. When we create an OpenShift Project, OpenShift creates the corresponding Namespace and can also apply permissions, annotations, resource limits, and predefined project settings.
 
-> Every OpenShift Project is a Kubernetes Namespace, but not every Namespace is treated as a user-facing OpenShift Project with the same self-service and governance features.
+Therefore, the Namespace provides the technical isolation, while the Project provides an easier way for developers and teams to access and manage that isolated environment.
+
+**Best Interview Line:**
+
+> A Namespace is the Kubernetes foundation, while a Project is OpenShift’s user-facing way of managing that Namespace.
+
+**Example:**
+
+When we run:
+
+`oc new-project development`
+
+OpenShift creates a Namespace named `development`, gives the user access to it, and switches the current working project to it.
 
 ---
 
-## 1.5 What is the difference between Project and Namespace?
+## 1.5.1 What is the difference between Project and Namespace?
 
 ### Answer
 
@@ -146,6 +158,16 @@ oc get projects
 oc get namespaces
 ```
 
+## 1.5.2 Can we create multiple namespace inside the Project ?
+
+OpenShift Cluster
+├── Project: development   → Namespace: development
+├── Project: testing       → Namespace: testing
+└── Project: production    → Namespace: production
+
+**Best Interview Line:**
+
+> No, we cannot create multiple namespaces inside an OpenShift Project because a Project itself represents one Kubernetes Namespace. To create separate isolation boundaries, we create multiple Projects or Namespaces in the cluster.
 ---
 
 ## 1.6 What is SCC in OpenShift?
