@@ -161,8 +161,11 @@ oc get namespaces
 ## 1.5.2 Can we create multiple namespace inside the Project ?
 
 OpenShift Cluster
+
 ├── Project: development   → Namespace: development
+
 ├── Project: testing       → Namespace: testing
+
 └── Project: production    → Namespace: production
 
 **Best Interview Line:**
