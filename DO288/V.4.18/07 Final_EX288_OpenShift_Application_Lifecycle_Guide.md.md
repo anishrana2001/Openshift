@@ -1,16 +1,3 @@
-I have created the `.md` content in an **instructor style** for a GitHub README / learning guide. The objective is not just listing EX288 topics, but showing the **relationship between OpenShift resources**:
-
-**Developer → GitLab → Builder Image → BuildConfig → ImageStream → Deployment → Service → Route → Trigger → Tekton Pipeline → Automated CI/CD**
-
-The structure follows EX288 (OpenShift Application Developer) V4.14 concepts and the Red Hat DO288 learning flow. 
-
-You can directly save this as:
-
-```
-EX288_OpenShift_Application_Lifecycle_Guide.md
-```
-
----
 
 ```markdown
 # 🚀 EX288 V4.14 - OpenShift Application Developer Complete Flow Guide
