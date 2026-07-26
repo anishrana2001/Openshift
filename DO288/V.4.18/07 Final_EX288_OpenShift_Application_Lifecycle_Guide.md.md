@@ -4,8 +4,6 @@
 
 ## From Developer Code to Running Application + Tekton CI/CD
 
-![OpenShift](https://img.shields.io/badge/OpenShift-EX288-red)
-![Version](https://img.shields.io/badge/OpenShift-Version%204.14-blue)
 ```
 ---
 
