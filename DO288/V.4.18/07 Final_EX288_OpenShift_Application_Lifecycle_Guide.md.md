@@ -6,38 +6,37 @@
 
 ![OpenShift](https://img.shields.io/badge/OpenShift-EX288-red)
 ![Version](https://img.shields.io/badge/OpenShift-Version%204.14-blue)
-
+```
 ---
 
 # 🎯 Learning Goal
 
 By the end of this guide, a developer should understand:
 
-```
 
-How does my source code become a running application in OpenShift?
 
-How does OpenShift create:
+## How does my source code become a running application in OpenShift?
+
+### How does OpenShift create:
 - Image
 - Container
 - Deployment
 - Service
 - Route
 
-How do triggers automate deployment?
+## How do triggers automate deployment?
 
-Why do we use Tekton Pipelines?
+## Why do we use Tekton Pipelines?
 
-```
+
 
 ---
 
 # 🧠 Big Picture: Complete Application Journey
 
 
-```
 
-```
+
           👨‍💻 Developer
 
 
@@ -127,9 +126,6 @@ Why do we use Tekton Pipelines?
 
 
          🌎 User Access
-```
-
-```
 
 ---
 
@@ -138,7 +134,7 @@ Why do we use Tekton Pipelines?
 
 Example:
 
-```
+
 
 developer/
 |
@@ -153,7 +149,7 @@ developer/
 |
 +--- README.md
 
-```
+
 
 
 Developer pushes code:
