@@ -1,4 +1,3 @@
-```markdown
 # EX288 — Ways to Create an Application on OpenShift
 
 ## Overview
@@ -451,4 +450,4 @@ But in EX288, the most practical methods are usually:
 Other methods are valid, but they are usually secondary.
 
 If you prepare with that priority order, your approach will be more aligned with the exam.
-```
+
