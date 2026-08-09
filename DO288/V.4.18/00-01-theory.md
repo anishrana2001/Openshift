@@ -1,7 +1,3 @@
-Certainly! Here's the updated Markdown content with the image integrated into the relevant section to help students understand the OpenShift architecture better:
-
----
-
 # EX288 — Ways to Create an Application on OpenShift
 
 ## Overview
@@ -107,7 +103,7 @@ If the exam provides a ready container image, this is often faster than manually
 
 To better understand how applications are deployed, consider the architecture of an OpenShift cluster:
 
-![OpenShift Architecture](https://via.placeholder.com/600x400.png?text=OpenShift+Cluster+Architecture)
+https://via.placeholder.com/600x400.png?text=OpenShift+Cluster+Architecture
 
 *This diagram illustrates the core components:*
 
