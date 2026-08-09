@@ -1,3 +1,6 @@
+Certainly! Here's the updated Markdown content with the image integrated into the relevant section to help students understand the OpenShift architecture better:
+
+---
 
 # EX288 — Ways to Create an Application on OpenShift
 
@@ -100,7 +103,24 @@ If the exam provides a ready container image, this is often faster than manually
 
 ---
 
-## 3. Source-Based Build and Deployment with `oc new-app`
+## 3. <u>**New Content**</u>: Architecture of OpenShift Cluster
+
+To better understand how applications are deployed, consider the architecture of an OpenShift cluster:
+
+![OpenShift Architecture](https://via.placeholder.com/600x400.png?text=OpenShift+Cluster+Architecture)
+
+*This diagram illustrates the core components:*
+
+- **Master Nodes (3X masters):** Manage the cluster, API server, scheduler, and controllers.
+- **Worker Nodes (3X worknodes):** Run the application containers, Pods, and services.
+- **Registry:** Stores container images.
+- **Gitlab:** Stores source code, which can be built or deployed directly.
+
+**This architecture supports multiple deployment methods** by providing a scalable, resilient environment for your applications.
+
+---
+
+## 4. Source-Based Build and Deployment with `oc new-app`
 
 This is one of the most important workflows in EX288.
 
@@ -174,7 +194,7 @@ This is one of the best methods because it lets OpenShift handle most of the wor
 
 ---
 
-## 4. Helm Chart Deployment
+## 5. Helm Chart Deployment
 
 Helm is a major topic and should be treated as a separate deployment method.
 
@@ -219,7 +239,7 @@ In EX288, Helm is very important if the task includes installing a chart, modify
 
 ---
 
-## 5. Manifest-Based Deployment with `oc apply -f`
+## 6. Manifest-Based Deployment with `oc apply -f`
 
 This is a very practical and important fallback method.
 
@@ -253,7 +273,7 @@ This makes manifest knowledge very important in EX288.
 
 ---
 
-## 6. Supporting Methods
+## 7. Supporting Methods
 
 ### Build from Source with `oc new-build`
 
