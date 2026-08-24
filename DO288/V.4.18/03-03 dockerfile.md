@@ -38,99 +38,23 @@ git push -u origin main
 - The base image stream `httpd:2.4-ubi9` must be used from the `openshift` namespace.
 - The application binary is available at `https://raw.githubusercontent.com/anishrana2001/Openshift/refs/heads/main/DO288/V.4.18/Download-dir`
 - The service has to be publicly available on the default hostname.
+- User `devuser` has readonly privileges.
 ---
 
 
 ## Solution: 
 
----
+## 🧠 Understand the Build
 
-What is Given ?
-
-| Requirement | Required value |
-|---|---|
-| Project | `task77` |
-| Resource name | `ex288-docker-app` |
-| Git repository | `https://git.ocp4.example.com/developer/devops-wala/` |
-| Git reference | `main` |
-| Context directory | `apps/task77/` |
-| Build strategy | Docker build |
-| Base image stream | `httpd:2.4-ubi9` |
-| Base image namespace | `openshift` |
-| Application binary | `https://raw.githubusercontent.com/anishrana2001/Openshift/refs/heads/main/DO288/V.4.18/Download-dir` |
-| External access | Route with the default hostname |
-
----
-
-## 🧭 Learning Path
-
-```mermaid
-flowchart TD
-    A["📁 Git source"] --> B["🏗️ Docker BuildConfig"]
-    B --> C["📦 Application image"]
-    C --> D["🚀 Deployment and Service"]
-    D --> E["🌐 Public Route"]
-```
-
-
-## 🧰 Part 1: Prepare the Lab Repository
-
-> [!IMPORTANT]
-> This section is for the person preparing the lab. A student solving the OpenShift task can start from [Part 2](#-part-2-understand-the-build).
-
-### 1. Download and extract the source archive
-
-```bash
-mkdir -p /home/student/ex288
-cd /home/student/ex288
-
-curl -fL \
-  "https://raw.githubusercontent.com/anishrana2001/Openshift/main/DO288/V.4.18/devops-wala.tar" \
-  -o devops-wala.tar
-
-tar -xf devops-wala.tar
-cd /home/student/ex288/devops-wala
-
-# Initialize the extracted directory as a Git repository
-# The TAR archive contains project files, but it does not contain Git metadata. Therefore, initialize it before using commands such as `git remote`, `git commit`, or `git push`.
-git init -b main
-git init
-git branch -M main
-```
-
-### 3. Commit and push the files
-
-```bash
-git remote add origin \
-  https://developer@git.ocp4.example.com/developer/devops-wala.git
-
-git add . && git commit -m "Add EX288 lab files"
-git push -u origin main
-
-
-git remote add origin https://git.ocp4.example.com/developer/devops-wala.git
-git remote set-url origin https://developer:d3v3lop3r@git.ocp4.example.com/developer/devops-wala.git
-git add . && git commit -m "adding files"
-git push -u origin main
-```
-
----
-
-## 🧠 Part 2: Understand the Build
-
-The context directory contains a `Dockerfile`, so OpenShift must use the Docker build strategy.
+The context directory contains a `Dockerfile`, so OpenShift must use the **Docker build strategy**.
 
 The supplied file contains this design:
 
 ```dockerfile
 FROM httpd:2.4-ubi9
-
 ARG CodeBinary
-
 RUN curl -fL ${CodeBinary} -o /usr/local/apache2/htdocs/index.html
-
 EXPOSE 80
-
 CMD ["httpd-foreground"]
 ```
 
@@ -144,7 +68,7 @@ The task requires the Red Hat `httpd:2.4-ubi9` image stream from the `openshift`
 | Runtime command | `run-httpd` |
 | HTTP port | `8080` |
 
-The supplied Dockerfile instead uses the layout of the Docker Hub HTTPD image. Because the Git repository is read-only for `devuser`, the solution overrides the Dockerfile inside the `BuildConfig` rather than modifying and pushing the repository.
+The supplied Dockerfile instead uses the layout of the Docker Hub HTTPD image. Because the Git repository is **read-only for `devuser`**, the solution overrides the Dockerfile inside the `BuildConfig` rather than modifying and pushing the repository.
 
 ### How each task value is represented
 
