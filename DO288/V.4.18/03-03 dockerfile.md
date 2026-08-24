@@ -30,27 +30,17 @@ git push -u origin main
 
 ## 🎯 Task Requirements
 
-    The application must be built and deployed to the project `task77`
-
-    The deployed application and its resources must be named `ex288-docker-app`
-
-    The source code is available at URL `https://git.ocp4.example.com/developer/devops-wala/`
-	
-	The application source code directory `apps/task77/`
-
-    Git reference `main`
-
-    Note: The Git repository is `read-only` for the devuser.
-
-    The base image stream `httpd:2.4-ubi9` must be used from the `openshift` namespace.
-
-    The application binary is available at `https://raw.githubusercontent.com/anishrana2001/Openshift/refs/heads/main/DO288/V.4.18/Download-dir`
-
-    The service has to be publicly available on the default hostname.
-
-
-
+- The application must be built and deployed to the project `task77`
+- The deployed application and its resources must be named `ex288-docker-app`
+- The source code is available at URL `https://git.ocp4.example.com/developer/devops-wala/`
+- The application source code directory `apps/task77/`
+- Git reference `main`
+- The base image stream `httpd:2.4-ubi9` must be used from the `openshift` namespace.
+- The application binary is available at `https://raw.githubusercontent.com/anishrana2001/Openshift/refs/heads/main/DO288/V.4.18/Download-dir`
+- The service has to be publicly available on the default hostname.
 ---
+
+
 ## Solution: 
 
 ---
