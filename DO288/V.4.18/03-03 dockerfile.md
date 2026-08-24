@@ -1,6 +1,6 @@
 <div align="center">
 
-# 🔴 EX288 Task 77
+# 🔴 EX288 Task 3
 
 ### Build and Deploy an HTTPD Application on OpenShift
 
@@ -11,24 +11,51 @@
 
 </div>
 
-> [!NOTE]
-> This is an instructor-style practice lab for EX288. It includes lab preparation, the complete solution, command explanations, verification, and troubleshooting.
 
 ---
-
-## 🧭 Learning Path
-
-```mermaid
-flowchart TD
-    A["📁 Git source"] --> B["🏗️ Docker BuildConfig"]
-    B --> C["📦 Application image"]
-    C --> D["🚀 Deployment and Service"]
-    D --> E["🌐 Public Route"]
+How to Create a lab ?
+```
+mkdir -p /home/student/ex288/
+cd /home/student/ex288/
+curl -L "https://raw.githubusercontent.com/anishrana2001/Openshift/main/DO288/V.4.18/devops-wala.tar" -o /home/student/ex288/devops-wala.tar
+tar -xf /home/student/ex288/devops-wala.tar
+cd /home/student/ex288/devops-wala/
+git init -b main
+git remote add origin https://git.ocp4.example.com/developer/devops-wala.git
+git remote set-url origin https://developer:d3v3lop3r@git.ocp4.example.com/developer/devops-wala.git
+git add . && git commit -m "adding files"
+git push -u origin main
 ```
 
----
 
 ## 🎯 Task Requirements
+
+    The application must be built and deployed to the project `task77`
+
+    The deployed application and its resources must be named `ex288-docker-app`
+
+    The source code is available at URL `https://git.ocp4.example.com/developer/devops-wala/`
+	
+	The application source code directory `apps/task77/`
+
+    Git reference `main`
+
+    Note: The Git repository is `read-only` for the devuser.
+
+    The base image stream `httpd:2.4-ubi9` must be used from the `openshift` namespace.
+
+    The application binary is available at `https://raw.githubusercontent.com/anishrana2001/Openshift/refs/heads/main/DO288/V.4.18/Download-dir`
+
+    The service has to be publicly available on the default hostname.
+
+
+
+---
+## Solution: 
+
+---
+
+What is Given ?
 
 | Requirement | Required value |
 |---|---|
@@ -44,6 +71,17 @@ flowchart TD
 | External access | Route with the default hostname |
 
 ---
+
+## 🧭 Learning Path
+
+```mermaid
+flowchart TD
+    A["📁 Git source"] --> B["🏗️ Docker BuildConfig"]
+    B --> C["📦 Application image"]
+    C --> D["🚀 Deployment and Service"]
+    D --> E["🌐 Public Route"]
+```
+
 
 ## 🧰 Part 1: Prepare the Lab Repository
 
@@ -62,20 +100,10 @@ curl -fL \
 
 tar -xf devops-wala.tar
 cd /home/student/ex288/devops-wala
-```
 
-### 2. Initialize the extracted directory as a Git repository
-
-The TAR archive contains project files, but it does not contain Git metadata. Therefore, initialize it before using commands such as `git remote`, `git commit`, or `git push`.
-
-```bash
+# Initialize the extracted directory as a Git repository
+# The TAR archive contains project files, but it does not contain Git metadata. Therefore, initialize it before using commands such as `git remote`, `git commit`, or `git push`.
 git init -b main
-git status
-```
-
-If the installed Git version does not support `git init -b`, use:
-
-```bash
 git init
 git branch -M main
 ```
@@ -88,18 +116,12 @@ git remote add origin \
 
 git add . && git commit -m "Add EX288 lab files"
 git push -u origin main
-```
 
-Enter the Git password when prompted.
 
-> [!CAUTION]
-> Do not place a password directly inside a Git URL in a public repository or permanent shell script. A URL such as `https://username:password@example.com/repository.git` can expose the password through shell history, logs, and configuration files.
-
-If `origin` already exists, update it instead of adding it again:
-
-```bash
-git remote set-url origin \
-  https://developer@git.ocp4.example.com/developer/devops-wala.git
+git remote add origin https://git.ocp4.example.com/developer/devops-wala.git
+git remote set-url origin https://developer:d3v3lop3r@git.ocp4.example.com/developer/devops-wala.git
+git add . && git commit -m "adding files"
+git push -u origin main
 ```
 
 ---
