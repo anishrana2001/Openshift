@@ -139,108 +139,61 @@ Expected output:
 task77
 ```
 
-### Step 3: Confirm the required base image stream
-
-```bash
-oc get imagestreamtag httpd:2.4-ubi9 -n openshift
-```
-
 This confirms that the required image stream tag exists before the build is created.
 
-### Step 4: Create the output ImageStream and BuildConfig
+# Step 4 - Grant Image Puller Policy
+```bash
+oc policy add-role-to-user system:image-puller \
+  system:serviceaccount:task77:builder \
+  --namespace=openshift
+```
 
-Copy and run the complete block:
+### Assign devuser Read-Only Access
+```
+oc adm policy add-role-to-user view devuser -n task77
+oc get rolebinding -n task77
+```
+
+### Step 5: Clone & Inspect Dockerfile
+```bash
+git clone https://git.ocp4.example.com/developer/devops-wala/
+cd devops-wala
+git checkout main
+cat apps/task77/Dockerfile
+```
+
+### Step 6 - Create Build with ARG override
 
 ```bash
-oc apply -f - <<'EOF'
-apiVersion: image.openshift.io/v1
-kind: ImageStream
-metadata:
-  name: ex288-docker-app
-  namespace: task77
----
-apiVersion: build.openshift.io/v1
-kind: BuildConfig
-metadata:
-  name: ex288-docker-app
-  namespace: task77
-spec:
-  runPolicy: Serial
-  source:
-    type: Git
-    git:
-      uri: https://git.ocp4.example.com/developer/devops-wala/
-      ref: main
-    contextDir: apps/task77/
-    dockerfile: |-
-      FROM httpd:2.4-ubi9
-      ARG CodeBinary
-      RUN curl -fL "${CodeBinary}" -o /var/www/html/index.html
-      EXPOSE 8080
-      CMD ["run-httpd"]
-  strategy:
-    type: Docker
-    dockerStrategy:
-      from:
-        kind: ImageStreamTag
-        namespace: openshift
-        name: httpd:2.4-ubi9
-      buildArgs:
-        - name: CodeBinary
-          value: https://raw.githubusercontent.com/anishrana2001/Openshift/refs/heads/main/DO288/V.4.18/Download-dir
-  output:
-    to:
-      kind: ImageStreamTag
-      name: ex288-docker-app:latest
-  triggers: []
-EOF
+oc new-build \
+  openshift/httpd:2.4-ubi9~https://git.ocp4.example.com/developer/devops-wala/#main \
+  --name=ex288-docker-app \
+  --strategy=docker \
+  --context-dir=apps/task77/ \
+  --build-arg=CodeBinary=https://raw.githubusercontent.com/anishrana2001/Openshift/refs/heads/main/DO288/V.4.18/Download-dir \
+  -n task77
 ```
 
-### Why this configuration is correct
+### Step 7: Verify the BuildConfig before building
 
-- `source.git` makes OpenShift clone the required read-only repository.
-- `ref: main` selects the required Git branch.
-- `contextDir` makes `apps/task77/` the build context.
-- `type: Docker` selects the Docker build strategy.
-- `dockerStrategy.from` explicitly resolves the base image from the `openshift` namespace.
-- `buildArgs` supplies the binary URL to `ARG CodeBinary`.
-- The inline `dockerfile` overrides the incompatible Dockerfile without changing the read-only repository.
-- `output.to` stores the completed image as `ex288-docker-app:latest`.
-- `triggers: []` prevents an incomplete automatic build and lets the student start the configured build explicitly.
 
-### Step 5: Verify the BuildConfig before building
-
-```bash
-oc get bc/ex288-docker-app -o jsonpath='Git URI: {.spec.source.git.uri}{"\n"}Git ref: {.spec.source.git.ref}{"\n"}Context: {.spec.source.contextDir}{"\n"}Strategy: {.spec.strategy.type}{"\n"}Base image: {.spec.strategy.dockerStrategy.from.namespace}/{.spec.strategy.dockerStrategy.from.name}{"\n"}'
-```
-
-Expected values include:
-
-```text
-Git URI: https://git.ocp4.example.com/developer/devops-wala/
-Git ref: main
-Context: apps/task77/
-Strategy: Docker
-Base image: openshift/httpd:2.4-ubi9
-```
 
 Verify the Docker build argument:
 
 ```bash
-oc get bc/ex288-docker-app \
-  -o jsonpath='{range .spec.strategy.dockerStrategy.buildArgs[*]}{.name}={.value}{"\n"}{end}'
+oc get bc/ex288-docker-app 
 ```
 
-The output must begin with:
+Focus on the output must begin with:
 
 ```text
 CodeBinary=https://raw.githubusercontent.com/
 ```
 
-### Step 6: Start and follow the build
+### Step 8: Start and follow the build
 
 ```bash
-oc start-build bc/ex288-docker-app --follow
+oc start-build bc/ex288-docker-app --follow --wait -n task77
 ```
 
 Confirm that the latest build completed successfully:
@@ -256,7 +209,7 @@ Expected build phase:
 Complete
 ```
 
-### Step 7: Deploy the built image
+### Step 9: Deploy the built image
 
 ```bash
 oc create deployment ex288-docker-app \
@@ -334,6 +287,10 @@ The endpoint list must not be empty.
 oc get route/ex288-docker-app \
   -o custom-columns=NAME:.metadata.name,HOST:.spec.host,SERVICE:.spec.to.name
 ```
+
+## Assign devuser Read-Only Access
+oc adm policy add-role-to-user view devuser -n task77
+oc get rolebinding -n task77
 
 ### Grading checklist
 
