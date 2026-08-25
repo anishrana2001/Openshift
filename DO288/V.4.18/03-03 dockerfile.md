@@ -11,24 +11,7 @@
 
 </div>
 
-oc new-project task77
 
-oc new-build \
-  openshift/httpd:2.4-ubi9~https://git.ocp4.example.com/developer/devops-wala/#main \
-  --name=ex288-docker-app \
-  --strategy=docker \
-  --context-dir=apps/task77/ \
-  --build-arg=CodeBinary=https://raw.githubusercontent.com/anishrana2001/Openshift/refs/heads/main/DO288/V.4.18/Download-dir
-
-oc start-build ex288-docker-app --follow --wait
-
-oc new-app \
-  --image-stream=ex288-docker-app:latest \
-  --name=ex288-docker-app
-
-oc expose service ex288-docker-app
-
-curl "http://$(oc get route ex288-docker-app -o jsonpath='{.spec.host}')"
 ---
 How to Create a lab ?
 ```
