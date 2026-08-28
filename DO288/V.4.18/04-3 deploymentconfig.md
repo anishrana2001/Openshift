@@ -178,7 +178,36 @@ Use the name returned by your cluster. Do not create a second container merely b
 
 ## ✏️ Step 5: Edit the DeploymentConfig from WebPortal. 
 
-![img.png](img.png)
+<img width="1596" height="847" alt="image" src="https://github.com/user-attachments/assets/af75bd2d-617d-4707-b602-57d04030031d" />
+
+
+
+### 💡 Explanation of `envFrom`
+
+```yaml
+envFrom:
+  - configMapRef:
+      name: todo-ssr-config
+```
+
+
+## Task : 2. Expose the `todo-ssr` Pod name as the `POD_NAME` environment variable.
+
+### What we can do, we can check the already running pods' config and copy the syntax. 
+```
+oc get pods -A -oyaml | grep -C 5 valueFrom
+```
+
+### Take a reference from the output and add it.
+
+```
+      env:
+      - name: POD_NAME
+        valueFrom:
+          fieldRef:
+            apiVersion: v1
+            fieldPath: metadata.name
+```
 
 Add `envFrom` and `env` to that **same container**. The relevant section should resemble the following:
 
@@ -201,48 +230,6 @@ spec:
                   apiVersion: v1
                   fieldPath: metadata.name
 ```
-
-> ⚠️ Replace `default-container` only when Step 4 reports a different container name. Keep all existing container fields, such as `image`, `resources`, `ports`, probes, and image pull settings.
-
-
-### 💡 Explanation of `envFrom`
-
-```yaml
-envFrom:
-  - configMapRef:
-      name: todo-ssr-config
-```
-
-Read it as:
-
-> Load all environment variables **from** the ConfigMap named `todo-ssr-config`.
-
-The ConfigMap keys become variable names:
-
-```text
-CUSTOMER → CUSTOMER=blue
-PRIORITY → PRIORITY=gold
-```
-
-Task : 2. Expose the `todo-ssr` Pod name as the `POD_NAME` environment variable.
-
-### What we can do, we can check the already running pods' config and copy the syntax. 
-```
-oc get pods -A -oyaml | grep -C 5 valueFrom
-```
-
-### Take a reference from the output and add it.
-
-```
-      env:
-      - name: POD_NAME
-        valueFrom:
-          fieldRef:
-            apiVersion: v1
-            fieldPath: metadata.name
-```
-
----
 
 ## 🚀 Step 6: Monitor the rollout
 
@@ -288,10 +275,7 @@ echo "$POD"
 Validate the three required environment variables:
 
 ```bash
-oc exec "$POD" -- printenv \
-  | grep -E '^(CUSTOMER|PRIORITY|POD_NAME)=' \
-  | sort
-```
+oc exec "$POD" -- printenv | egrep "CUSTOMER|PRIORITY|POD_NAME" ```
 
 Expected output resembles:
 
@@ -301,7 +285,7 @@ POD_NAME=todo-ssr-2-7m9kx
 PRIORITY=gold
 ```
 
-The generated Pod name will differ.
+**The generated Pod name will differ.**
 
 ### Confirm that `POD_NAME` matches the real Pod name
 
@@ -316,32 +300,6 @@ The two names must be identical.
 ---
 
 ## 🔎 Step 8: Validate the DeploymentConfig definition
-
-Check the ConfigMap reference:
-
-```bash
-oc get deploymentconfig/todo-ssr \
-  -o jsonpath='{.spec.template.spec.containers[0].envFrom[*].configMapRef.name}{"\n"}'
-```
-
-Expected output:
-
-```text
-todo-ssr-config
-```
-
-Check the Downward API field:
-
-```bash
-oc get deploymentconfig/todo-ssr \
-  -o jsonpath='{.spec.template.spec.containers[0].env[?(@.name=="POD_NAME")].valueFrom.fieldRef.fieldPath}{"\n"}'
-```
-
-Expected output:
-
-```text
-metadata.name
-```
 
 View both sections in YAML:
 
@@ -433,53 +391,7 @@ oc rollout latest deploymentconfig/todo-ssr
 
 ---
 
-# 🧠 Memory Aids
 
-## Remember `envFrom`
-
-```text
-All keys from a ConfigMap
-          ↓
-       envFrom
-          ↓
-    configMapRef
-          ↓
-         name
-```
-
-```yaml
-envFrom:
-  - configMapRef:
-      name: todo-ssr-config
-```
-
-## Remember the Pod name structure
-
-```text
-POD_NAME
-   ↓
-valueFrom
-   ↓
-fieldRef
-   ↓
-fieldPath
-   ↓
-metadata.name
-```
-
-```yaml
-env:
-  - name: POD_NAME
-    valueFrom:
-      fieldRef:
-        fieldPath: metadata.name
-```
-
-A useful sentence is:
-
-> **`POD_NAME` gets its value from a Pod field reference whose field path is `metadata.name`.**
-
----
 
 # ⚠️ Common Mistakes
 
@@ -526,7 +438,7 @@ POD_NAME=<current-todo-ssr-pod-name>
 
 ---
 
-# 🏁 Exam-Ready Command Summary
+# 🏁 Closed env Command Summary
 
 ```bash
 oc project deploy-config
