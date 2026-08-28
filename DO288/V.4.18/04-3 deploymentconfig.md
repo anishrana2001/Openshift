@@ -178,7 +178,8 @@ Use the name returned by your cluster. Do not create a second container merely b
 
 ## ✏️ Step 5: Edit the DeploymentConfig from WebPortal. 
 
-<img width="1596" height="847" alt="image" src="https://github.com/user-attachments/assets/af75bd2d-617d-4707-b602-57d04030031d" />
+<img width="1596" height="847" alt="image" src="https://github.com/user-attachments/assets/2bd314bc-3242-498f-be44-a012e1077580" />
+
 
 
 
