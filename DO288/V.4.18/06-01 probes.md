@@ -21,1639 +21,1212 @@ Readiness → Should the Pod receive traffic?
 A startup probe protects a slow-starting application from premature liveness failures. After it succeeds, liveness and readiness checks can perform their normal jobs. Three probes, three responsibilities, because one health signal would apparently be far too peaceful.
 
 
+# OpenShift Practice Question Bank: Startup, Liveness, and Readiness Probes
 
-In this lab, you configure three Kubernetes health probes on the running `todo-ssr` Deployment in the `deploy-probes` project.
-
-The application listens on TCP port `8080`. You will use:
-
-- a **TCP startup probe** to confirm that the application has started;
-- a **TCP liveness probe** to detect an application that is no longer healthy;
-- an **HTTP readiness probe** to determine whether the application can receive traffic.
-
-> **Target resource:** `deployment/todo-ssr`  
-> **Target project:** `deploy-probes`  
-> **Application port:** `8080`
+> **Audience:** OpenShift learners preparing for hands-on administration and application-management exercises  
+> **Format:** Eleven independent, original practice questions with solutions, explanations, and validation commands  
+> **Workload type:** Kubernetes `Deployment`
 
 ---
 
-## How to create lab for this task?
-```
-oc login -u developer -p developer https://api.ocp4.example.com:6443
-oc new-project deploy-probes
-oc create deployment todo-ssr --image registry.ocp4.example.com:8443/redhattraining/hello-world-nginx:v1.0 
-clear
-oc get all
-```
+## 🎯 Learning objectives
+
+After completing these exercises, a student should be able to:
+
+- Configure TCP, HTTP, and command-based probes.
+- Select the correct probe for startup protection, container recovery, or traffic control.
+- Configure probe timing and threshold values.
+- Calculate an application's approximate startup-protection window.
+- Identify the operational difference between liveness and readiness failures.
+- Diagnose unhealthy Pods by checking status, restart counts, events, and Service endpoints.
+- Verify probe configuration without depending only on the web console.
+
+
+
+# 📋 Student questions
+
+Attempt this section before reading the answer key. Humanity has already automated enough things without automating the learning part too.
 
 ---
 
-# 🧩 Student task
+## Question 1: Configure a TCP startup probe
 
-Configure startup, liveness, and readiness probes on the main container of the existing `todo-ssr` Deployment in the `deploy-probes` project.
+Configure a startup probe on `deployment/web-gateway` with these requirements:
 
-## 1. Startup probe requirements
+- Perform a TCP socket check on port `8080`.
+- Wait `5` seconds before the first startup check.
+- Perform a check every `6` seconds.
+- Allow each check to run for at most `2` seconds.
+- Restart the container after `15` consecutive startup failures.
 
-Configure a **startup probe** with the following settings:
-
-| Setting | Required value |
-|---|---:|
-| Probe mechanism | TCP socket |
-| TCP port | `8080` |
-| Initial delay | `10` seconds |
-| Timeout | `18` seconds |
-
-The startup probe must determine whether the application has completed its startup process.
-
-### Additional startup-probe tasks
-
-After configuring the probe:
-
-1. Identify the default values assigned to `periodSeconds`, `failureThreshold`, and `successThreshold`.
-2. Calculate how many failed startup checks are allowed by the resulting configuration.
-3. Explain why liveness and readiness checks do not take effect until the startup probe succeeds.
-4. Use `oc explain` to identify the YAML field used for the TCP socket action.
+After configuring the probe, verify the Deployment and wait for the rollout to finish.
 
 ---
 
-## 2. Liveness probe requirements
+## Question 2: Configure an exec startup probe and calculate its budget
 
-Configure a **liveness probe** with the following settings:
-
-| Setting | Required value |
-|---|---:|
-| Probe mechanism | TCP socket |
-| TCP port | `8080` |
-| Probe interval | `10` seconds |
-| Timeout | `5` seconds |
-| Failure threshold | `5` consecutive failures |
-
-The liveness probe must restart the application container when the TCP check fails five consecutive times.
-
-### Additional liveness-probe tasks
-
-After configuring the probe:
-
-1. Record the container restart count while the application is healthy.
-2. Explain the difference between a probe failure and a container restart.
-3. Determine the approximate probe interval represented by `periodSeconds`.
-4. Use Pod events to confirm that no liveness failures are occurring.
-5. Explain why a liveness probe should not be used merely to determine whether a Pod should receive traffic.
-
----
-
-## 3. Readiness probe requirements
-
-Configure a **readiness probe** with the following settings:
-
-| Setting | Required value |
-|---|---:|
-| Probe mechanism | HTTP GET |
-| URL path | `/` |
-| Port | `8080` |
-| Probe interval | `15` seconds |
-| Timeout | `60` seconds |
-| Failure threshold | `5` consecutive failures |
-
-The readiness probe must prevent an unhealthy or temporarily unavailable Pod from receiving Service traffic.
-
-### Additional readiness-probe tasks
-
-After configuring the probe:
-
-1. Verify that the HTTP request uses the Pod IP by leaving the host portion of the URL empty.
-2. Create a Service for the Deployment and confirm that the ready Pod appears as an endpoint.
-3. Scale the Deployment to two replicas and verify that both Pods become ready.
-4. In a practice environment, temporarily configure an invalid readiness path and observe that the Pod becomes unready without being restarted.
-5. Restore the correct `/` readiness path after the troubleshooting exercise.
-
----
-
-# 🎯 Learning objectives
-
-After completing this lab, you should be able to:
-
-- distinguish startup, liveness, and readiness probes;
-- configure TCP and HTTP probe actions with the `oc` command;
-- explain `initialDelaySeconds`, `periodSeconds`, `timeoutSeconds`, and `failureThreshold`;
-- inspect probe settings in a Deployment;
-- monitor rollout status, Pod readiness, restart counts, and events;
-- demonstrate the effect of a failed readiness probe on Service endpoints.
-
----
-
-# 🧠 Probe concepts before you begin
-
-| Probe | Main question | Failure result |
-|---|---|---|
-| **Startup** | Has the application finished starting? | The container is restarted if the startup probe reaches its failure threshold. |
-| **Liveness** | Is the application still functioning? | The container is restarted after the configured consecutive failures. |
-| **Readiness** | Can the application receive traffic now? | The Pod is marked unready and is removed from matching Service endpoints. |
-
-## Easy memory aid
-
-```text
-Startup   → Can the application begin?
-Liveness  → Should the container continue?
-Readiness → Should the Pod receive traffic?
-```
-
-A startup probe protects a slow-starting application from premature liveness failures. After it succeeds, liveness and readiness checks can perform their normal jobs. Three probes, three responsibilities, because one health signal would apparently be far too peaceful.
-
----
-
-# ✅ Solution
-
-## Step 1: Confirm the current project
+Configure a startup probe that runs this command inside the container:
 
 ```bash
-oc project
+/bin/sh -c 'test -r /proc/1/status'
 ```
-
-Expected project:
-
-```text
-deploy-probes
-```
-
-If another project is selected, switch to the required project:
-
-```bash
-oc project deploy-probes
-```
-
----
-
-## Step 2: Confirm that the Deployment and Pod exist
-
-```bash
-oc get deployment/todo-ssr
-oc get pods
-```
-
-Wait until the initial Pod is running:
-
-```bash
-oc rollout status deployment/todo-ssr
-```
-
-Inspect the Deployment:
-
-```bash
-oc describe deployment/todo-ssr
-```
-
----
-
-## Step 3: Identify the main container
-
-Display the container name:
-
-```bash
-oc get deployment/todo-ssr \
-  -o jsonpath='{.spec.template.spec.containers[*].name}{"\n"}'
-```
-
-Display the container image:
-
-```bash
-oc get deployment/todo-ssr \
-  -o jsonpath='{.spec.template.spec.containers[*].image}{"\n"}'
-```
-
-The lab contains one application container, so `oc set probe` applies the probe configuration to that container.
-
----
-
-## Step 4: Use built-in command help
-
-Inspect the probe command:
-
-```bash
-oc set probe --help
-```
-
-Inspect the Deployment probe fields:
-
-```bash
-oc explain deployment.spec.template.spec.containers.startupProbe
-oc explain deployment.spec.template.spec.containers.livenessProbe
-oc explain deployment.spec.template.spec.containers.readinessProbe
-```
-
-Inspect the two probe mechanisms used in this lab:
-
-```bash
-oc explain deployment.spec.template.spec.containers.startupProbe.tcpSocket
-oc explain deployment.spec.template.spec.containers.readinessProbe.httpGet
-```
-
-Inspect all fields recursively:
-
-```bash
-oc explain deployment.spec.template.spec.containers.startupProbe --recursive
-```
-
----
-
-## Step 5: Configure the startup probe
-
-Run:
-
-```bash
-oc set probe deployment/todo-ssr \
-  --startup \
-  --open-tcp=8080 \
-  --initial-delay-seconds=10 \
-  --timeout-seconds=18
-```
-
-### Command explanation
-
-| Option | Meaning |
-|---|---|
-| `deployment/todo-ssr` | Updates the Pod template in the `todo-ssr` Deployment. |
-| `--startup` | Selects the startup probe. |
-| `--open-tcp=8080` | Attempts to open a TCP connection to port `8080`. |
-| `--initial-delay-seconds=10` | Waits 10 seconds after container startup before initiating the probe. |
-| `--timeout-seconds=18` | Allows one probe attempt up to 18 seconds before timing out. |
-
-Because `periodSeconds`, `failureThreshold`, and `successThreshold` are not specified, their platform defaults are retained.
-
----
-
-## Step 6: Configure the liveness probe
-
-Run:
-
-```bash
-oc set probe deployment/todo-ssr \
-  --liveness \
-  --open-tcp=8080 \
-  --period-seconds=10 \
-  --timeout-seconds=5 \
-  --failure-threshold=5
-```
-
-### Command explanation
-
-| Option | Meaning |
-|---|---|
-| `--liveness` | Selects the liveness probe. |
-| `--open-tcp=8080` | Checks whether the application accepts a TCP connection on port `8080`. |
-| `--period-seconds=10` | Performs the probe approximately every 10 seconds. |
-| `--timeout-seconds=5` | Treats an individual probe attempt as failed if it does not complete in 5 seconds. |
-| `--failure-threshold=5` | Requires five consecutive failures before the container is treated as unhealthy. |
-
-A liveness failure can restart the container. It does not merely remove the Pod from Service traffic.
-
----
-
-## Step 7: Configure the readiness probe
-
-Run:
-
-```bash
-oc set probe deployment/todo-ssr \
-  --readiness \
-  --get-url=http://:8080/ \
-  --period-seconds=15 \
-  --timeout-seconds=60 \
-  --failure-threshold=5
-```
-
-### Understanding the URL
-
-```text
-http://:8080/
-       │    └── path: /
-       └─────── port: 8080
-```
-
-The host is intentionally empty. The platform performs the request against the Pod IP.
-
-### Command explanation
-
-| Option | Meaning |
-|---|---|
-| `--readiness` | Selects the readiness probe. |
-| `--get-url=http://:8080/` | Sends an HTTP GET request to `/` on port `8080` of the Pod. |
-| `--period-seconds=15` | Performs the readiness check approximately every 15 seconds. |
-| `--timeout-seconds=60` | Allows an individual HTTP check up to 60 seconds before timing out. |
-| `--failure-threshold=5` | Marks the container unready after five consecutive failed checks. |
-
-A failed readiness probe does not normally restart the container. It changes the Pod's ready state so that matching Services stop sending it normal traffic.
-
----
-
-## Step 8: Monitor the Deployment rollout
-
-Each `oc set probe` command changes the Deployment's Pod template. The Deployment therefore creates a new ReplicaSet and replaces the old Pod.
-
-Monitor the final rollout:
-
-```bash
-oc rollout status deployment/todo-ssr
-```
-
-List ReplicaSets:
-
-```bash
-oc get replicasets
-```
-
-List Pods with labels:
-
-```bash
-oc get pods --show-labels
-```
-
----
-
-# 🔍 Validate the configuration
-
-## Validation 1: Display all probe configuration
-
-```bash
-oc get deployment/todo-ssr -o yaml
-```
-
-Locate the following sections beneath the application container:
-
-```yaml
-startupProbe:
-livenessProbe:
-readinessProbe:
-```
-
-A relevant result should resemble:
-
-```yaml
-spec:
-  template:
-    spec:
-      containers:
-        - name: todo-ssr
-          startupProbe:
-            tcpSocket:
-              port: 8080
-            initialDelaySeconds: 10
-            timeoutSeconds: 18
-            periodSeconds: 10
-            successThreshold: 1
-            failureThreshold: 3
-
-          livenessProbe:
-            tcpSocket:
-              port: 8080
-            timeoutSeconds: 5
-            periodSeconds: 10
-            successThreshold: 1
-            failureThreshold: 5
-
-          readinessProbe:
-            httpGet:
-              path: /
-              port: 8080
-              scheme: HTTP
-            timeoutSeconds: 60
-            periodSeconds: 15
-            successThreshold: 1
-            failureThreshold: 5
-```
-
-> The order of YAML fields can differ. Validate field names and values rather than expecting a particular display order.
-
----
-
-## Validation 2: Check the startup probe
-
-```bash
-oc get deployment/todo-ssr \
-  -o jsonpath='{.spec.template.spec.containers[0].startupProbe.tcpSocket.port}{"\n"}'
-```
-
-Expected:
-
-```text
-8080
-```
-
-```bash
-oc get deployment/todo-ssr \
-  -o jsonpath='{.spec.template.spec.containers[0].startupProbe.initialDelaySeconds}{"\n"}'
-```
-
-Expected:
-
-```text
-10
-```
-
-```bash
-oc get deployment/todo-ssr \
-  -o jsonpath='{.spec.template.spec.containers[0].startupProbe.timeoutSeconds}{"\n"}'
-```
-
-Expected:
-
-```text
-18
-```
-
-Display the defaulted startup values:
-
-```bash
-oc get deployment/todo-ssr \
-  -o jsonpath='period={.spec.template.spec.containers[0].startupProbe.periodSeconds}{"\n"}failure={.spec.template.spec.containers[0].startupProbe.failureThreshold}{"\n"}success={.spec.template.spec.containers[0].startupProbe.successThreshold}{"\n"}'
-```
-
-Typical output:
-
-```text
-period=10
-failure=3
-success=1
-```
-
----
-
-## Validation 3: Check the liveness probe
-
-```bash
-oc get deployment/todo-ssr \
-  -o jsonpath='port={.spec.template.spec.containers[0].livenessProbe.tcpSocket.port}{"\n"}period={.spec.template.spec.containers[0].livenessProbe.periodSeconds}{"\n"}timeout={.spec.template.spec.containers[0].livenessProbe.timeoutSeconds}{"\n"}failure={.spec.template.spec.containers[0].livenessProbe.failureThreshold}{"\n"}'
-```
-
-Expected:
-
-```text
-port=8080
-period=10
-timeout=5
-failure=5
-```
-
----
-
-## Validation 4: Check the readiness probe
-
-```bash
-oc get deployment/todo-ssr \
-  -o jsonpath='scheme={.spec.template.spec.containers[0].readinessProbe.httpGet.scheme}{"\n"}path={.spec.template.spec.containers[0].readinessProbe.httpGet.path}{"\n"}port={.spec.template.spec.containers[0].readinessProbe.httpGet.port}{"\n"}period={.spec.template.spec.containers[0].readinessProbe.periodSeconds}{"\n"}timeout={.spec.template.spec.containers[0].readinessProbe.timeoutSeconds}{"\n"}failure={.spec.template.spec.containers[0].readinessProbe.failureThreshold}{"\n"}'
-```
-
-Expected:
-
-```text
-scheme=HTTP
-path=/
-port=8080
-period=15
-timeout=60
-failure=5
-```
-
----
-
-## Validation 5: Check Pod readiness and restart count
-
-Select the newest running Pod dynamically:
-
-```bash
-POD=$(oc get pods \
-  -l app=todo-ssr \
-  --field-selector=status.phase=Running \
-  --sort-by=.metadata.creationTimestamp \
-  -o jsonpath='{.items[-1:].metadata.name}')
-```
-
-Display the selected Pod:
-
-```bash
-echo "$POD"
-```
-
-Check whether its application container is ready:
-
-```bash
-oc get pod "$POD" \
-  -o jsonpath='ready={.status.containerStatuses[0].ready}{"\n"}restarts={.status.containerStatuses[0].restartCount}{"\n"}'
-```
-
-Expected healthy result:
-
-```text
-ready=true
-restarts=0
-```
-
-A restart count greater than zero is not automatically a configuration failure, but it requires investigation.
-
----
-
-## Validation 6: Review Pod events
-
-```bash
-oc describe pod "$POD"
-```
-
-Review the `Events` section for messages such as:
-
-```text
-Startup probe failed
-Liveness probe failed
-Readiness probe failed
-```
-
-A healthy Pod should not continuously produce probe failure events.
-
-You can also sort project events by creation time:
-
-```bash
-oc get events --sort-by=.metadata.creationTimestamp
-```
-
----
-
-# 🧪 Additional practice exercises
-
-These exercises make the lab more practical and provide original troubleshooting work beyond merely entering three commands.
-
-## Exercise A: Observe a Deployment rollout
-
-1. Display the active ReplicaSet:
-
-   ```bash
-   oc get replicasets
-   ```
-
-2. Change one readiness value:
-
-   ```bash
-   oc set probe deployment/todo-ssr \
-     --readiness \
-     --get-url=http://:8080/ \
-     --period-seconds=12 \
-     --timeout-seconds=60 \
-     --failure-threshold=5
-   ```
-
-3. Observe the new rollout:
-
-   ```bash
-   oc rollout status deployment/todo-ssr
-   oc get replicasets
-   ```
-
-4. Restore the required value:
-
-   ```bash
-   oc set probe deployment/todo-ssr \
-     --readiness \
-     --get-url=http://:8080/ \
-     --period-seconds=15 \
-     --timeout-seconds=60 \
-     --failure-threshold=5
-   ```
-
----
-
-## Exercise B: Create a Service and inspect readiness endpoints
-
-Create a Service:
-
-```bash
-oc expose deployment/todo-ssr --port=8080
-```
-
-Verify it:
-
-```bash
-oc get service/todo-ssr
-```
-
-Inspect the endpoints:
-
-```bash
-oc get endpoints/todo-ssr
-```
-
-A ready Pod should appear as a Service endpoint. An unready Pod is not used as a normal ready endpoint.
-
----
-
-## Exercise C: Scale the application
-
-Scale to two replicas:
-
-```bash
-oc scale deployment/todo-ssr --replicas=2
-```
-
-Monitor the rollout:
-
-```bash
-oc rollout status deployment/todo-ssr
-```
-
-Verify that both Pods become ready:
-
-```bash
-oc get pods -l app=todo-ssr
-```
-
-Expected `READY` values:
-
-```text
-1/1
-1/1
-```
-
-Inspect Service endpoints again:
-
-```bash
-oc get endpoints/todo-ssr
-```
-
-Restore the original replica count when finished:
-
-```bash
-oc scale deployment/todo-ssr --replicas=1
-```
-
----
-
-## Exercise D: Demonstrate a readiness failure safely
-
-> ⚠️ Run this only in a practice environment. Do not perform extra changes in a graded or closed exam environment unless instructed.
-
-Temporarily configure an endpoint that does not exist:
-
-```bash
-oc set probe deployment/todo-ssr \
-  --readiness \
-  --get-url=http://:8080/this-path-does-not-exist \
-  --period-seconds=5 \
-  --timeout-seconds=2 \
-  --failure-threshold=1
-```
-
-Watch the Pods:
-
-```bash
-oc get pods -w
-```
-
-Stop the watch with `Ctrl+C`.
-
-Inspect events:
-
-```bash
-oc get events --sort-by=.metadata.creationTimestamp
-```
-
-Observe these expected behaviors:
-
-- the new container can remain running;
-- the new Pod can show `0/1` readiness;
-- the readiness failure does not require a container restart;
-- the Deployment rollout can pause because the replacement Pod is not ready;
-- a matching Service does not treat the failed Pod as a normal ready endpoint.
-
-Restore the required readiness probe:
-
-```bash
-oc set probe deployment/todo-ssr \
-  --readiness \
-  --get-url=http://:8080/ \
-  --period-seconds=15 \
-  --timeout-seconds=60 \
-  --failure-threshold=5
-```
-
-Confirm recovery:
-
-```bash
-oc rollout status deployment/todo-ssr
-oc get pods
-oc get endpoints/todo-ssr
-```
-
----
-
-## Exercise E: Compare readiness and liveness outcomes
-
-Answer the following without deliberately breaking the liveness probe:
-
-1. What happens to Service traffic when readiness fails?
-2. What happens to the container when liveness reaches its failure threshold?
-3. Why can a readiness failure be appropriate during a temporary dependency outage?
-4. Why can an overly aggressive liveness probe make an outage worse?
-5. Why is the startup probe useful for an application that takes a long time to initialize?
-
-Suggested comparison:
-
-| Situation | Readiness result | Liveness result |
-|---|---|---|
-| Application is warming its cache | Temporarily stop traffic | Usually do not restart |
-| Application is deadlocked | Not ready | Restart after threshold |
-| External dependency is briefly unavailable | Often mark unready | Avoid unnecessary restart |
-| Application has not completed startup | Startup probe remains active | Liveness waits for startup success |
-
----
-
-## Exercise F: Inspect probe YAML with `oc explain`
-
-Run:
-
-```bash
-oc explain deployment.spec.template.spec.containers.startupProbe
-oc explain deployment.spec.template.spec.containers.livenessProbe
-oc explain deployment.spec.template.spec.containers.readinessProbe
-```
-
-Then answer:
-
-1. Which field controls how often a probe runs?
-2. Which field controls an individual probe's timeout?
-3. Which field controls the number of consecutive failures?
-4. Which probe types require `successThreshold` to remain `1`?
-5. Which action field represents a TCP probe?
-6. Which action field represents an HTTP probe?
-
----
-
-# 🧩 Five additional probe questions
-
-The following questions are original practice scenarios based on the same OpenShift probe concepts. Complete them one at a time in a practice environment.
-
-> ⚠️ **Practice note:** Each question changes the probe configuration. Use the provided restore command before moving to the next question, or recreate the lab. In a graded environment, perform only the changes explicitly requested by the task. Automated graders are famously unmoved by creative experimentation.
-
-## Quick question map
-
-| Question | Main skill |
-|---|---|
-| 1 | Configure an HTTP startup probe and calculate its startup budget |
-| 2 | Configure an exec-based liveness probe |
-| 3 | Control readiness recovery with `successThreshold` |
-| 4 | Remove only one probe and restore it |
-| 5 | Use a named container port in HTTP and TCP probes |
-
----
-
-## Question 1: Configure an HTTP startup probe
-
-### 📋 Question
-
-Reconfigure the startup probe on `deployment/todo-ssr` with the following requirements:
-
-| Setting | Required value |
-|---|---:|
-| Probe mechanism | HTTP GET |
-| Path | `/` |
-| Port | `8080` |
-| Initial delay | `6` seconds |
-| Probe interval | `5` seconds |
-| Timeout | `2` seconds |
-| Failure threshold | `12` consecutive failures |
-
-After configuring the probe, determine the approximate startup-check budget available after probing begins.
-
-### ✅ Solution
-
-```bash
-oc project deploy-probes
-
-oc set probe deployment/todo-ssr \
-  --startup \
-  --get-url=http://:8080/ \
-  --initial-delay-seconds=6 \
-  --period-seconds=5 \
-  --timeout-seconds=2 \
-  --failure-threshold=12
-```
-
-Monitor the rollout:
-
-```bash
-oc rollout status deployment/todo-ssr
-```
-
-Validate the probe:
-
-```bash
-oc get deployment/todo-ssr \
-  -o jsonpath='{.spec.template.spec.containers[0].startupProbe}{"\n"}'
-```
-
-Expected relevant configuration:
-
-```yaml
-startupProbe:
-  httpGet:
-    scheme: HTTP
-    path: /
-    port: 8080
-  initialDelaySeconds: 6
-  periodSeconds: 5
-  timeoutSeconds: 2
-  failureThreshold: 12
-  successThreshold: 1
-```
-
-### 🧠 Explanation
-
-The URL:
-
-```text
-http://:8080/
-```
-
-leaves the host empty, so the kubelet sends the request to the Pod IP. The probe succeeds when the endpoint returns a successful HTTP response code.
-
-The configured startup-check budget is approximately:
-
-```text
-failureThreshold × periodSeconds
-12 × 5 seconds = 60 seconds
-```
-
-Therefore, probing starts after the initial `6`-second delay, and the application then has roughly another `60` seconds of failed checks before the startup probe reaches its failure threshold. Probe scheduling and individual timeouts can affect the exact wall-clock moment, so this is a planning estimate rather than a railway timetable.
-
-While the startup probe has not succeeded, the liveness and readiness probes are held back. This prevents a slow-starting application from being restarted or marked ready too early.
-
-### 🔄 Restore the original startup probe
-
-```bash
-oc set probe deployment/todo-ssr \
-  --startup \
-  --open-tcp=8080 \
-  --initial-delay-seconds=10 \
-  --period-seconds=10 \
-  --timeout-seconds=18 \
-  --failure-threshold=3 \
-  --success-threshold=1
-```
-
----
-
-## Question 2: Configure an exec-based liveness probe
-
-### 📋 Question
-
-Configure a liveness probe that verifies that the NGINX index file exists and is not empty.
 
 Use these settings:
 
-| Setting | Required value |
-|---|---:|
-| Probe mechanism | Container command (`exec`) |
-| Command | `/bin/sh -c 'test -s /usr/share/nginx/html/index.html'` |
-| Initial delay | `15` seconds |
-| Probe interval | `20` seconds |
-| Timeout | `3` seconds |
-| Failure threshold | `3` consecutive failures |
+- Perform the check every `4` seconds.
+- Allow each command to run for at most `3` seconds.
+- Allow `30` consecutive failures.
+- Do not configure an initial delay.
 
-### 🔍 Pre-check
+Answer this additional question:
 
-Obtain the running Pod dynamically:
+> Approximately how much startup time is provided by `failureThreshold × periodSeconds`?
+
+---
+
+## Question 3: Diagnose a startup probe that uses the wrong port
+
+A colleague configured the following startup probe:
+
+```bash
+oc set probe deployment/web-gateway \
+  --startup \
+  --open-tcp=9090 \
+  --period-seconds=5 \
+  --timeout-seconds=2 \
+  --failure-threshold=3
+```
+
+The application actually listens on port `8080`.
+
+Complete these tasks:
+
+1. Observe the Pod state and events.
+2. Identify why the startup probe fails.
+3. Correct the startup probe without deleting the Deployment.
+4. Confirm that the new Pod becomes ready.
+
+> **Practice environment only:** This question intentionally causes probe failures.
+
+---
+
+## Question 4: Configure a TCP liveness probe
+
+Configure a liveness probe on `deployment/web-gateway` with these requirements:
+
+- Perform a TCP socket check on port `8080`.
+- Wait `20` seconds before beginning liveness checks.
+- Perform a check every `12` seconds.
+- Allow each check to run for at most `4` seconds.
+- Restart the container after `4` consecutive failures.
+
+Verify all liveness-probe fields after the rollout.
+
+---
+
+## Question 5: Configure an HTTP liveness probe
+
+Configure a liveness probe with these requirements:
+
+- Send an HTTP request to `/` on port `8080`.
+- Wait `10` seconds before beginning the checks.
+- Perform a check every `20` seconds.
+- Allow each request to run for at most `3` seconds.
+- Restart the container after `3` consecutive failures.
+
+After the rollout, verify the HTTP path, port, scheme, and timing values.
+
+---
+
+## Question 6: Compare a liveness failure with container restarts
+
+Configure an intentionally incorrect HTTP liveness probe:
+
+- Request `/page-that-does-not-exist` on port `8080`.
+- Initial delay: `3` seconds
+- Period: `5` seconds
+- Timeout: `2` seconds
+- Failure threshold: `2`
+
+Complete these tasks:
+
+1. Observe the container restart count.
+2. Review the Pod events for liveness failures.
+3. Correct the path to `/`.
+4. Confirm that the restart count stops increasing.
+
+> **Practice environment only:** Do not run this failure simulation in a graded or shared environment unless instructed.
+
+---
+
+## Question 7: Configure an exec readiness probe with recovery protection
+
+Configure a readiness probe that runs this command inside the container:
+
+```bash
+/bin/sh -c 'test -s /etc/hosts'
+```
+
+Use these settings:
+
+- Wait `3` seconds before the first readiness check.
+- Perform a check every `10` seconds.
+- Allow each command to run for at most `2` seconds.
+- Mark the container NotReady after `4` consecutive failures.
+- After a failure, require `2` consecutive successful checks before marking it ready again.
+
+Before adding the probe, test the command manually. Then verify the exec command and `successThreshold` in the Deployment.
+
+---
+
+## Question 8: Use readiness to control Service endpoints
+
+Configure a TCP readiness probe with these requirements:
+
+- Check port `8080`.
+- Perform a check every `7` seconds.
+- Use a timeout of `2` seconds.
+- Mark the container NotReady after `3` consecutive failures.
+
+Then:
+
+1. Scale `deployment/web-gateway` to `3` replicas.
+2. Confirm that all three Pods become ready.
+3. Inspect the EndpointSlice or Endpoints object used by `service/web-gateway`.
+4. Confirm that ready Pods are represented as Service backends.
+
+---
+
+## Question 9: Prove that readiness failure does not restart a container
+
+Configure an intentionally incorrect TCP readiness probe on port `9090`:
+
+- Initial delay: `2` seconds
+- Period: `5` seconds
+- Timeout: `2` seconds
+- Failure threshold: `2`
+
+Complete these tasks:
+
+1. Confirm that the Pod remains in the `Running` phase but is not ready.
+2. Confirm that the container restart count remains unchanged.
+3. Check whether the Pod is available through the Service endpoints.
+4. Change the readiness port to `8080` and confirm recovery.
+
+> **Practice environment only:** This question intentionally makes the Pod unavailable to normal Service traffic.
+
+---
+
+## Question 10: Configure all three probes together
+
+Configure all three probes on `deployment/web-gateway`.
+
+### Startup probe
+
+- HTTP request to `/` on port `8080`
+- Initial delay: `8` seconds
+- Period: `5` seconds
+- Timeout: `2` seconds
+- Failure threshold: `18`
+
+### Liveness probe
+
+- TCP socket check on port `8080`
+- Period: `14` seconds
+- Timeout: `4` seconds
+- Failure threshold: `3`
+
+### Readiness probe
+
+- HTTP request to `/` on port `8080`
+- Period: `9` seconds
+- Timeout: `3` seconds
+- Failure threshold: `4`
+- Success threshold: `2`
+
+After configuring the probes:
+
+1. Wait for the rollout.
+2. Display all three probes from the Deployment.
+3. Confirm that the Pod is ready.
+4. Explain the order in which the probes become operational.
+
+---
+
+## Question 11: Choose the correct probe
+
+For each situation, identify whether the main solution is a **startup**, **liveness**, or **readiness** probe.
+
+1. A Java application can require four minutes to initialize and must not be restarted by health checks during initialization.
+2. A web process is running but can occasionally deadlock and stop responding permanently.
+3. An application must temporarily stop receiving traffic while refreshing an in-memory cache, but its container should not be restarted.
+4. A Pod must be removed from Service load balancing when its dependency is unavailable.
+5. A container that never completes startup should eventually be restarted.
+
+Explain each answer in one or two sentences.
+
+---
+
+# ✅ Solutions and explanations
+
+---
+
+## Solution 1: TCP startup probe
+
+### Command
+
+```bash
+oc set probe deployment/web-gateway \
+  --startup \
+  --open-tcp=8080 \
+  --initial-delay-seconds=5 \
+  --period-seconds=6 \
+  --timeout-seconds=2 \
+  --failure-threshold=15
+```
+
+Wait for the rollout:
+
+```bash
+oc rollout status deployment/web-gateway
+```
+
+### Verification
+
+```bash
+oc get deployment/web-gateway -o json \
+  | jq '.spec.template.spec.containers[0].startupProbe'
+```
+
+Expected relevant structure:
+
+```json
+{
+  "tcpSocket": {
+    "port": 8080
+  },
+  "initialDelaySeconds": 5,
+  "timeoutSeconds": 2,
+  "periodSeconds": 6,
+  "failureThreshold": 15,
+  "successThreshold": 1
+}
+```
+
+### Explanation
+
+`--open-tcp=8080` asks the kubelet to open a TCP connection to port `8080` on the Pod IP. A successful connection indicates that the application has reached the minimum startup state represented by that port.
+
+The startup probe runs before liveness and readiness probes are allowed to operate. If it fails `15` times consecutively, the kubelet treats startup as failed and restarts the container according to the Pod restart policy.
+
+---
+
+## Solution 2: Exec startup probe and startup budget
+
+### 1. Test the command manually
+
+Get a running Pod:
 
 ```bash
 POD=$(oc get pods \
-  -l app=todo-ssr \
+  -l app=web-gateway \
   --field-selector=status.phase=Running \
-  -o name | head -1)
-
-echo "$POD"
+  --sort-by=.metadata.creationTimestamp \
+  -o name | tail -1)
 ```
 
-Confirm that the file exists before making it the liveness condition:
+Run the command and check its exit status:
 
 ```bash
-oc exec "$POD" -- \
-  /bin/sh -c 'test -s /usr/share/nginx/html/index.html && echo "index file is present"'
+oc exec "$POD" -- /bin/sh -c 'test -r /proc/1/status'
+echo $?
 ```
 
-If the file path is different in a modified image, identify a stable application file first. A liveness probe should test a condition that is meaningful for the actual container, not a path selected through spiritual intuition.
+Expected exit status:
 
-### ✅ Solution
+```text
+0
+```
+
+### 2. Configure the startup probe
 
 ```bash
-oc set probe deployment/todo-ssr \
-  --liveness \
-  --initial-delay-seconds=15 \
-  --period-seconds=20 \
+oc set probe deployment/web-gateway \
+  --startup \
+  --period-seconds=4 \
   --timeout-seconds=3 \
-  --failure-threshold=3 \
-  -- /bin/sh -c 'test -s /usr/share/nginx/html/index.html'
+  --failure-threshold=30 \
+  -- /bin/sh -c 'test -r /proc/1/status'
 ```
 
-Monitor the rollout:
+Wait for the rollout:
 
 ```bash
-oc rollout status deployment/todo-ssr
+oc rollout status deployment/web-gateway
 ```
 
-Validate the command stored in the probe:
+### 3. Verify the exec action
 
 ```bash
-oc get deployment/todo-ssr \
-  -o jsonpath='{.spec.template.spec.containers[0].livenessProbe.exec.command}{"\n"}'
+oc get deployment/web-gateway \
+  -o jsonpath='{.spec.template.spec.containers[0].startupProbe.exec.command}{"\n"}'
 ```
 
 Expected output resembles:
 
 ```text
-[/bin/sh -c test -s /usr/share/nginx/html/index.html]
+[/bin/sh -c test -r /proc/1/status]
 ```
 
-Display the complete liveness probe:
-
-```bash
-oc get deployment/todo-ssr \
-  -o jsonpath='{.spec.template.spec.containers[0].livenessProbe}{"\n"}'
-```
-
-### 🧠 Explanation
-
-An exec probe runs a command inside the container:
-
-- exit status `0` means success;
-- a non-zero exit status means failure;
-- reaching the liveness failure threshold causes the container to be restarted.
-
-The command:
-
-```bash
-test -s /usr/share/nginx/html/index.html
-```
-
-succeeds only when the file exists and has a size greater than zero.
-
-Exec probes are useful when application health can only be determined from inside the container. For a web application, however, HTTP or TCP checks are often simpler and use fewer container-side resources.
-
-### 🔄 Restore the original TCP liveness probe
-
-```bash
-oc set probe deployment/todo-ssr \
-  --liveness \
-  --open-tcp=8080 \
-  --initial-delay-seconds=0 \
-  --period-seconds=10 \
-  --timeout-seconds=5 \
-  --failure-threshold=5 \
-  --success-threshold=1
-```
-
----
-
-## Question 3: Require repeated readiness successes after failure
-
-### 📋 Question
-
-Reconfigure the readiness probe so that a failed Pod must pass three consecutive checks before it becomes ready again.
-
-Use these settings:
-
-| Setting | Required value |
-|---|---:|
-| Probe mechanism | HTTP GET |
-| Path | `/` |
-| Port | `8080` |
-| Probe interval | `5` seconds |
-| Timeout | `2` seconds |
-| Failure threshold | `2` consecutive failures |
-| Success threshold | `3` consecutive successes |
-
-### ✅ Solution
-
-First inspect the field:
-
-```bash
-oc explain deployment.spec.template.spec.containers.readinessProbe.successThreshold
-```
-
-Configure the probe:
-
-```bash
-oc set probe deployment/todo-ssr \
-  --readiness \
-  --get-url=http://:8080/ \
-  --period-seconds=5 \
-  --timeout-seconds=2 \
-  --failure-threshold=2 \
-  --success-threshold=3
-```
-
-The resulting relevant YAML is:
+Expected YAML structure:
 
 ```yaml
-readinessProbe:
-  httpGet:
-    scheme: HTTP
-    path: /
-    port: 8080
-  periodSeconds: 5
-  timeoutSeconds: 2
-  failureThreshold: 2
-  successThreshold: 3
+startupProbe:
+  exec:
+    command:
+      - /bin/sh
+      - -c
+      - test -r /proc/1/status
+  periodSeconds: 4
+  timeoutSeconds: 3
+  failureThreshold: 30
+  successThreshold: 1
 ```
 
-Monitor the rollout:
-
-```bash
-oc rollout status deployment/todo-ssr
-```
-
-Validate the thresholds:
-
-```bash
-oc get deployment/todo-ssr \
-  -o jsonpath='failureThreshold={.spec.template.spec.containers[0].readinessProbe.failureThreshold}{"\n"}successThreshold={.spec.template.spec.containers[0].readinessProbe.successThreshold}{"\n"}'
-```
-
-Expected output:
+### Startup-budget calculation
 
 ```text
-failureThreshold=2
-successThreshold=3
+failureThreshold × periodSeconds
+30 × 4 seconds = 120 seconds
 ```
 
-### 🧠 Explanation
+The configured retry budget is therefore approximately **120 seconds after probing begins**. Exact wall-clock behavior can also be affected by individual probe execution time and kubelet scheduling, so this multiplication is best treated as the intended probe budget rather than a laboratory-grade stopwatch reading. Computers, like humans, become strangely interpretive around timing boundaries.
 
-`failureThreshold: 2` means that two consecutive failed checks are required before the readiness probe is considered failed.
+### Explanation
 
-`successThreshold: 3` means that, after an unsuccessful condition, three consecutive successful checks are required before the container is considered ready again. With a `5`-second period, recovery generally requires several successful checks over roughly `15` seconds.
+An exec probe succeeds when its command exits with status `0`; a nonzero exit status is a failure. In this exercise, the probe checks whether the process-status file for PID 1 is readable.
 
-A success threshold greater than `1` is valid for readiness probes. Startup and liveness probes must keep `successThreshold` at `1`, because their purpose is not to provide gradual traffic re-entry.
-
-This configuration is useful when a dependency is unstable and you do not want a Pod repeatedly entering and leaving Service endpoints after a single successful check.
-
-### 🔄 Restore the original readiness probe
-
-```bash
-oc set probe deployment/todo-ssr \
-  --readiness \
-  --get-url=http://:8080/ \
-  --period-seconds=15 \
-  --timeout-seconds=60 \
-  --failure-threshold=5 \
-  --success-threshold=1
-```
-
-After restoring it, confirm that `successThreshold` has returned to `1`:
-
-```bash
-oc get deployment/todo-ssr \
-  -o jsonpath='{.spec.template.spec.containers[0].readinessProbe.successThreshold}{"\n"}'
-```
+This command is deliberately simple so students can focus on startup-probe structure. A production startup command should test an application-specific condition that becomes true only after initialization has completed.
 
 ---
 
-## Question 4: Remove only the liveness probe
+## Solution 3: Repair the startup probe
 
-### 📋 Question
-
-Temporarily remove the liveness probe from `deployment/todo-ssr` while keeping the startup and readiness probes configured.
-
-Then:
-
-1. verify that only the liveness probe was removed;
-2. confirm that a new rollout occurred;
-3. restore the original liveness probe.
-
-### ✅ Solution
-
-Remove only the liveness probe:
+### 1. Observe the Pod
 
 ```bash
-oc set probe deployment/todo-ssr \
-  --remove \
-  --liveness
+oc get pods -w
 ```
 
-Monitor the rollout:
+In another terminal, identify the newest Pod:
 
 ```bash
-oc rollout status deployment/todo-ssr
+POD=$(oc get pods \
+  -l app=web-gateway \
+  --sort-by=.metadata.creationTimestamp \
+  -o name | tail -1)
+
+echo "$POD"
 ```
 
-Verify that the liveness probe is absent:
+Review its events:
 
 ```bash
-oc get deployment/todo-ssr \
-  -o jsonpath='{.spec.template.spec.containers[0].livenessProbe}{"\n"}'
+oc describe "$POD"
 ```
 
-An empty line is expected.
+You should see startup-probe failures mentioning port `9090`, connection refusal, or an inability to connect.
 
-Confirm that the startup probe still exists:
+### 2. Confirm the configured port
 
 ```bash
-oc get deployment/todo-ssr \
+oc get deployment/web-gateway \
   -o jsonpath='{.spec.template.spec.containers[0].startupProbe.tcpSocket.port}{"\n"}'
 ```
 
-Expected:
+Incorrect value:
 
 ```text
-8080
+9090
 ```
 
-Confirm that the readiness probe still exists:
+### 3. Correct the probe
 
 ```bash
-oc get deployment/todo-ssr \
-  -o jsonpath='{.spec.template.spec.containers[0].readinessProbe.httpGet.path}{"\n"}'
-```
-
-Expected:
-
-```text
-/
-```
-
-Restore the original liveness probe:
-
-```bash
-oc set probe deployment/todo-ssr \
-  --liveness \
+oc set probe deployment/web-gateway \
+  --startup \
   --open-tcp=8080 \
-  --initial-delay-seconds=0 \
-  --period-seconds=10 \
-  --timeout-seconds=5 \
-  --failure-threshold=5 \
-  --success-threshold=1
+  --period-seconds=5 \
+  --timeout-seconds=2 \
+  --failure-threshold=3
 ```
 
-Verify the restored configuration:
+### 4. Verify recovery
 
 ```bash
-oc rollout status deployment/todo-ssr
-
-oc get deployment/todo-ssr \
-  -o jsonpath='{.spec.template.spec.containers[0].livenessProbe}{"\n"}'
+oc rollout status deployment/web-gateway
+oc get pods
 ```
 
-### 🧠 Explanation
+Expected result:
 
-The `--remove` option removes only the probe types selected on the same command line. In this question, `--liveness` is selected, so startup and readiness remain unchanged.
+```text
+READY   STATUS
+1/1     Running
+```
 
-Removing or restoring a probe changes the Deployment's Pod template. Kubernetes therefore creates a new ReplicaSet and rolls out replacement Pods. Existing Pods are not edited in place, because immutable Pod templates remain one of the few boundaries the platform enforces consistently.
+### Explanation
 
-This technique is useful during troubleshooting, but running without a required liveness probe should be temporary and deliberate.
+The application listens on `8080`, but the startup probe attempted to connect to `9090`. Because startup never succeeded, the kubelet kept treating the container as unsuccessfully started and eventually restarted it after the failure threshold.
+
+Correcting the Pod template creates a new ReplicaSet and replacement Pod. Deleting the Deployment is unnecessary and would be rather dramatic for a one-digit port mistake.
 
 ---
 
-## Question 5: Use a named port in the probes
+## Solution 4: TCP liveness probe
 
-### 📋 Question
-
-Configure the application container so that port `8080` is named `web`. Then use that named port in both:
-
-- a TCP startup probe; and
-- an HTTP readiness probe.
-
-Use the following probe settings:
-
-#### Startup probe
-
-| Setting | Required value |
-|---|---:|
-| Mechanism | TCP socket |
-| Port | `web` |
-| Probe interval | `4` seconds |
-| Timeout | `2` seconds |
-| Failure threshold | `15` consecutive failures |
-
-#### Readiness probe
-
-| Setting | Required value |
-|---|---:|
-| Mechanism | HTTP GET |
-| Path | `/` |
-| Port | `web` |
-| Probe interval | `10` seconds |
-| Timeout | `3` seconds |
-| Failure threshold | `3` consecutive failures |
-
-### ✅ Solution
-
-Display the actual container name:
+### Command
 
 ```bash
-oc get deployment/todo-ssr \
-  -o jsonpath='{.spec.template.spec.containers[0].name}{"\n"}'
+oc set probe deployment/web-gateway \
+  --liveness \
+  --open-tcp=8080 \
+  --initial-delay-seconds=20 \
+  --period-seconds=12 \
+  --timeout-seconds=4 \
+  --failure-threshold=4
 ```
 
-Edit the Deployment:
+Wait for completion:
 
 ```bash
-oc edit deployment/todo-ssr
+oc rollout status deployment/web-gateway
 ```
 
-Under the existing container, configure the following relevant fields:
+### Verification
+
+```bash
+oc get deployment/web-gateway -o json \
+  | jq '.spec.template.spec.containers[0].livenessProbe'
+```
+
+Or inspect individual fields:
+
+```bash
+oc get deployment/web-gateway \
+  -o jsonpath='{.spec.template.spec.containers[0].livenessProbe.tcpSocket.port}{"\n"}{.spec.template.spec.containers[0].livenessProbe.initialDelaySeconds}{"\n"}{.spec.template.spec.containers[0].livenessProbe.periodSeconds}{"\n"}{.spec.template.spec.containers[0].livenessProbe.timeoutSeconds}{"\n"}{.spec.template.spec.containers[0].livenessProbe.failureThreshold}{"\n"}'
+```
+
+Expected values:
+
+```text
+8080
+20
+12
+4
+4
+```
+
+### Explanation
+
+A liveness probe answers whether the already-running application is still healthy enough to continue. After four consecutive TCP failures, the kubelet restarts the container.
+
+A liveness probe should not be used merely because a temporary dependency is unavailable. Restarting a healthy application every time a database blinks is one of those operational ideas that sounds energetic while accomplishing very little.
+
+---
+
+## Solution 5: HTTP liveness probe
+
+### Command
+
+```bash
+oc set probe deployment/web-gateway \
+  --liveness \
+  --get-url=http://:8080/ \
+  --initial-delay-seconds=10 \
+  --period-seconds=20 \
+  --timeout-seconds=3 \
+  --failure-threshold=3
+```
+
+Wait for the rollout:
+
+```bash
+oc rollout status deployment/web-gateway
+```
+
+### Verification
+
+```bash
+oc get deployment/web-gateway -o json \
+  | jq '.spec.template.spec.containers[0].livenessProbe'
+```
+
+Without `jq`, inspect the important fields directly:
+
+```bash
+oc get deployment/web-gateway \
+  -o jsonpath='{.spec.template.spec.containers[0].livenessProbe.httpGet.path}{"\n"}{.spec.template.spec.containers[0].livenessProbe.httpGet.port}{"\n"}{.spec.template.spec.containers[0].livenessProbe.httpGet.scheme}{"\n"}{.spec.template.spec.containers[0].livenessProbe.initialDelaySeconds}{"\n"}{.spec.template.spec.containers[0].livenessProbe.periodSeconds}{"\n"}{.spec.template.spec.containers[0].livenessProbe.timeoutSeconds}{"\n"}{.spec.template.spec.containers[0].livenessProbe.failureThreshold}{"\n"}'
+```
+
+Expected values:
+
+```text
+/
+8080
+HTTP
+10
+20
+3
+3
+```
+
+Expected YAML structure:
 
 ```yaml
-ports:
-  - name: web
-    containerPort: 8080
-    protocol: TCP
-
-startupProbe:
-  tcpSocket:
-    port: web
-  periodSeconds: 4
-  timeoutSeconds: 2
-  failureThreshold: 15
-  successThreshold: 1
-
-readinessProbe:
+livenessProbe:
   httpGet:
-    scheme: HTTP
     path: /
-    port: web
-  periodSeconds: 10
+    port: 8080
+    scheme: HTTP
+  initialDelaySeconds: 10
+  periodSeconds: 20
   timeoutSeconds: 3
   failureThreshold: 3
   successThreshold: 1
 ```
 
-> If a `containerPort: 8080` entry already exists, add `name: web` to that entry instead of creating a duplicate port definition.
+### Explanation
 
-Save and monitor the rollout:
+The empty host in `http://:8080/` tells `oc set probe` to check the Pod IP. The kubelet sends an HTTP request to `/` on port `8080`. HTTP response codes from `200` through `399` count as success.
+
+After three consecutive failures, the kubelet restarts the container. The initial delay gives the application ten seconds before liveness monitoring begins when no startup probe is protecting the initialization phase.
+
+---
+
+## Solution 6: Observe and repair a liveness failure
+
+### 1. Configure the intentionally incorrect probe
 
 ```bash
-oc rollout status deployment/todo-ssr
+oc set probe deployment/web-gateway \
+  --liveness \
+  --get-url=http://:8080/page-that-does-not-exist \
+  --initial-delay-seconds=3 \
+  --period-seconds=5 \
+  --timeout-seconds=2 \
+  --failure-threshold=2
 ```
 
-Validate the named container port:
+Wait for the new Pod to appear:
 
 ```bash
-oc get deployment/todo-ssr \
-  -o jsonpath='{.spec.template.spec.containers[0].ports[?(@.name=="web")].containerPort}{"\n"}'
+oc get pods -w
 ```
 
-Expected:
+### 2. Observe restart count
+
+```bash
+POD=$(oc get pods \
+  -l app=web-gateway \
+  --sort-by=.metadata.creationTimestamp \
+  -o name | tail -1)
+
+oc get "$POD" \
+  -o custom-columns=NAME:.metadata.name,READY:.status.containerStatuses[0].ready,RESTARTS:.status.containerStatuses[0].restartCount
+```
+
+Repeat the preceding command after several probe periods. The restart count should increase if the nonexistent path returns a failing HTTP status. Most nginx configurations return `404` for this path. If this particular training image returns a successful `2xx` or `3xx` response for unknown paths, repeat the exercise with `--get-url=http://:9090/` to produce a definite connection failure.
+
+### 3. Review events
+
+```bash
+oc describe "$POD" | sed -n '/Events:/,$p'
+```
+
+Look for messages similar to:
 
 ```text
-8080
+Liveness probe failed: HTTP probe failed with statuscode: 404
+Killing container ... failed liveness probe, will be restarted
 ```
 
-Validate the startup probe port:
+### 4. Correct the path
 
 ```bash
-oc get deployment/todo-ssr \
-  -o jsonpath='{.spec.template.spec.containers[0].startupProbe.tcpSocket.port}{"\n"}'
-```
-
-Expected:
-
-```text
-web
-```
-
-Validate the readiness probe port:
-
-```bash
-oc get deployment/todo-ssr \
-  -o jsonpath='{.spec.template.spec.containers[0].readinessProbe.httpGet.port}{"\n"}'
-```
-
-Expected:
-
-```text
-web
-```
-
-### 🧠 Explanation
-
-HTTP and TCP probes can refer to a container port by name rather than by number. The probe resolves `web` to the container port definition:
-
-```yaml
-- name: web
-  containerPort: 8080
-```
-
-Named ports improve readability and reduce repeated numeric values. If the application port later changes, the container port definition and application configuration still need to be updated, but every probe that refers to `web` does not need its own numeric port edited separately.
-
-A named port must exist in the same container that owns the probe. Misspelling `web` creates a probe that cannot resolve its target, which is the sort of tiny configuration defect that can consume an impressively adult portion of an afternoon.
-
-### 🔄 Optional restore to the original numeric probe configuration
-
-```bash
-oc set probe deployment/todo-ssr \
-  --startup \
-  --open-tcp=8080 \
-  --initial-delay-seconds=10 \
-  --period-seconds=10 \
-  --timeout-seconds=18 \
-  --failure-threshold=3 \
-  --success-threshold=1
-
-oc set probe deployment/todo-ssr \
-  --readiness \
+oc set probe deployment/web-gateway \
+  --liveness \
   --get-url=http://:8080/ \
-  --period-seconds=15 \
-  --timeout-seconds=60 \
-  --failure-threshold=5 \
-  --success-threshold=1
+  --initial-delay-seconds=3 \
+  --period-seconds=5 \
+  --timeout-seconds=2 \
+  --failure-threshold=2
 ```
 
-The named `web` port can remain on the container; it does not interfere with numeric probe references.
+Wait for the rollout:
+
+```bash
+oc rollout status deployment/web-gateway
+```
+
+### 5. Confirm stability
+
+```bash
+POD=$(oc get pods \
+  -l app=web-gateway \
+  --field-selector=status.phase=Running \
+  --sort-by=.metadata.creationTimestamp \
+  -o name | tail -1)
+
+oc get "$POD" \
+  -o custom-columns=NAME:.metadata.name,READY:.status.containerStatuses[0].ready,RESTARTS:.status.containerStatuses[0].restartCount
+```
+
+### Explanation
+
+A failed liveness probe causes the kubelet to restart the container. It does not normally replace the Pod object immediately; therefore, the same Pod name can remain while its container restart count rises.
+
+Correcting the Deployment creates a new rollout whose Pods use the healthy `/` endpoint.
 
 ---
 
-# ✅ Additional-question completion checklist
+## Solution 7: Exec readiness probe with `successThreshold`
 
-- [ ] Question 1 used an HTTP startup probe and calculated its startup budget.
-- [ ] Question 2 demonstrated how an exec probe interprets command exit status.
-- [ ] Question 3 used `successThreshold` to make readiness recovery less sensitive to a single success.
-- [ ] Question 4 removed only the liveness probe and preserved the other probes.
-- [ ] Question 5 configured and validated a named container port.
-- [ ] The required baseline probes were restored after each temporary exercise.
-- [ ] The Deployment completed its latest rollout.
-- [ ] The running Pod returned to the `1/1` ready state.
+### 1. Test the command manually
 
-# 🛠️ Troubleshooting guide
-
-## Problem 1: The Pod never becomes ready
-
-Check:
+Get a running Pod and run the check:
 
 ```bash
-oc get pods
-oc describe pod "$POD"
-oc get events --sort-by=.metadata.creationTimestamp
+POD=$(oc get pods \
+  -l app=web-gateway \
+  --field-selector=status.phase=Running \
+  --sort-by=.metadata.creationTimestamp \
+  -o name | tail -1)
+
+oc exec "$POD" -- /bin/sh -c 'test -s /etc/hosts'
+echo $?
 ```
 
-Common causes include:
+Expected exit status:
 
-- incorrect HTTP path;
-- incorrect port;
-- application not listening on the Pod IP;
-- application returning an unsuccessful HTTP status;
-- startup probe not succeeding.
+```text
+0
+```
 
----
-
-## Problem 2: The container keeps restarting
-
-Check restart count:
+### 2. Configure the readiness probe
 
 ```bash
-oc get pod "$POD" \
-  -o jsonpath='{.status.containerStatuses[0].restartCount}{"\n"}'
+oc set probe deployment/web-gateway \
+  --readiness \
+  --initial-delay-seconds=3 \
+  --period-seconds=10 \
+  --timeout-seconds=2 \
+  --failure-threshold=4 \
+  --success-threshold=2 \
+  -- /bin/sh -c 'test -s /etc/hosts'
 ```
 
-Check the previous container log:
+Wait for the rollout:
 
 ```bash
-oc logs "$POD" --previous
+oc rollout status deployment/web-gateway
 ```
 
-Inspect events:
+### 3. Verify the command and threshold
 
 ```bash
-oc describe pod "$POD"
+oc get deployment/web-gateway \
+  -o jsonpath='{.spec.template.spec.containers[0].readinessProbe.exec.command}{"\n"}{.spec.template.spec.containers[0].readinessProbe.successThreshold}{"\n"}'
 ```
 
-Common causes include:
+Expected output resembles:
 
-- liveness port is incorrect;
-- startup probe does not allow enough startup time;
-- application stops listening on port `8080`;
-- probe thresholds are too aggressive.
-
----
-
-## Problem 3: The HTTP readiness URL looks unusual
-
-This command is intentional:
-
-```bash
---get-url=http://:8080/
+```text
+[/bin/sh -c test -s /etc/hosts]
+2
 ```
 
-It means:
+Expected YAML structure:
 
 ```yaml
-httpGet:
-  scheme: HTTP
-  port: 8080
-  path: /
+readinessProbe:
+  exec:
+    command:
+      - /bin/sh
+      - -c
+      - test -s /etc/hosts
+  initialDelaySeconds: 3
+  periodSeconds: 10
+  timeoutSeconds: 2
+  failureThreshold: 4
+  successThreshold: 2
 ```
 
-The empty host tells the probe to use the Pod IP.
+### Explanation
+
+The command succeeds when `/etc/hosts` exists and contains data. This is a portable syntax exercise, not a recommended production readiness condition; a real application should report whether it can actually serve its intended traffic.
+
+`failureThreshold: 4` allows four consecutive failures before the container is treated as not ready. `successThreshold: 2` then requires two consecutive successes before readiness is restored, reducing rapid ready/not-ready oscillation.
+
+For liveness and startup probes, Kubernetes requires `successThreshold` to remain `1`. A value greater than `1` is meaningful only for readiness probes.
 
 ---
 
-## Problem 4: A probe was added to the wrong project
+## Solution 8: TCP readiness and Service endpoints
 
-Verify:
+### 1. Configure readiness
 
 ```bash
-oc project
+oc set probe deployment/web-gateway \
+  --readiness \
+  --open-tcp=8080 \
+  --period-seconds=7 \
+  --timeout-seconds=2 \
+  --failure-threshold=3
 ```
 
-Switch projects:
+Wait for the rollout:
 
 ```bash
-oc project deploy-probes
+oc rollout status deployment/web-gateway
 ```
 
-Then inspect:
+### 2. Scale to three replicas
 
 ```bash
-oc get deployment/todo-ssr
+oc scale deployment/web-gateway --replicas=3
+oc rollout status deployment/web-gateway
+```
+
+### 3. Confirm readiness
+
+```bash
+oc get pods -l app=web-gateway
+```
+
+Expected relevant result:
+
+```text
+READY   STATUS
+1/1     Running
+1/1     Running
+1/1     Running
+```
+
+### 4. Inspect Service backends
+
+Preferred modern resource:
+
+```bash
+oc get endpointslice \
+  -l kubernetes.io/service-name=web-gateway \
+  -o wide
+```
+
+You can also inspect the compatibility Endpoints object:
+
+```bash
+oc get endpoints/web-gateway -o wide
+```
+
+### Explanation
+
+A successful readiness probe sets the container's ready condition to true. Ready Pods selected by the Service can then appear as usable backends in EndpointSlice data.
+
+If one Pod becomes unready, the workload can remain running while that Pod is excluded from normal Service traffic. This is why readiness is the traffic gate, not the container restart lever.
+
+---
+
+## Solution 9: Readiness failure without a restart
+
+### 1. Configure the incorrect readiness port
+
+```bash
+oc set probe deployment/web-gateway \
+  --readiness \
+  --open-tcp=9090 \
+  --initial-delay-seconds=2 \
+  --period-seconds=5 \
+  --timeout-seconds=2 \
+  --failure-threshold=2
+```
+
+Observe the rollout for a limited period:
+
+```bash
+oc rollout status deployment/web-gateway --timeout=30s || true
+```
+
+A timeout is expected because the new Pod cannot become ready. Inspect the Pod directly rather than staring at the terminal until mutual resentment develops.
+
+### 2. Check phase, readiness, and restarts
+
+```bash
+POD=$(oc get pods \
+  -l app=web-gateway \
+  --sort-by=.metadata.creationTimestamp \
+  -o name | tail -1)
+
+oc get "$POD" \
+  -o custom-columns=NAME:.metadata.name,PHASE:.status.phase,READY:.status.containerStatuses[0].ready,RESTARTS:.status.containerStatuses[0].restartCount
+```
+
+Expected behavior:
+
+```text
+PHASE     READY   RESTARTS
+Running   false   0
+```
+
+### 3. Review readiness events
+
+```bash
+oc describe "$POD" | sed -n '/Events:/,$p'
+```
+
+Look for readiness-probe connection failures on port `9090`.
+
+### 4. Inspect Service endpoints
+
+```bash
+oc get endpointslice \
+  -l kubernetes.io/service-name=web-gateway \
+  -o yaml
+```
+
+The unready Pod should not be treated as a normal ready Service backend.
+
+### 5. Correct the port
+
+```bash
+oc set probe deployment/web-gateway \
+  --readiness \
+  --open-tcp=8080 \
+  --initial-delay-seconds=2 \
+  --period-seconds=5 \
+  --timeout-seconds=2 \
+  --failure-threshold=2
+```
+
+Wait for recovery:
+
+```bash
+oc rollout status deployment/web-gateway
+oc get pods -l app=web-gateway
+```
+
+### Explanation
+
+Readiness failure changes traffic eligibility. It does not instruct the kubelet to restart the container. Therefore, the Pod can remain `Running` while showing `0/1` in the READY column and a restart count of zero.
+
+This is the most important operational distinction between readiness and liveness:
+
+```text
+Readiness failure → stop traffic
+Liveness failure  → restart container
 ```
 
 ---
 
-## Problem 5: The label selector returns no Pod
+## Solution 10: Configure all three probes
 
-Inspect the Deployment selector:
-
-```bash
-oc get deployment/todo-ssr \
-  -o jsonpath='{.spec.selector.matchLabels}{"\n"}'
-```
-
-List labels:
+Reset first so older probes and replica changes do not interfere:
 
 ```bash
-oc get pods --show-labels
-```
-
-Then select the Pod using the labels displayed by your cluster.
-
----
-
-# 🧹 Optional reset
-
-Remove all three probes:
-
-```bash
-oc set probe deployment/todo-ssr \
+oc set probe deployment/web-gateway \
   --remove \
   --startup \
   --liveness \
   --readiness
+
+oc scale deployment/web-gateway --replicas=1
 ```
 
-Confirm removal:
+### 1. Configure startup
 
 ```bash
-oc get deployment/todo-ssr -o yaml
-```
-
-Reapply the required configuration:
-
-```bash
-oc set probe deployment/todo-ssr --startup --open-tcp=8080 --initial-delay-seconds=10 --timeout-seconds=18
-oc set probe deployment/todo-ssr --liveness --open-tcp=8080 --period-seconds=10 --timeout-seconds=5 --failure-threshold=5
-oc set probe deployment/todo-ssr --readiness --get-url=http://:8080/ --period-seconds=15 --timeout-seconds=60 --failure-threshold=5
-```
-
----
-
-# 📝 Instructor explanation
-
-## Why use a startup probe?
-
-A startup probe is useful when an application needs time to initialize. Until it succeeds, the platform does not allow the liveness and readiness probes to interfere with startup.
-
-For this lab:
-
-```text
-Initial delay: 10 seconds
-TCP target:    port 8080
-Timeout:       18 seconds
-```
-
-The probe succeeds when a TCP connection to port `8080` can be established.
-
----
-
-## Why use a liveness probe?
-
-A liveness probe detects a container that remains running but can no longer perform useful work. After five consecutive TCP failures, the container is considered unhealthy and is restarted according to the Pod restart policy.
-
-For this lab:
-
-```text
-TCP target:       port 8080
-Check interval:   10 seconds
-Timeout:          5 seconds
-Failure threshold: 5
-```
-
----
-
-## Why use a readiness probe?
-
-A readiness probe controls whether the Pod is eligible to receive traffic. An application can be alive but not ready, such as while loading data or waiting for a dependency.
-
-For this lab:
-
-```text
-HTTP path:         /
-HTTP port:         8080
-Check interval:    15 seconds
-Timeout:           60 seconds
-Failure threshold: 5
-```
-
-Five consecutive failures mark the container unready. The process remains running while readiness checks continue.
-
----
-
-# 🧾 Exam-ready command summary
-
-```bash
-oc project deploy-probes
-
-oc set probe deployment/todo-ssr \
+oc set probe deployment/web-gateway \
   --startup \
-  --open-tcp=8080 \
-  --initial-delay-seconds=10 \
-  --timeout-seconds=18
+  --get-url=http://:8080/ \
+  --initial-delay-seconds=8 \
+  --period-seconds=5 \
+  --timeout-seconds=2 \
+  --failure-threshold=18
+```
 
-oc set probe deployment/todo-ssr \
+### 2. Configure liveness
+
+```bash
+oc set probe deployment/web-gateway \
   --liveness \
   --open-tcp=8080 \
-  --period-seconds=10 \
-  --timeout-seconds=5 \
-  --failure-threshold=5
-
-oc set probe deployment/todo-ssr \
-  --readiness \
-  --get-url=http://:8080/ \
-  --period-seconds=15 \
-  --timeout-seconds=60 \
-  --failure-threshold=5
-
-oc rollout status deployment/todo-ssr
-oc get deployment/todo-ssr -o yaml
-oc get pods
+  --period-seconds=14 \
+  --timeout-seconds=4 \
+  --failure-threshold=3
 ```
 
----
+### 3. Configure readiness
 
-# ✅ Completion checklist
+```bash
+oc set probe deployment/web-gateway \
+  --readiness \
+  --get-url=http://:8080/ \
+  --period-seconds=9 \
+  --timeout-seconds=3 \
+  --failure-threshold=4 \
+  --success-threshold=2
+```
 
-Confirm each item before finishing:
+### 4. Wait for the rollout
 
-- [ ] Current project is `deploy-probes`.
-- [ ] `deployment/todo-ssr` exists.
-- [ ] Startup probe uses TCP port `8080`.
-- [ ] Startup initial delay is `10`.
-- [ ] Startup timeout is `18`.
-- [ ] Liveness probe uses TCP port `8080`.
-- [ ] Liveness period is `10`.
-- [ ] Liveness timeout is `5`.
-- [ ] Liveness failure threshold is `5`.
-- [ ] Readiness probe uses HTTP GET.
-- [ ] Readiness path is `/`.
-- [ ] Readiness port is `8080`.
-- [ ] Readiness period is `15`.
-- [ ] Readiness timeout is `60`.
-- [ ] Readiness failure threshold is `5`.
-- [ ] The latest rollout completes.
-- [ ] The running Pod reports `1/1` in the `READY` column.
-- [ ] Pod events do not show recurring probe failures.
+```bash
+oc rollout status deployment/web-gateway
+```
 
----
+### 5. Display all probes
 
-# 📌 Final expected probe configuration
+```bash
+oc get deployment/web-gateway -o json \
+  | jq '.spec.template.spec.containers[0] | {
+      startupProbe,
+      livenessProbe,
+      readinessProbe
+    }'
+```
+
+Without `jq`, display the Deployment YAML and inspect the container section:
+
+```bash
+oc get deployment/web-gateway -o yaml
+```
+
+### 6. Confirm Pod status
+
+```bash
+oc get pods -l app=web-gateway
+```
+
+### Expected YAML structure
 
 ```yaml
 startupProbe:
-  tcpSocket:
+  httpGet:
+    path: /
     port: 8080
-  initialDelaySeconds: 10
-  timeoutSeconds: 18
-  periodSeconds: 10
+    scheme: HTTP
+  initialDelaySeconds: 8
+  periodSeconds: 5
+  timeoutSeconds: 2
+  failureThreshold: 18
   successThreshold: 1
-  failureThreshold: 3
 
 livenessProbe:
   tcpSocket:
     port: 8080
-  periodSeconds: 10
-  timeoutSeconds: 5
+  periodSeconds: 14
+  timeoutSeconds: 4
+  failureThreshold: 3
   successThreshold: 1
-  failureThreshold: 5
 
 readinessProbe:
   httpGet:
-    scheme: HTTP
     path: /
     port: 8080
-  periodSeconds: 15
-  timeoutSeconds: 60
-  successThreshold: 1
-  failureThreshold: 5
+    scheme: HTTP
+  periodSeconds: 9
+  timeoutSeconds: 3
+  failureThreshold: 4
+  successThreshold: 2
 ```
 
-> Defaulted fields can be displayed in a different order. The values, not the order, determine whether the configuration is correct.
+### Probe activation order
+
+1. The startup probe begins after its eight-second initial delay.
+2. Until startup succeeds, liveness and readiness checks are suppressed.
+3. After startup succeeds, the startup probe has completed its purpose.
+4. Liveness begins monitoring whether the application should be restarted.
+5. Readiness begins controlling whether the Pod should receive Service traffic.
+
+### Explanation
+
+Each probe solves a separate problem:
+
+- Startup protects a slow initialization phase.
+- Liveness recovers from a permanently unhealthy running process.
+- Readiness protects users and upstream services from traffic being sent to an unavailable instance.
+
+Using all three does not mean checking the same thing three times with different labels. Their endpoints and thresholds should represent the distinct states the application can actually report.
+
+---
+
+## Solution 11: Select the correct probe
+
+### 1. Four-minute Java initialization
+
+**Answer: Startup probe**
+
+A startup probe gives the application time to initialize and prevents liveness and readiness checks from interfering until startup succeeds.
+
+### 2. Permanently deadlocked web process
+
+**Answer: Liveness probe**
+
+A liveness failure causes the kubelet to restart the container, which can recover an application that is alive as a process but unable to make progress.
+
+### 3. Temporary cache refresh
+
+**Answer: Readiness probe**
+
+The container does not need to be restarted. It only needs to stop receiving traffic until the cache is usable again.
+
+### 4. Dependency outage should remove a Pod from load balancing
+
+**Answer: Readiness probe**
+
+The Pod should become NotReady so that normal Service traffic is not sent to it. Whether dependency health belongs in readiness depends on the application's actual ability to serve requests, but liveness should not generally restart an otherwise healthy process for a temporary external outage.
+
+### 5. Application never completes startup
+
+**Answer: Startup probe**
+
+After the startup probe reaches its failure threshold, the kubelet restarts the container according to its restart policy.
+
+---
+
+# 🔍 General verification commands
+
+## Display every configured probe
+
+```bash
+oc get deployment/web-gateway -o json \
+  | jq '.spec.template.spec.containers[] | {
+      name,
+      startupProbe,
+      livenessProbe,
+      readinessProbe
+    }'
+```
+
+## Use built-in API documentation
+
+```bash
+oc explain deployment.spec.template.spec.containers.startupProbe
+oc explain deployment.spec.template.spec.containers.livenessProbe
+oc explain deployment.spec.template.spec.containers.readinessProbe
+```
+
+Inspect probe fields recursively:
+
+```bash
+oc explain deployment.spec.template.spec.containers.readinessProbe --recursive
+```
+
+## Check Pods, readiness, and restart counts
+
+```bash
+oc get pods \
+  -l app=web-gateway \
+  -o custom-columns=NAME:.metadata.name,PHASE:.status.phase,READY:.status.containerStatuses[0].ready,RESTARTS:.status.containerStatuses[0].restartCount
+```
+
+## Review recent events
+
+```bash
+oc get events --sort-by=.lastTimestamp | tail -20
+```
+
+## Follow rollout status
+
+```bash
+oc rollout status deployment/web-gateway
+```
+
+---
+
+# ⚠️ Common mistakes
+
+## 1. Using liveness for temporary dependency problems
+
+A temporary database or API outage often calls for readiness behavior, not repeated container restarts.
+
+## 2. Using an endpoint that does too much work
+
+Health endpoints should be lightweight. A probe that performs expensive database reports every few seconds can become its own denial-of-service hobby project.
+
+## 3. Making liveness too aggressive
+
+Very short periods and low failure thresholds can restart a healthy application during a brief CPU pause or network delay.
+
+## 4. Forgetting that probe changes trigger a rollout
+
+Probes live in the Pod template. Changing that template creates replacement Pods through the Deployment rollout process.
+
+## 5. Assuming `Running` means ready
+
+A Pod can be in the `Running` phase while its readiness condition is false. Check the READY column and container status, not only the phase.
+
+## 6. Setting `successThreshold` above `1` for startup or liveness
+
+Kubernetes requires `successThreshold: 1` for startup and liveness probes. Readiness probes can use a higher value.
+
+---
+
+# 🧾 Quick command patterns
+
+## TCP probe
+
+```bash
+oc set probe deployment/NAME \
+  --startup|--liveness|--readiness \
+  --open-tcp=PORT
+```
+
+## HTTP probe
+
+```bash
+oc set probe deployment/NAME \
+  --startup|--liveness|--readiness \
+  --get-url=http://:PORT/PATH
+```
+
+## Command probe
+
+```bash
+oc set probe deployment/NAME \
+  --startup|--liveness|--readiness \
+  -- COMMAND ARGUMENTS
+```
+
+## Remove a probe
+
+```bash
+oc set probe deployment/NAME --remove --startup
+oc set probe deployment/NAME --remove --liveness
+oc set probe deployment/NAME --remove --readiness
+```
+
+---
+
+# 🧹 Cleanup
+
+Delete the practice project after completing the exercises:
+
+```bash
+oc delete project probe-practice
+```
+
+---
+
+# 📚 Official references
+
+- Kubernetes documentation: **Configure Liveness, Readiness and Startup Probes**  
+  <https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/>
+
+- Kubernetes concepts: **Liveness, Readiness, and Startup Probes**  
+  <https://kubernetes.io/docs/concepts/workloads/pods/probes/>
+
+- OKD CLI reference: **`oc set probe`**  
+  <https://docs.okd.io/4.18/cli_reference/openshift_cli/developer-cli-commands.html>
+
+- OKD application health documentation  
+  <https://docs.okd.io/latest/applications/application-health.html>
