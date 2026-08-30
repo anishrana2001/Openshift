@@ -1,0 +1,65 @@
+apiVersion: template.openshift.io/v1
+kind: Template
+metadata:
+  name: catalog-frontend-build
+
+objects:
+  - apiVersion: image.openshift.io/v1
+    kind: ImageStream
+    metadata:
+      name: ${NAME}
+      labels:
+        app: ${NAME}
+        group: catalog
+
+  - apiVersion: build.openshift.io/v1
+    kind: BuildConfig
+    metadata:
+      name: ${NAME}
+      labels:
+        app: ${NAME}
+        group: catalog
+    spec:
+      source:
+        type: Git
+        git:
+          uri: ${SOURCE_REPOSITORY_URL}
+          ref: ${SOURCE_REPOSITORY_REF}
+      strategy:
+        type: Docker
+        dockerStrategy:
+          env:
+            - name: NPM_REGISTRY
+              value: ${NPM_REGISTRY}
+            - name: BACKEND_URL
+              value: ${BACKEND_URL}
+
+      output:
+        to:
+          kind: DockerImage
+          name: ${REGISTRY_URL}/petrol/${NAME}:latest
+		  
+parameters:
+  - name: NAME
+    description: Application name
+    required: true
+
+  - name: SOURCE_REPOSITORY_URL
+    description: Git source repository URL
+    required: true
+
+  - name: SOURCE_REPOSITORY_REF
+    description: Git branch
+    value: main
+
+  - name: NPM_REGISTRY
+    description: NPM registry URL
+    required: true
+
+  - name: REGISTRY_URL
+    description: Container images registry URL
+    required: true
+
+  - name: BACKEND_URL
+    description: Backend public URL
+    required: true
