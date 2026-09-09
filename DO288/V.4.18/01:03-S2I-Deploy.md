@@ -177,9 +177,13 @@ todo-ssr-1    Source    Complete
 Follow build logs:
 
 ```bash
-oc start-build todo-ssr --follow
+oc logs build/todo-ssr-2
 ```
 
+### If you observe some issue and want to re-run the build 
+```bash
+oc start-build todo-ssr --follow
+```
 ---
 
 # 8. Create HTTP + HTTPS Route
