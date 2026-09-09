@@ -34,10 +34,7 @@ By the end of this guide, a developer should understand:
 
 
 
-
           👨‍💻 Developer
-
-
                 |
                 |
                 v
