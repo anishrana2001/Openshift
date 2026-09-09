@@ -703,8 +703,8 @@ Example syntax:
 ```bash
 oc create secret generic todo-app2-git \
   --type=kubernetes.io/basic-auth \
-  --from-literal=username='<GIT_USERNAME>' \
-  --from-literal=password='<GIT_PASSWORD>'
+  --from-literal=username=developer \
+  --from-literal=password=d3v3lop3r
 ```
 
 Verify:
