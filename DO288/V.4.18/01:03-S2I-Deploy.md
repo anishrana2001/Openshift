@@ -177,7 +177,7 @@ todo-ssr-1    Source    Complete
 Follow build logs:
 
 ```bash
-oc logs build/todo-ssr-2
+oc logs build/todo-ssr-1
 ```
 
 ### If you observe some issue and want to re-run the build 
