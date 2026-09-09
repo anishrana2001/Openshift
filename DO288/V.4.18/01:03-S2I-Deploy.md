@@ -322,6 +322,14 @@ https://todo-ssr.apps.ocp4.example.com
 
 Both should open successfully.
 
+CLI 
+
+```bash
+curl -I http://todo-ssr.apps.ocp4.example.com
+```
+```bash
+curl -I http://todo-ssr.apps.ocp4.example.com
+```
 ---
 
 # Web Console Verification
