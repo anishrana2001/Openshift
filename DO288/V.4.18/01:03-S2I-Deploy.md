@@ -6,7 +6,7 @@
 
 ![OpenShift](https://img.shields.io/badge/OpenShift-4.18-EE0000?logo=redhatopenshift&logoColor=white)
 ![Build](https://img.shields.io/badge/Source2Image_Strategy-2496ED?logo=docker&logoColor=white)
-![Project](https://img.shields.io/badge/Project-deploy\-cli-7B42BC)
+![Project](https://img.shields.io/badge/Project-deploycli-7B42BC)
 ![Guide](https://img.shields.io/badge/Guide-Student_Ready-2EA44F)
 
 </div>
