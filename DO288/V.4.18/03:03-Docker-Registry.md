@@ -199,7 +199,7 @@ git clone https://git.ocp4.example.com/developer/devops-wala/
 [student@workstation devops-wala]$ git clone https://git.ocp4.example.com/developer/devops-wala/
 Cloning into 'devops-wala'...
 Username for 'https://git.ocp4.example.com': developer
-Password for 'https://developer@git.ocp4.example.com': 
+Password for 'https://developer@git.ocp4.example.com':   d3v3lop3r
 [student@workstation devops-wala]$
 ```
 
