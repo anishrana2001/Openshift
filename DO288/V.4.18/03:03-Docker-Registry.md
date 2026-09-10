@@ -43,6 +43,8 @@ git remote add origin \
 git add .
 git commit -m "Add EX288 practice files"
 git push -u origin main
+rm -rf /home/student/ex288/devops-wala.tar
+rm -rf /home/student/ex288/devops-wala
 ```
 
 Verify the repository:
