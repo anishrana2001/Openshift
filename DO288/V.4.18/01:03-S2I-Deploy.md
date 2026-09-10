@@ -33,8 +33,6 @@ oc new-project deploy-cli
 
 # Q1 — Build and Deploy `todo-ssr` on OpenShift
 
-## Question
-
 You are a developer working on an OpenShift cluster.
 
 - The application must be built and deployed from the source code at: `https://git.ocp4.example.com/developer/DO288-apps`
