@@ -1,8 +1,58 @@
-# 🚀 EX288 Practice Lab — Deploy `todo-app2` using Source-to-Image (S2I)
+<div align="center">
 
+# 🔴 EX288 Task 2
+
+## Build and Deploy `todo-app2` using Source-to-Image (S2I)
+
+![OpenShift](https://img.shields.io/badge/OpenShift-4.18-EE0000?logo=redhatopenshift&logoColor=white)
+![Build](https://img.shields.io/badge/Source2Image_Strategy-2496ED?logo=docker&logoColor=white)
+![Project](https://img.shields.io/badge/Project-deploy--si-7B42BC)
+![Guide](https://img.shields.io/badge/Guide-Student_Ready-2EA44F)
+
+</div>
 
 ---
 
+## 🧪 How to Prepare the Lab
+
+Run these commands on the workstation as the `student` user. They download the
+practice repository, initialize it as a Git repository, and push it to the lab
+Git server.
+
+> [!NOTE]
+> Use these preparation commands on a fresh lab environment. Do not change the
+> application files before attempting the task.
+
+
+Start the lab:
+
+```bash
+lab start deploy-introduction
+oc login -u developer -p developer https://api.ocp4.example.com:6443
+oc new-project deploy-si
+```
+
+---
+---
+
+# Q2 — Build and Deploy `todo-app2` on OpenShift
+
+## Question: You are a developer working on an OpenShift cluster.
+
+- The application must be built and deployed from the source code at: `https://git.ocp4.example.com/developer/DO288-apps`
+- The application source code is located in the subdirectory: `labs/builds-s2i/s2i-scripts `
+- The application must be deployed to the project `deploy-si`
+- The deployed application and its resources must be named `todo-app2`
+- The build **must modify the existing S2I scripts** of the `httpd:2.4-ubi9` builder image to set the `SERVER_PORT` **environment variable** with the value `8081`
+
+- The application must be accessible using both:
+    - http://todo-app2.apps.ocp4.example.com
+    - https://todo-app2.apps.ocp4.example.com
+---
+
+<details>
+<summary><strong>✅ Show the complete solution and explanation</strong></summary>
+    
 ## 📚 Table of Contents
 
 1. [🎯 Lab Objective](#-lab-objective)
@@ -26,28 +76,7 @@
 19. [🧠 Exam Memory Map](#-exam-memory-map)
 20. [⚡ Fast Exam Runbook](#-fast-exam-runbook)
 
----
 
-# 🎯 Lab Objective
-
-You are a developer working on an OpenShift cluster.
-
-Build and deploy an application with the following requirements:
-
-# Q2 — Build and Deploy `todo-app2` on OpenShift
-
-## Question: You are a developer working on an OpenShift cluster.
-
-- The application must be built and deployed from the source code at: `https://git.ocp4.example.com/developer/DO288-apps`
-- The application source code is located in the subdirectory: `labs/builds-s2i/s2i-scripts `
-- The application must be deployed to the project `deploy-si`
-- The deployed application and its resources must be named `todo-app2`
-- The build **must modify the existing S2I scripts** of the `httpd:2.4-ubi9` builder image to set the `SERVER_PORT` **environment variable** with the value `8081`
-
-- The application must be accessible using both:
-    - http://todo-app2.apps.ocp4.example.com
-    - https://todo-app2.apps.ocp4.example.com
----
 
 > [!IMPORTANT]
 > The wording **“must modify the existing S2I scripts”** is important.  
@@ -67,47 +96,7 @@ Build and deploy an application with the following requirements:
 | 🔒 HTTPS URL | `https://todo-app2.apps.ocp4.example.com` |
 
 
----
 
-# 🧪 Prepare the Lab
-
-Start the lab:
-
-```bash
-lab start deploy-introduction
-```
-
-Log in to OpenShift:
-
-```bash
-oc login -u developer -p developer https://api.ocp4.example.com:6443
-```
-
-Create the project if it does not already exist:
-
-```bash
-oc new-project deploy-si
-```
-
-If you receive:
-
-```text
-Error from server (AlreadyExists): project.project.openshift.io "deploy-si" already exists
-```
-
-that is not a problem. Simply select it:
-
-```bash
-oc project deploy-si
-```
-
-Verify:
-
-```bash
-oc project
-```
-
----
 
 # 🧠 Understand What the Question Is Testing
 
