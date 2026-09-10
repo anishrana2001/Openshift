@@ -67,16 +67,13 @@ Build and deploy the HTTPD application with the following requirements:
 - The application must be built and deployed to the project `task77`.
 - The deployed application and its resources must be named
   `ex288-docker-app`.
-- The source code is available at
-  `https://git.ocp4.example.com/developer/devops-wala/`.
-- The application source code directory is `apps/task77/`.
+- The source code is available at `https://git.ocp4.example.com/developer/devops-wala/`
+- The application source code directory is `devops-wala/apps/task77/`
 - The Git reference is `main`.
-- The `httpd:2.4-ubi9` base image stream must be used from the `openshift`
-  namespace.
-- The application binary is available at
-  `https://raw.githubusercontent.com/anishrana2001/Openshift/refs/heads/main/DO288/V.4.18/Download-dir`.
+- The `httpd:2.4-ubi9` base image stream must be used from the **`openshift`** namespace.
+- The application binary is available at `https://raw.githubusercontent.com/anishrana2001/Openshift/refs/heads/main/DO288/V.4.18/Download-dir`
 - The service must be publicly available on the default hostname.
-- User `student` has only readonly privileges on Git.
+- User **`student`** has only readonly privileges on Git.
 
 > [!TIP]
 > Attempt the task and inspect the build or runtime errors before opening the
@@ -96,30 +93,11 @@ The repository contains the following Dockerfile:
 
 ```dockerfile
 FROM httpd:2.4-ubi9
-
 ARG CodeBinary
-
-RUN curl -fL ${CodeBinary} -o /usr/local/apache2/htdocs/index.html
-
-EXPOSE 80
-
-CMD ["httpd-foreground"]
+RUN curl -fL "${CodeBinary}" -o /var/www/html/index.html
+EXPOSE 8080
+CMD ["run-httpd"]
 ```
-
-The required Red Hat UBI HTTPD image does not use the Docker Hub HTTPD layout.
-The correct runtime values are:
-
-| Item | Incorrect repository value | Required UBI HTTPD value |
-|---|---|---|
-| Document root | `/usr/local/apache2/htdocs` | `/var/www/html` |
-| Container port | `80` | `8080` |
-| Start command | `httpd-foreground` | `run-httpd` |
-
-Because the source repository is read-only during the task, do not edit and
-push its Dockerfile. Use `oc new-build --dockerfile=-` to store a corrected
-inline Dockerfile in the `BuildConfig`. OpenShift processes this inline file
-after the Git source and therefore replaces the Dockerfile from the selected
-context directory.
 
 ### Task-to-resource mapping
 
@@ -222,18 +200,7 @@ oc new-build \
   --name=ex288-docker-app \
   --strategy=docker \
   --context-dir=apps/task77/ \
-  --build-arg=CodeBinary=https://raw.githubusercontent.com/anishrana2001/Openshift/refs/heads/main/DO288/V.4.18/Download-dir \
-  --dockerfile=- <<'EOF'
-FROM httpd:2.4-ubi9
-
-ARG CodeBinary
-
-RUN curl -fL "${CodeBinary}" -o /var/www/html/index.html
-
-EXPOSE 8080
-
-CMD ["run-httpd"]
-EOF
+  --build-arg=CodeBinary=https://raw.githubusercontent.com/anishrana2001/Openshift/refs/heads/main/DO288/V.4.18/Download-dir 
 ```
 
 ### Why this command is easier than memorizing a complete YAML file
