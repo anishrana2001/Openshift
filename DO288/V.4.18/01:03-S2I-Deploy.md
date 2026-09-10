@@ -13,9 +13,15 @@
 
 ---
 
-## How to Prepare the Lab?
+## 🧪 How to Prepare the Lab?
 
-Start the lab environment:
+Run these commands on the workstation as the `student` user. They download the
+practice repository, initialize it as a Git repository, and push it to the lab
+Git server.
+
+> [!NOTE]
+> Use these preparation commands on a fresh lab environment. Do not change the
+> application files before attempting the task.
 
 ```bash
 lab start deploy-introduction
@@ -52,8 +58,8 @@ Password: d3v3lop3r
 - The npm dependency repository can be passed to the build environment using `npm_config_registry`
 
 ---
-
-# Solution
+<details>
+<summary><strong>✅ Show the complete solution and explanation</strong></summary>
 
 ## 1. Login to OpenShift
 
