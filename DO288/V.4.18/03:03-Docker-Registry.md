@@ -173,12 +173,7 @@ Expected output:
 task77
 ```
 
-### Step 3: Grant `devuser` read-only access
-
-```bash
-oc policy add-role-to-user view devuser -n task77
-oc get rolebinding -n task77 -o wide
-```
+### Step 3: 
 
 The `view` cluster role permits read-only access to most project resources and
 does not grant permission to create, update, or delete them.
@@ -196,6 +191,18 @@ The image stream tag must exist before the build is created.
 > student account generally cannot change access in that shared namespace.
 
 ### Step 5: Inspect the supplied Dockerfile
+
+```bash
+git clone https://git.ocp4.example.com/developer/devops-wala/
+```
+```
+[student@workstation devops-wala]$ git clone https://git.ocp4.example.com/developer/devops-wala/
+Cloning into 'devops-wala'...
+Username for 'https://git.ocp4.example.com': developer
+Password for 'https://developer@git.ocp4.example.com': 
+[student@workstation devops-wala]$
+```
+
 
 ```bash
 cd /home/student/ex288/devops-wala
