@@ -45,6 +45,11 @@ git commit -m "Add EX288 practice files"
 git push -u origin main
 rm -rf /home/student/ex288/devops-wala.tar
 rm -rf /home/student/ex288/devops-wala
+oc new-project task77
+oc create secret generic devops-git-secret --type=kubernetes.io/basic-auth --from-literal=username=developer --from-literal=password=d3v3lop3r
+oc annotate secret devops-git-secret "build.openshift.io/source-secret-match-uri-1=https://git.ocp4.example.com/*"
+oc secrets link builder devops-git-secret
+
 ```
 
 Verify the repository:
@@ -68,7 +73,7 @@ Build and deploy the HTTPD application with the following requirements:
 - The deployed application and its resources must be named
   `ex288-docker-app`.
 - The source code is available at `https://git.ocp4.example.com/developer/devops-wala/`
-- The application source code directory is `devops-wala/apps/task77/`
+- The application source code directory is `apps/task77/`
 - The Git reference is `main`.
 - The `httpd:2.4-ubi9` base image stream must be used from the **`openshift`** namespace.
 - The application binary is available at `https://raw.githubusercontent.com/anishrana2001/Openshift/refs/heads/main/DO288/V.4.18/Download-dir`
@@ -199,7 +204,7 @@ oc new-build \
   openshift/httpd:2.4-ubi9~https://git.ocp4.example.com/developer/devops-wala/#main \
   --name=ex288-docker-app \
   --strategy=docker \
-  --context-dir=devops-wala/apps/task77/ \
+  --context-dir=apps/task77/ \
   --build-arg=CodeBinary=https://raw.githubusercontent.com/anishrana2001/Openshift/refs/heads/main/DO288/V.4.18/Download-dir 
 ```
 
