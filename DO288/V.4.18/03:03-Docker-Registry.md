@@ -74,7 +74,7 @@ Build and deploy the HTTPD application with the following requirements:
 - The application binary is available at
   `https://raw.githubusercontent.com/anishrana2001/Openshift/refs/heads/main/DO288/V.4.18/Download-dir`.
 - The service must be publicly available on the default hostname.
-- User `devuser` must have read-only privileges.
+- User `student` has only readonly privileges on Git.
 
 > [!TIP]
 > Attempt the task and inspect the build or runtime errors before opening the
