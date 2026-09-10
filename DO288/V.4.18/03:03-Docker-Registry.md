@@ -199,7 +199,7 @@ oc new-build \
   openshift/httpd:2.4-ubi9~https://git.ocp4.example.com/developer/devops-wala/#main \
   --name=ex288-docker-app \
   --strategy=docker \
-  --context-dir=apps/task77/ \
+  --context-dir=devops-wala/apps/task77/ \
   --build-arg=CodeBinary=https://raw.githubusercontent.com/anishrana2001/Openshift/refs/heads/main/DO288/V.4.18/Download-dir 
 ```
 
