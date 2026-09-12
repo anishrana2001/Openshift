@@ -277,7 +277,8 @@ echo "$POD"
 Validate the three required environment variables:
 
 ```bash
-oc exec "$POD" -- printenv | egrep "CUSTOMER|PRIORITY|POD_NAME" ```
+oc exec "$POD" -- printenv | egrep "CUSTOMER|PRIORITY|POD_NAME"
+```
 
 Expected output resembles:
 
