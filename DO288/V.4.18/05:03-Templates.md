@@ -1,3 +1,49 @@
+<div align="center">
+
+# 🔴 EX288 Task 5
+
+## Build and Deploy cdnweb Frontend Application Using OpenShift Templates
+
+![OpenShift](https://img.shields.io/badge/OpenShift-4.18-EE0000?logo=redhatopenshift&logoColor=white)
+![Build](https://img.shields.io/badge/Templates_Strategy-2496ED?logo=docker&logoColor=white)
+![Project](https://img.shields.io/badge/Project-tiger-7B42BC)
+![Guide](https://img.shields.io/badge/Guide-Student_Ready-2EA44F)
+
+</div>
+
+---
+
+## 🧪 How to Prepare the Lab?
+
+Run these commands on the workstation as the `student` user. They download the
+practice repository, initialize it as a Git repository, and push it to the lab
+Git server.
+
+> [!NOTE]
+> Use these preparation commands on a fresh lab environment. Do not change the
+> application files before attempting the task.
+
+```bash
+mkdir -p /home/student/ex288/template
+cd /home/student/ex288/template
+wget https://raw.githubusercontent.com/anishrana2001/Openshift/refs/heads/main/DO288/V.4.18/05-00-cdnweb-frontend-build-template.yaml
+
+wget https://raw.githubusercontent.com/anishrana2001/Openshift/refs/heads/main/DO288/V.4.18/05-00-cdnweb-frontend-deploy.template.yaml
+
+git init -b main
+git config user.name "Student"
+git config user.email "student@ocp4.example.com"
+git remote add origin \
+  https://developer:d3v3lop3r@git.ocp4.example.com/developer/mycdn.git
+
+git add .
+git commit -m "Add EX288 practice files"
+git push -u origin main
+rm -rf /home/student/ex288/template/05-00-cdnweb-frontend-build-template.yaml
+rm -rf /home/student/ex288/template/05-00-cdnweb-frontend-deploy.template.yaml
+```
+---
+
 # Task : Build and Deploy cdnweb Frontend Application Using OpenShift Templates
 
 - The cdnweb `frontend application` must be built and deployed in the project **`tiger`**
