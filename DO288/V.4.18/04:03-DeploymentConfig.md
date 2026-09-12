@@ -212,6 +212,7 @@ oc get pods -A -oyaml | grep -C 5 valueFrom
 
 Add `envFrom` and `env` to that **same container**. The relevant section should resemble the following:
 
+## Search "valueFrom" from documentation, Configure --> Node --> Working with Container
 ```yaml
 spec:
   template:
