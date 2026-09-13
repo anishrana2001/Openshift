@@ -38,7 +38,7 @@ objects:
         to:
           kind: DockerImage
           name: ${REGISTRY_URL}/petrol/${NAME}:latest
-		  
+
 parameters:
   - name: NAME
     description: Application name
