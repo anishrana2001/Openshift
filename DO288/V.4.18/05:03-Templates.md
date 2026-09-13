@@ -29,7 +29,7 @@ cd /home/student/ex288/template
 wget https://raw.githubusercontent.com/anishrana2001/Openshift/refs/heads/main/DO288/V.4.18/05-00-cdnweb-frontend-build-template.yaml
 wget https://raw.githubusercontent.com/anishrana2001/Openshift/refs/heads/main/DO288/V.4.18/05-00-cdnweb-frontend-deploy.template.yaml
 
-git init -b main
+git init -b cdn-v4
 git config user.name "Student"
 git config user.email "student@ocp4.example.com"
 git remote add origin \
@@ -37,7 +37,7 @@ git remote add origin \
 
 git add .
 git commit -m "Add EX288 practice files"
-git push -u origin main
+git push -u origin cdn-v4
 rm -rf /home/student/ex288/template/05-00-cdnweb-frontend-build-template.yaml
 rm -rf /home/student/ex288/template/05-00-cdnweb-frontend-deploy.template.yaml
 ```
