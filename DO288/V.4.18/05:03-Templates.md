@@ -65,6 +65,9 @@ rm -rf /home/student/ex288/template/05-00-05-00-cdnweb-frontend-deploy.template.
 
 > **Important Note:** You must push the template changes into the Git code repository.
 ---
+<details>
+<summary><strong>✅ Show the complete solution and explanation</strong></summary>
+
 
 # Goal of the Task
 
