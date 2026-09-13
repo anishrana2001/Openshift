@@ -187,11 +187,8 @@ For example, the template may already contain parameters such as:
 
 ```text
 NAME
-SOURCE_REPOSITORY_URL
-SOURCE_REPOSITORY_REF
-NPM_REGISTRY
-BACKEND_URL
-FRONTEND_URL
+REGISTRY_URL
+FRONTEND_HOST
 ```
 
 The exact names depend on the template. Do not guess if the template already defines them. Guessing parameter names in OpenShift templates is basically gambling with extra indentation.
