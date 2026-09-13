@@ -40,7 +40,7 @@ git add .
 git commit -m "Add EX288 practice files"
 git push -u origin main
 rm -rf /home/student/ex288/template/05-00-cdnweb-frontend-build-template.yaml
-rm -rf /home/student/ex288/template/05-00-05-00-cdnweb-frontend-deploy.template.yaml
+rm -rf /home/student/ex288/template/05-00-cdnweb-frontend-deploy.template.yaml
 ```
 ---
 
