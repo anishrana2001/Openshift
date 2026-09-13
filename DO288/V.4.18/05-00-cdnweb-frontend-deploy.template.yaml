@@ -60,7 +60,7 @@ objects:
         name: ${NAME}
       tls:
         termination: edge
-		
+
 parameters:
   - name: NAME
     description: Application name
