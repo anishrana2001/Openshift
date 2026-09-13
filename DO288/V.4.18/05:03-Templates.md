@@ -15,9 +15,9 @@
 
 ## 🧪 How to Prepare the Lab?
 
-Run these commands on the workstation as the `student` user. They download the
-practice repository, initialize it as a Git repository, and push it to the lab
-Git server.
+Run these commands on the workstation as the `student` user. They download 
+the required template files, initialize them as a Git repository,
+and push the templates to the lab GitLab repository.
 
 > [!NOTE]
 > Use these preparation commands on a fresh lab environment. Do not change the
@@ -27,7 +27,6 @@ Git server.
 mkdir -p /home/student/ex288/template
 cd /home/student/ex288/template
 wget https://raw.githubusercontent.com/anishrana2001/Openshift/refs/heads/main/DO288/V.4.18/05-00-cdnweb-frontend-build-template.yaml
-
 wget https://raw.githubusercontent.com/anishrana2001/Openshift/refs/heads/main/DO288/V.4.18/05-00-cdnweb-frontend-deploy.template.yaml
 
 git init -b main
@@ -46,28 +45,23 @@ rm -rf /home/student/ex288/template/05-00-cdnweb-frontend-deploy.template.yaml
 
 # Task : Build and Deploy cdnweb Frontend Application Using OpenShift Templates
 
-- The cdnweb `frontend application` must be built and deployed in the project **`tiger`**
-- Build the OpenShift `build template` for the `cdnweb` application located at **`task5/05-00-cdnweb-frontend-build-template.yaml`** with the following modification:
+- The **`cdnweb`** **frontend application** must be built and deployed in the project **`tiger`**
+	- Build the OpenShift **`build template`** for the `cdnweb` application from the  template  located at **`task5/05-00-cdnweb-frontend-build-template.yaml`** with the following modification:
+		- Define a new required parameter named **`REGISTRY_URL`** with the following description **`My CDN image registry`**
+		- All created resources should use the name **cdnweb-ui**.
+		- Use the default branch **`cdn-v4`** from the repository **`git.ocp4.example.com/developer/mycdn.git`** & credentials are **`Username: developer`** and **`Password: d3v3lop3r`**
+		- The application's dependencies NPM repository to the corporate is **`http://nexus-infra.apps.ocp4.example.com/repository/npm`**
+		- Set the container image registry as **`registry.ocp4.example.com`**
 
-	- Define a new required parameter named **`REGISTRY_URL`** with the following description **`My CDN image registry`**
-    - All objects must have the name **`cdnweb-ui`**
-    - Use the default branch **`cdn-v4`** from the repository **`git.ocp4.example.com/developer/mycdn.git`** & credentails is **`Username: developer`** and **`Password: d3v3lop3r`**
-    - The application's dependencies NPM repository to the corporate is **`http://nexus-infra.apps.ocp4.example.com/repository/npm`**
-    - Set the container image registry as **`registry.ocp4.example.com**
+- **Set the `backend`** service to the public exposed backend URL `https://cdnweb-be-tiger-db.apps.ocp4.example.com/`
 
-- **Set the `backend`** service to the public exposed backend URL `https://cdnweb-be-tiger-db.apps.docdn-v44.example.com/`
-
-- To deploy the cdnweb **`frontend`** application, use the OpenShift deployment template located at **`task5/05-00-cdnweb-frontend-deploy.template.yaml`** with the following modification:
-
-    - All objects must have the name **`cdnweb-ui`**
-    - Set the public exposed frontend URL as **`https://cdnweb-ui-tiger.apps.docdn-v44.example.com/`**
-    - All resources created from the template must be selectable using the selector **`app=cdnweb-ui,group=cdnweb`**
+	- To deploy the **`cdnweb`** **frontend application**, use the OpenShift deployment template located at **`task5/05-00-cdnweb-frontend-deploy.template.yaml`** with the following modification:
+		- All created resources should use the name **`cdnweb-ui`**
+		- Set the public exposed frontend URL as **`https://cdnweb-ui-tiger.apps.ocp4.example.com/`**
+		- All resources created from the template must be selectable using the selector **`app=cdnweb-ui,group=cdnweb`**
 
 > **Important Note:** You must push the template changes into the Git code repository.
 ---
-<details>
-<summary><strong>✅ Show the complete solution and explanation</strong></summary>
-
 
 # Goal of the Task
 
@@ -83,7 +77,7 @@ In this task, you must:
 8. Start and verify the build.
 9. Verify the deployment, service, route, and labels.
 
-This is not just a simple `oc new-app` task. This is a template-based deployment task. So blindly typing commands is how people summon YAML demons.
+This is not just a simple oc new-app task. This is a template-based deployment task, so understanding the template workflow is important.
 
 ---
 
@@ -91,7 +85,7 @@ This is not just a simple `oc new-app` task. This is a template-based deployment
 
 
          1. SOURCE CONTROL
-              GitLab
+              GitLab (git.ocp4.example.com/developer/mycdn.git)
                 │
                 │ clone
                 ▼
@@ -122,7 +116,7 @@ This is not just a simple `oc new-app` task. This is a template-based deployment
                 │
                 │ git clone source
                 ▼
-             GitLab
+             GitLab (git.ocp4.example.com/developer/mycdn.git)
                 │
                 ▼
         Application source
@@ -137,7 +131,7 @@ This is not just a simple `oc new-app` task. This is a template-based deployment
 
 ---
 
-# Correct Solution
+# Solution
 
 ## Step 1: Switch to the Required Project
 
@@ -158,7 +152,7 @@ oc new-project tiger
 
 
 ```bash
-git clone git.ocp4.example.com/developer/mycdn.git
+git clone https://git.ocp4.example.com/developer/mycdn.git
 ```
 
 When prompted:
@@ -272,7 +266,7 @@ task5/05-00-cdnweb-frontend-deploy.template.yaml
 
 ### Why Use `${NAME}`?
 
-Because the task says all objects must have the name:
+Because the task says all created resources must use the name:
 
 ```text
 cdnweb-ui
@@ -390,7 +384,7 @@ oc create secret generic cdnweb-ui-git-auth \
 
 This creates a secret that can be attached to the BuildConfig as a source secret.
 
-The password is wrapped in single quotes because of the exclamation mark.
+
 
 ---
 
@@ -403,9 +397,9 @@ oc process -f task5/05-00-cdnweb-frontend-build-template.yaml \
   -p NAME=cdnweb-ui \
   -p SOURCE_REPOSITORY_URL=git.ocp4.example.com/developer/mycdn.git \
   -p SOURCE_REPOSITORY_REF=cdn-v4 \
-  -p NPM_REGISTRY=http://npm.docdn-v44.example.com:8081/repository/npm-reg/ \
-  -p REGISTRY_URL=registry.docdn-v44.example.com \
-  -p BACKEND_URL=https://cdnweb-be-tiger-db.apps.docdn-v44.example.com/ \
+  -p NPM_REGISTRY=http://nexus-infra.apps.ocp4.example.com/repository/npm \
+  -p REGISTRY_URL=registry.ocp4.example.com \
+  -p BACKEND_URL=https://cdnweb-be-tiger-db.apps.ocp4.example.com/ \
   | oc apply -f -
 ```
 
@@ -420,9 +414,9 @@ The important values are:
 | Application name | `cdnweb-ui` |
 | Git repository | `git.ocp4.example.com/developer/mycdn.git` |
 | Git branch | `cdn-v4` |
-| NPM registry | `http://npm.docdn-v44.example.com:8081/repository/npm-reg/` |
-| Container registry | `registry.docdn-v44.example.com` |
-| Backend URL | `https://cdnweb-be-tiger-db.apps.docdn-v44.example.com/` |
+| NPM registry | `http://nexus-infra.apps.ocp4.example.com/repository/npm` |
+| Container registry | `registry.ocp4.example.com` |
+| Backend URL | `https://cdnweb-be-tiger-db.apps.ocp4.example.com/` |
 
 ---
 
@@ -446,11 +440,11 @@ For example:
 | `GIT_URI` | `git.ocp4.example.com/developer/mycdn.git` |
 | `SOURCE_REPOSITORY_REF` | `cdn-v4` |
 | `GIT_REF` | `cdn-v4` |
-| `NPM_REGISTRY` | `http://npm.docdn-v44.example.com:8081/repository/npm-reg/` |
-| `NPM_MIRROR` | `http://npm.docdn-v44.example.com:8081/repository/npm-reg/` |
-| `BACKEND_URL` | `https://cdnweb-be-tiger-db.apps.docdn-v44.example.com/` |
-| `APPLICATION_SERVICE` | `https://cdnweb-be-tiger-db.apps.docdn-v44.example.com/` |
-| `REGISTRY_URL` | `registry.docdn-v44.example.com` |
+| `NPM_REGISTRY` | `http://nexus-infra.apps.ocp4.example.com/repository/npm` |
+| `NPM_MIRROR` | `http://nexus-infra.apps.ocp4.example.com/repository/npm` |
+| `BACKEND_URL` | `https://cdnweb-be-tiger-db.apps.ocp4.example.com/` |
+| `APPLICATION_SERVICE` | `https://cdnweb-be-tiger-db.apps.ocp4.example.com/` |
+| `REGISTRY_URL` | `registry.ocp4.example.com` |
 
 Do not blindly copy parameter names if your template uses different names. The template output is the boss here, because apparently files are allowed to have opinions.
 
@@ -531,7 +525,7 @@ oc logs -f bc/cdnweb-ui
 ```bash
 oc process -f task5/05-00-cdnweb-frontend-deploy.template.yaml \
   -p NAME=cdnweb-ui \
-  -p FRONTEND_URL=https://cdnweb-ui-tiger.apps.docdn-v44.example.com/ \
+  -p FRONTEND_URL=https://cdnweb-ui-tiger.apps.ocp4.example.com/ \
   | oc apply -f -
 ```
 
@@ -544,7 +538,7 @@ The cdn-v4 customizations are:
 | Requirement | Value |
 |---|---|
 | Object name | `cdnweb-ui` |
-| Public frontend URL | `https://cdnweb-ui-tiger.apps.docdn-v44.example.com/` |
+| Public frontend URL | `https://cdnweb-ui-tiger.apps.ocp4.example.com/` |
 | Labels | `app=cdnweb-ui,group=cdnweb` |
 
 ---
@@ -553,16 +547,16 @@ The cdn-v4 customizations are:
 
 Some templates expect only the hostname, not the full URL.
 
-If your deployment template asks for `HOSTNAME`, `APPLICATION_DOcdn-v4`, or `ROUTE_HOST`, use this value:
+If your deployment template asks for `HOSTNAME`, or `ROUTE_HOST`, use this value:
 
 ```text
-cdnweb-ui-tiger.apps.docdn-v44.example.com
+cdnweb-ui-tiger.apps.ocp4.example.com
 ```
 
 not:
 
 ```text
-https://cdnweb-ui-tiger.apps.docdn-v44.example.com/
+https://cdnweb-ui-tiger.apps.ocp4.example.com/
 ```
 
 ### Why?
@@ -582,7 +576,7 @@ or a trailing slash:
 The route host should only be:
 
 ```text
-cdnweb-ui-tiger.apps.docdn-v44.example.com
+cdnweb-ui-tiger.apps.ocp4.example.com
 ```
 
 Use the full URL only if the template parameter specifically asks for the frontend public URL.
@@ -593,10 +587,17 @@ Use the full URL only if the template parameter specifically asks for the fronte
 
 If the deployment template does not create the route automatically, create it manually:
 
+Check the route before creating it.
+
+```bash
+oc get route cdnweb-ui
+```
+
+
 ```bash
 oc create route edge cdnweb-ui \
   --service=cdnweb-ui \
-  --hostname=cdnweb-ui-tiger.apps.docdn-v44.example.com
+  --hostname=cdnweb-ui-tiger.apps.ocp4.example.com
 ```
 
 ### Explanation
@@ -606,13 +607,13 @@ This exposes the frontend service publicly over HTTPS.
 Do not use this as the hostname:
 
 ```text
-https://cdnweb-ui-tiger.apps.docdn-v44.example.com/
+https://cdnweb-ui-tiger.apps.ocp4.example.com/
 ```
 
 Use only:
 
 ```text
-cdnweb-ui-tiger.apps.docdn-v44.example.com
+cdnweb-ui-tiger.apps.ocp4.example.com
 ```
 
 OpenShift route hostnames do not include the URL scheme.
@@ -664,13 +665,13 @@ Resources related to cdnweb-ui should be listed.
 Test the frontend URL:
 
 ```bash
-curl -k https://cdnweb-ui-tiger.apps.docdn-v44.example.com/
+curl -k https://cdnweb-ui-tiger.apps.ocp4.example.com/
 ```
 
 If the frontend loads but cannot communicate with the backend, check that the backend URL parameter was set correctly:
 
 ```text
-https://cdnweb-be-tiger-db.apps.docdn-v44.example.com/
+https://cdnweb-be-tiger-db.apps.ocp4.example.com/
 ```
 
 ---
@@ -684,10 +685,10 @@ Use this clean sequence.
 oc project tiger || oc new-project tiger
 
 # 2. Clone the source repository
-git clone 'http://developer:d3v3lop3r@git.docdn-v44.example.com:5000/filesmart/cdnweb-frontend.git'
+git clone https://git.ocp4.example.com/developer/mycdn.git
 
 # 3. Enter the repository
-cd cdnweb-frontend
+cd mycdn/
 
 # 4. Inspect template parameters
 oc process --parameters -f task5/05-00-cdnweb-frontend-build-template.yaml
@@ -717,9 +718,9 @@ oc process -f task5/05-00-cdnweb-frontend-build-template.yaml \
   -p NAME=cdnweb-ui \
   -p SOURCE_REPOSITORY_URL=git.ocp4.example.com/developer/mycdn.git \
   -p SOURCE_REPOSITORY_REF=cdn-v4 \
-  -p NPM_REGISTRY=http://npm.docdn-v44.example.com:8081/repository/npm-reg/ \
-  -p REGISTRY_URL=registry.docdn-v44.example.com \
-  -p BACKEND_URL=https://cdnweb-be-tiger-db.apps.docdn-v44.example.com/ \
+  -p NPM_REGISTRY=http://nexus-infra.apps.ocp4.example.com/repository/npm \
+  -p REGISTRY_URL=registry.ocp4.example.com \
+  -p BACKEND_URL=https://cdnweb-be-tiger-db.apps.ocp4.example.com/ \
   | oc apply -f -
 
 # 10. Attach Git source secret to BuildConfig
@@ -731,13 +732,13 @@ oc start-build cdnweb-ui --follow
 # 12. Process and apply deployment template
 oc process -f task5/05-00-cdnweb-frontend-deploy.template.yaml \
   -p NAME=cdnweb-ui \
-  -p FRONTEND_URL=https://cdnweb-ui-tiger.apps.docdn-v44.example.com/ \
+  -p FRONTEND_URL=https://cdnweb-ui-tiger.apps.ocp4.example.com/ \
   | oc apply -f -
 
 # 13. Create route manually if template does not create it
 oc create route edge cdnweb-ui \
   --service=cdnweb-ui \
-  --hostname=cdnweb-ui-tiger.apps.docdn-v44.example.com
+  --hostname=cdnweb-ui-tiger.apps.ocp4.example.com
 
 # 14. Verify resources
 oc get all
@@ -748,344 +749,6 @@ oc get pods
 
 ---
 
-# Errors in the Given Rough Solution
-
-The rough solution was:
-
-```bash
-oc new-project patrol
-
-Git clone git.ocp4.example.com/developer/mycdn.git
-Cd cdnweb-frontend
-
-Add parameters description and labels in both yaml
-
-Vim build.yaml
-
-Add parameters:
--
-name: REGISTRY
-URL
-_
-description: container registry url
-required: true
-
-- name: NAME
-description: app name
-required: true
--
-name: APPLICATION
-SERVICE
-_
-description: container registry url
-required: true
-
-labels:
-app: cdnweb-ui
-groups: cdnweb
-
-Same as deploy.yaml as required
-
-git status
-git add .
-git commit -m 'add param and desc'
-git push
-
-oc apply -f template
-_
-oc apply -f template
-_
-build.yaml
-deploy.yaml
-
-oc new-app --template TEMPLATE
-_
-NAME -p PARAM
-NAME=PARAM
-_
-_
-"app=label,group=groupLabel"
-VALUE -l
-
-oc new-app --template TEMPLATE
-_
-NAME2 -p PARAM
-NAME=PARAM
-_
-_
-"app=label,group=groupLabel"
-VALUE -l
-
-oc create route edge --service custom-u
-```
-
----
-
-## Error 1: Wrong project name
-
-Wrong:
-
-```bash
-oc new-project patrol
-```
-
-Correct:
-
-```bash
-oc project tiger
-```
-
-or:
-
-```bash
-oc new-project tiger
-```
-
-The task says `tiger`, not `patrol`.
-
----
-
-## Error 2: Git authentication is missing
-
-The rough solution clones the repository without configuring credentials.
-
-The task requires:
-
-```text
-Username: developer
-Password: d3v3lop3r
-```
-
-Correct clone command:
-
-```bash
-git clone 'http://developer:d3v3lop3r@git.docdn-v44.example.com:5000/filesmart/cdnweb-frontend.git'
-```
-
-Also create an OpenShift source secret:
-
-```bash
-oc create secret generic cdnweb-ui-git-auth \
-  --type=kubernetes.io/basic-auth \
-  --from-literal=username=developer \
-  --from-literal=password='d3v3lop3r'
-```
-
----
-
-## Error 3: Wrong or broken parameter name
-
-Wrong rough form:
-
-```yaml
-name: REGISTRY
-URL
-_
-```
-
-Correct:
-
-```yaml
-- name: REGISTRY_URL
-  description: My CDN image registry
-  required: true
-```
-
-The question formatting is broken, but the intended parameter name is `REGISTRY_URL`.
-
----
-
-## Error 4: Wrong label key
-
-Wrong:
-
-```yaml
-groups: cdnweb
-```
-
-Correct:
-
-```yaml
-group: cdnweb
-```
-
-The selector must be:
-
-```text
-app=cdnweb-ui,group=cdnweb
-```
-
-not:
-
-```text
-app=cdnweb-ui,groups=cdnweb
-```
-
----
-
-## Error 5: Template file names are wrong
-
-The rough solution says:
-
-```text
-build.yaml
-deploy.yaml
-```
-
-But the question gives exact file paths:
-
-```text
-task5/05-00-cdnweb-frontend-build-template.yaml
-task5/05-00-cdnweb-frontend-deploy.template.yaml
-```
-
-Use the exact files given in the task.
-
----
-
-## Error 6: Template application method is unclear
-
-The rough solution mixes:
-
-```bash
-oc apply -f template
-```
-
-and:
-
-```bash
-oc new-app --template TEMPLATE_NAME
-```
-
-A clean way is:
-
-```bash
-oc process -f template.yaml -p KEY=VALUE | oc apply -f -
-```
-
-This processes the template with custom parameters and applies the generated resources.
-
----
-
-## Error 7: Missing NPM registry value
-
-The task requires the NPM registry to be:
-
-```text
-http://npm.docdn-v44.example.com:8081/repository/npm-reg/
-```
-
-The rough solution does not clearly set it.
-
-Correct parameter example:
-
-```bash
--p NPM_REGISTRY=http://npm.docdn-v44.example.com:8081/repository/npm-reg/
-```
-
----
-
-## Error 8: Missing backend URL value
-
-The task requires the backend URL to be:
-
-```text
-https://cdnweb-be-tiger-db.apps.docdn-v44.example.com/
-```
-
-Correct parameter example:
-
-```bash
--p BACKEND_URL=https://cdnweb-be-tiger-db.apps.docdn-v44.example.com/
-```
-
----
-
-## Error 9: Missing frontend URL value
-
-The task requires the frontend URL to be:
-
-```text
-https://cdnweb-ui-tiger.apps.docdn-v44.example.com/
-```
-
-Correct parameter example:
-
-```bash
--p FRONTEND_URL=https://cdnweb-ui-tiger.apps.docdn-v44.example.com/
-```
-
----
-
-## Error 10: Route command is incomplete
-
-Wrong:
-
-```bash
-oc create route edge --service custom-u
-```
-
-Correct:
-
-```bash
-oc create route edge cdnweb-ui \
-  --service=cdnweb-ui \
-  --hostname=cdnweb-ui-tiger.apps.docdn-v44.example.com
-```
-
----
-
-# Expected Template Snippets
-
-## Build Template Parameter Snippet
-
-Inside:
-
-```text
-task5/05-00-cdnweb-frontend-build-template.yaml
-```
-
-add:
-
-```yaml
-parameters:
-- name: REGISTRY_URL
-  description: My CDN image registry
-  required: true
-```
-
----
-
-## Template Label Snippet
-
-Inside both templates:
-
-```yaml
-labels:
-  app: ${NAME}
-  group: cdnweb
-```
-
----
-
-## Deployment Template Pod Label Snippet
-
-Inside the deployment object:
-
-```yaml
-spec:
-  selector:
-    matchLabels:
-      app: ${NAME}
-      group: cdnweb
-  template:
-    metadata:
-      labels:
-        app: ${NAME}
-        group: cdnweb
-```
-
----
 
 # Verification Checklist
 
@@ -1174,7 +837,7 @@ oc get route cdnweb-ui
 Expected host:
 
 ```text
-cdnweb-ui-tiger.apps.docdn-v44.example.com
+cdnweb-ui-tiger.apps.ocp4.example.com
 ```
 
 ---
@@ -1182,198 +845,8 @@ cdnweb-ui-tiger.apps.docdn-v44.example.com
 ## 7. Verify application
 
 ```bash
-curl -k https://cdnweb-ui-tiger.apps.docdn-v44.example.com/
+curl -k https://cdnweb-ui-tiger.apps.ocp4.example.com/
 ```
-
----
-
-# Troubleshooting
-
-## Problem 1: `REGISTRY_URL` parameter not found
-
-If you see:
-
-```text
-unknown parameter name "REGISTRY_URL"
-```
-
-Then the parameter was not added correctly to:
-
-```text
-task5/05-00-cdnweb-frontend-build-template.yaml
-```
-
-Fix the `parameters:` section and apply again.
-
----
-
-## Problem 2: Build cannot clone Git repository
-
-If the build fails with authentication errors, verify the secret:
-
-```bash
-oc get secret cdnweb-ui-git-auth
-```
-
-Check BuildConfig:
-
-```bash
-oc get bc cdnweb-ui -o yaml
-```
-
-Look for:
-
-```yaml
-sourceSecret:
-  name: cdnweb-ui-git-auth
-```
-
-If missing, run:
-
-```bash
-oc set build-secret --source bc/cdnweb-ui cdnweb-ui-git-auth
-```
-
-Then rebuild:
-
-```bash
-oc start-build cdnweb-ui --follow
-```
-
----
-
-## Problem 3: NPM install fails
-
-Check whether the NPM registry parameter was passed correctly:
-
-```bash
-oc logs -f bc/cdnweb-ui
-```
-
-The registry should be:
-
-```text
-http://npm.docdn-v44.example.com:8081/repository/npm-reg/
-```
-
-If the app tries to download from the public npm registry, the NPM registry parameter was not passed correctly or the template does not use it properly.
-
----
-
-## Problem 4: Route already exists
-
-If you see:
-
-```text
-Error from server (AlreadyExists): routes.route.openshift.io "cdnweb-ui" already exists
-```
-
-That means the deploy template already created the route.
-
-Check it:
-
-```bash
-oc get route cdnweb-ui
-```
-
-If the hostname is wrong, edit or replace it:
-
-```bash
-oc edit route cdnweb-ui
-```
-
----
-
-## Problem 5: Route hostname contains `https://`
-
-If the route host is set like this:
-
-```text
-https://cdnweb-ui-tiger.apps.docdn-v44.example.com/
-```
-
-that is wrong for a Route host.
-
-Correct Route host:
-
-```text
-cdnweb-ui-tiger.apps.docdn-v44.example.com
-```
-
-The URL has `https://`, but the OpenShift route hostname does not.
-
----
-
-# Important Teaching Notes
-
-## Build Template vs Deploy Template
-
-The build template usually creates resources like:
-
-```text
-BuildConfig
-ImageStream
-Secret
-```
-
-The deploy template usually creates resources like:
-
-```text
-Deployment
-Service
-Route
-ConfigMap
-```
-
-That is why the task gives two separate templates.
-
----
-
-## Why `REGISTRY_URL` Is Added Only to the Build Template
-
-The requirement says:
-
-```text
-Define on the build template a new required parameter named REGISTRY_URL
-```
-
-This is because the build process needs to know where the resulting image should be stored or referenced.
-
-The deploy template may consume the image later, but the missing parameter is specifically required in the build template.
-
----
-
-## Why Git Push Is Mandatory
-
-The question says the template changes must be pushed into the Git repository.
-
-That means:
-
-```bash
-git commit
-git push
-```
-
-are part of the actual answer, not optional decoration.
-
----
-
-## Why Labels Matter
-
-This selector must work:
-
-```bash
-oc get all -l app=cdnweb-ui,group=cdnweb
-```
-
-So every resource from the templates should have:
-
-```yaml
-app: cdnweb-ui
-group: cdnweb
-```
-
-If this selector does not return the created resources, the label requirement is not satisfied.
 
 ---
 
@@ -1382,8 +855,8 @@ If this selector does not return the created resources, the label requirement is
 ```bash
 oc project tiger || oc new-project tiger
 
-git clone 'http://developer:d3v3lop3r@git.docdn-v44.example.com:5000/filesmart/cdnweb-frontend.git'
-cd cdnweb-frontend
+git clone https://git.ocp4.example.com/developer/mycdn.git
+cd mycdn/
 
 oc process --parameters -f task5/05-00-cdnweb-frontend-build-template.yaml
 oc process --parameters -f task5/05-00-cdnweb-frontend-deploy.template.yaml
@@ -1432,9 +905,9 @@ oc process -f task5/05-00-cdnweb-frontend-build-template.yaml \
   -p NAME=cdnweb-ui \
   -p SOURCE_REPOSITORY_URL=git.ocp4.example.com/developer/mycdn.git \
   -p SOURCE_REPOSITORY_REF=cdn-v4 \
-  -p NPM_REGISTRY=http://npm.docdn-v44.example.com:8081/repository/npm-reg/ \
-  -p REGISTRY_URL=registry.docdn-v44.example.com \
-  -p BACKEND_URL=https://cdnweb-be-tiger-db.apps.docdn-v44.example.com/ \
+  -p NPM_REGISTRY=http://nexus-infra.apps.ocp4.example.com/repository/npm \
+  -p REGISTRY_URL=registry.ocp4.example.com \
+  -p BACKEND_URL=https://cdnweb-be-tiger-db.apps.ocp4.example.com/ \
   | oc apply -f -
 ```
 
@@ -1450,7 +923,7 @@ Process deploy template:
 ```bash
 oc process -f task5/05-00-cdnweb-frontend-deploy.template.yaml \
   -p NAME=cdnweb-ui \
-  -p FRONTEND_URL=https://cdnweb-ui-tiger.apps.docdn-v44.example.com/ \
+  -p FRONTEND_URL=https://cdnweb-ui-tiger.apps.ocp4.example.com/ \
   | oc apply -f -
 ```
 
@@ -1459,7 +932,7 @@ Create route if needed:
 ```bash
 oc create route edge cdnweb-ui \
   --service=cdnweb-ui \
-  --hostname=cdnweb-ui-tiger.apps.docdn-v44.example.com
+  --hostname=cdnweb-ui-tiger.apps.ocp4.example.com
 ```
 
 Verify:
@@ -1467,14 +940,14 @@ Verify:
 ```bash
 oc get all -l app=cdnweb-ui,group=cdnweb
 oc get route cdnweb-ui
-curl -k https://cdnweb-ui-tiger.apps.docdn-v44.example.com/
+curl -k https://cdnweb-ui-tiger.apps.ocp4.example.com/
 ```
 
 ---
 
 # Final Summary
 
-To solve Task 6 correctly:
+To solve Task 5 correctly:
 
 - Use project `tiger`, not `patrol`.
 - Clone the correct repository.
