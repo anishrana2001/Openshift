@@ -28,7 +28,7 @@ mkdir -p /home/student/ex288/template
 cd /home/student/ex288/template
 wget https://raw.githubusercontent.com/anishrana2001/Openshift/refs/heads/main/DO288/V.4.18/05-00-cdnweb-frontend-build-template.yaml
 
-wget https://raw.githubusercontent.com/anishrana2001/Openshift/refs/heads/main/DO288/V.4.18/05-00-05-00-cdnweb-frontend-deploy.template.yaml
+wget https://raw.githubusercontent.com/anishrana2001/Openshift/refs/heads/main/DO288/V.4.18/05-00-cdnweb-frontend-deploy.template.yaml
 
 git init -b main
 git config user.name "Student"
