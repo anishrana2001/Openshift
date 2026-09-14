@@ -26,20 +26,19 @@ and push the templates to the lab GitLab repository.
 ```bash
 mkdir -p /home/student/ex288/template
 cd /home/student/ex288/template
-wget https://raw.githubusercontent.com/anishrana2001/Openshift/refs/heads/main/DO288/V.4.18/05-00-cdnweb-frontend-build-template.yaml
-wget https://raw.githubusercontent.com/anishrana2001/Openshift/refs/heads/main/DO288/V.4.18/05-00-cdnweb-frontend-deploy.template.yaml
-
+wget https://github.com/anishrana2001/Openshift/raw/refs/heads/main/DO288/V.4.18/05-00-cdnweb-frontend-lab.tar
+tar xvf cdnweb-frontend-lab.tar
+## Creation of git project.
 git init -b cdn-v4
 git config user.name "Student"
 git config user.email "student@ocp4.example.com"
-git remote add origin \
-  https://developer:d3v3lop3r@git.ocp4.example.com/developer/mycdn.git
-
+git remote add origin https://developer:d3v3lop3r@git.ocp4.example.com/developer/mycdn.git
 git add .
 git commit -m "Add EX288 practice files"
 git push -u origin cdn-v4
-rm -rf /home/student/ex288/template/05-00-cdnweb-frontend-build-template.yaml
-rm -rf /home/student/ex288/template/05-00-cdnweb-frontend-deploy.template.yaml
+## cleaning the files.
+cd /home/student/ex288/template/
+rm -rf /home/student/ex288/template/*
 ```
 ---
 
