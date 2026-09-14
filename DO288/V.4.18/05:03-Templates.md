@@ -27,7 +27,8 @@ and push the templates to the lab GitLab repository.
 mkdir -p /home/student/ex288/template
 cd /home/student/ex288/template
 wget https://github.com/anishrana2001/Openshift/raw/refs/heads/main/DO288/V.4.18/05-00-cdnweb-frontend-lab.tar
-tar xvf cdnweb-frontend-lab.tar
+tar xvf /home/student/ex288/template/05-00-cdnweb-frontend-lab.tar
+rm -rf /home/student/ex288/template/05-00-cdnweb-frontend-lab.tar
 ## Creation of git project.
 git init -b cdn-v4
 git config user.name "Student"
