@@ -191,8 +191,7 @@ REGISTRY_URL
 FRONTEND_HOST
 ```
 
-The exact names depend on the template. Do not guess if the template already defines them. Guessing parameter names in OpenShift templates is basically gambling with extra indentation.
-
+The exact names depend on the template. Do not guess if the template already defines them.
 ---
 
 # Step 4: Edit the Build Template
