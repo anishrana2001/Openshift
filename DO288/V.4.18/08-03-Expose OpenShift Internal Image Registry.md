@@ -76,11 +76,6 @@ Create a project for storing the image:
 oc new-project demo
 ```
 
-Or switch to an existing project:
-
-``` bash
-oc project demo
-```
 
 ------------------------------------------------------------------------
 
@@ -93,11 +88,14 @@ mkdir sample-image
 cd sample-image
 ```
 
-Create a Dockerfile:
+Create a Containerfile:
+
+```bash
+vi Containerfile
+```
 
 ``` dockerfile
 FROM registry.access.redhat.com/ubi9/ubi
-
 CMD ["echo","Hello from OpenShift registry"]
 ```
 
@@ -113,6 +111,11 @@ Verify:
 podman images
 ```
 
+```
+[student@workstation sample-image]$ podman images
+REPOSITORY                                                                      TAG               IMAGE ID      CREATED         SIZE
+localhost/sample-image                                                          v1                29e125a97a4e  15 minutes ago  219 MB
+```
 ------------------------------------------------------------------------
 
 ## Step 5: Tag the Image for OpenShift Registry
