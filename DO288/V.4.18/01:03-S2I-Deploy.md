@@ -178,6 +178,8 @@ This command creates:
 * Deployment
 * Service
 
+<img width="1864" height="1037" alt="Openshift Doc for (--build-env) " src="https://github.com/user-attachments/assets/5b13bc76-9420-444b-ae72-0ee322dd9a8a" />
+
 ---
 
 # 7. Monitor the Build
