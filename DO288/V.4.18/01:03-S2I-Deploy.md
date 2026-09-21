@@ -102,7 +102,7 @@ Expected:
 gitlab-secret
 ```
 
-<img width="1842" height="1037" alt="Openshift Documentation" src="https://github.com/user-attachments/assets/3fb84d33-e88a-41b1-9b0a-27e353c6cb06" />
+<img width="1842" height="1037" alt="Openshift Documentation" src="https://github.com/user-attachments/assets/382343bd-57f4-4ad6-9669-84d0dd6e5ea4" />
 
 
 
