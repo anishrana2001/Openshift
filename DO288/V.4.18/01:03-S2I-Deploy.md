@@ -102,6 +102,8 @@ Expected:
 gitlab-secret
 ```
 
+<img width="1842" height="1037" alt="image" src="https://github.com/user-attachments/assets/3fb84d33-e88a-41b1-9b0a-27e353c6cb06" />
+
 ---
 
 # 4. Add Git URL Matching Annotation
