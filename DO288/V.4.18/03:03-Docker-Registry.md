@@ -24,6 +24,8 @@ Git server.
 > application files before attempting the task.
 
 ```bash
+lab start deploy-introduction
+oc login -u developer -p developer https://api.ocp4.example.com:6443
 mkdir -p /home/student/ex288
 cd /home/student/ex288
 
