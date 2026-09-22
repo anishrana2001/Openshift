@@ -522,7 +522,7 @@ oc logs -f bc/cdnweb-ui
 ```bash
 oc process -f 05-00-cdnweb-frontend-deploy.template.yaml  \
 -p NAME=cdnweb-ui \
--p IMAGE_NAME=nginx \
+-p IMAGE_NAME=registry.ocp4.example.com:8443/redhattraining/ocpdev-ubi8-openjdk-17-base:1.16 \
 -p BACKEND_URL=https://cdnweb-be-tiger.apps.ocp4.example.com/ \
 -p FRONTEND_URL=cdnweb-ui-tiger.apps.ocp4.example.com \
 | oc apply -f -
