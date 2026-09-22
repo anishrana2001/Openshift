@@ -520,11 +520,12 @@ oc logs -f bc/cdnweb-ui
 # Step 13: Process and Apply the Deploy Template
 
 ```bash
-oc process -f 05-00-cdnweb-frontend-deploy.template.yaml \
-  -p NAME=cdnweb-ui \
-  -p REGISTRY_URL=registry.ocp4.example.com \
-  -p FRONTEND_HOST=cdnweb-ui-tiger.apps.ocp4.example.com \
-  | oc apply -f -
+oc process -f 05-00-cdnweb-frontend-deploy.template.yaml  \
+-p NAME=cdnweb-ui \
+-p IMAGE_NAME=nginx \
+-p BACKEND_URL=https://cdnweb-be-tiger.apps.ocp4.example.com/ \
+-p FRONTEND_URL=cdnweb-ui-tiger.apps.ocp4.example.com \
+| oc apply -f -
 ```
 
 ### Explanation
