@@ -199,6 +199,9 @@ envFrom:
 oc get pods -A -oyaml | grep -C 5 valueFrom
 ```
 
+<img width="1320" height="1036" alt="Openshift Doc for `fieldRef`" src="https://github.com/user-attachments/assets/a55cd290-ad83-4d40-a52a-d4a6ce1092cd" />
+
+
 ### Take a reference from the output and add it.
 
 ```
