@@ -58,6 +58,7 @@ rm -rf /home/student/ex288/template/*
 
 	- To deploy the **`cdnweb`** **frontend application**, use the OpenShift deployment template located at **`05-00-cdnweb-frontend-deploy.template.yaml`** with the following modification:
 		- All created resources should use the name **`cdnweb-ui`**
+    	- Set the **`IMAGE_NAME`** `registry.ocp4.example.com:8443/redhattraining/ocpdev-ubi8-openjdk-17-base:1.16`
 		- Set the public exposed frontend URL as **`https://cdnweb-ui-tiger.apps.ocp4.example.com/`**
 		- All resources created from the template must be selectable using the selector **`app=cdnweb-ui,group=cdnweb`**
 
