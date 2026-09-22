@@ -46,14 +46,15 @@ rm -rf /home/student/ex288/template/*
 # Task : Build and Deploy cdnweb Frontend Application Using OpenShift Templates
 
 - The **`cdnweb`** **frontend application** must be built and deployed in the project **`tiger`**
+
+
 	- Build the OpenShift **`build template`** for the `cdnweb` application from the  template  located at **`05-00-cdnweb-frontend-build-template.yaml`** with the following modification:
 		- Define a new required parameter named **`REGISTRY_URL`** with the following description **`My CDN image registry`**
 		- All created resources should use the name **cdnweb-ui**.
-		- Use the default branch **`cdn-v4`** from the repository **`git.ocp4.example.com/developer/mycdn.git`** & credentials are **`Username: developer`** and **`Password: d3v3lop3r`**
+		- Use the default branch **`cdn-v4`** from the repository **`https://git.ocp4.example.com/developer/mycdn.git`** & credentials are **`Username: developer`** and **`Password: d3v3lop3r`**
 		- The application's dependencies NPM repository to the corporate is **`http://nexus-infra.apps.ocp4.example.com/repository/npm`**
 		- Set the container image registry as **`registry.ocp4.example.com`**
-
-- **Set the `backend`** service to the public exposed backend URL `https://cdnweb-be-tiger.apps.ocp4.example.com/`
+		- Set the **`BACKEND_SERVICE`** to the public exposed backend URL **`https://cdnweb-be-tiger.apps.ocp4.example.com/`**
 
 	- To deploy the **`cdnweb`** **frontend application**, use the OpenShift deployment template located at **`05-00-cdnweb-frontend-deploy.template.yaml`** with the following modification:
 		- All created resources should use the name **`cdnweb-ui`**
