@@ -14,7 +14,7 @@ clear
 oc get all
 ```
 
-# Task: Configure `todo-ssr` DeploymentConfig with `ConfigMap` and `Pod Name` Environment Variable
+# Task: Configure `todo-ssr` DeploymentConfig with `ConfigMap` and `Pod Name` Environment Variable in the project `deploy-config`
 
 - Create the ConfigMap `todo-ssr-config` containing the following details:
 
