@@ -69,7 +69,7 @@ Expected result: the current branch is `main`, the working tree is clean, and
 
 ## 🎯 Original Question
 
-Build and deploy the HTTPD application with the following requirements:
+Build and deploy the HTTPS application with the following requirements:
 
 - The application must be built and deployed to the project `task77`.
 - The deployed application and its resources must be named
