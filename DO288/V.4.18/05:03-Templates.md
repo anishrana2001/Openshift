@@ -58,7 +58,7 @@ rm -rf /home/student/ex288/template/*
 
 	- To deploy the **`cdnweb`** **frontend application**, use the OpenShift deployment template located at **`05-00-cdnweb-frontend-deploy.template.yaml`** with the following modification:
 		- All created resources should use the name **`cdnweb-ui`**
-    	- Set the **`IMAGE_NAME`** `registry.ocp4.example.com:8443/redhattraining/ocpdev-ubi8-openjdk-17-base:1.16`
+    	- Set the **`IMAGE_NAME`** `image-registry.openshift-image-registry.svc:5000/tiger/cdnweb-ui:latest`
 		- Set the public exposed frontend URL as **`https://cdnweb-ui-tiger.apps.ocp4.example.com/`**
 		- All resources created from the template must be selectable using the selector **`app=cdnweb-ui,group=cdnweb`**
 
@@ -523,7 +523,7 @@ oc logs -f bc/cdnweb-ui
 ```bash
 oc process -f 05-00-cdnweb-frontend-deploy.template.yaml  \
 -p NAME=cdnweb-ui \
--p IMAGE_NAME=registry.ocp4.example.com:8443/redhattraining/ocpdev-ubi8-openjdk-17-base:1.16 \
+-p IMAGE_NAME=image-registry.openshift-image-registry.svc:5000/tiger/cdnweb-ui:latest \
 -p BACKEND_URL=https://cdnweb-be-tiger.apps.ocp4.example.com/ \
 -p FRONTEND_URL=cdnweb-ui-tiger.apps.ocp4.example.com \
 | oc apply -f -
@@ -733,9 +733,9 @@ oc start-build cdnweb-ui --follow
 # 12. Process and apply deployment template
 oc process -f 05-00-cdnweb-frontend-deploy.template.yaml \
   -p NAME=cdnweb-ui \
-  -p REGISTRY_URL=registry.ocp4.example.com \
-  -p FRONTEND_HOST=cdnweb-ui-tiger.apps.ocp4.example.com \
-  | oc apply -f -
+  -p IMAGE_NAME=image-registry.openshift-image-registry.svc:5000/tiger/cdnweb-ui:latest \
+  -p BACKEND_URL=https://cdnweb-be-tiger.apps.ocp4.example.com/ \
+  -p FRONTEND_URL=cdnweb-ui-tiger.apps.ocp4.example.com | oc apply -f -
 
 # 13. Create route manually if template does not create it
 oc create route edge cdnweb-ui \
