@@ -116,12 +116,12 @@ oc expose svc python-webserver
 oc get all
 ```
 
-## Task : A Python3 application named `phyton-webserver` is running under project `task66`.
+## Task : A Python3 application named `python-webserver` is running under project `task66`.
 A predefined script named `code66.py` under `/home/student/ex288/task66/` is available for you.
 
 Your tasks are to 
 
-- The application is running and available at http://phyton-webserver-task66.apps.ocp4.example.com
+- The application is running and available at http://python-webserver-task66.apps.ocp4.example.com
 - After a build finished, script `code66` executed at the end.
 - This script must be available for future build.
 - User has Readonly privileges on GIT repo. 
