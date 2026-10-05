@@ -126,4 +126,14 @@ Your tasks are to
 - This script must be available for future build.
 - User has Readonly privileges on GIT repo. 
 
+### Solution
 
+```
+cd /home/student/ex288/task66/
+
+oc set build-hook bc/python-webserver -h
+
+oc set build-hook bc/python-webserver --post-commit --script="python3 app.py" 
+
+
+```
