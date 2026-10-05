@@ -101,8 +101,6 @@ rm -rf /home/student/ex288/task2/apps/
 
 ## Question : 
 
-## Question
-
 Your task is to optimize the Dockerfile available at:
 	`https://git.ocp4.example.com/developer/task2-build.git` on branch **`lab-pythonv3`** 
 - The Containerfile is located under: `apps/task2/python-webserver` 
