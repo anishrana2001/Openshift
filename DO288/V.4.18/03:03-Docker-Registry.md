@@ -46,7 +46,7 @@ git add .
 git commit -m "Add EX288 practice files"
 git push -u origin main
 rm -rf /home/student/ex288/devops-wala.tar
-rm -rf /home/student/ex288/devops-wala
+rm -rf /home/student/ex288/devops-wala/
 oc new-project task77
 oc create secret generic devops-git-secret --type=kubernetes.io/basic-auth --from-literal=username=developer --from-literal=password=d3v3lop3r
 oc annotate secret devops-git-secret "build.openshift.io/source-secret-match-uri-1=https://git.ocp4.example.com/*"
