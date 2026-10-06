@@ -405,6 +405,13 @@ deployment.apps/todo-ssr   1/1
 
 build.build.openshift.io/todo-ssr-2   Complete
 ```
+## Fix Service Port
+
+```
+oc edit svc todo-ssr 
+```
+
+targetPort: 3000
 
 ---
 
