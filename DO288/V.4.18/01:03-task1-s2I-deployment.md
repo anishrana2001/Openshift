@@ -71,8 +71,7 @@ git checkout -b secure-api
 git config user.name "Student"
 git config user.email "student@ocp4.example.com"
 git remote add origin https://developer:d3v3lop3r@git.ocp4.example.com/developer/task1-nodejs-helloworld.git
-git add .
-git commit -m "Add EX288 practice files"
+git commit -am "Add EX288 practice files"
 git push -u origin secure-api
 ````
 
@@ -369,9 +368,9 @@ The problem is the missing `:` between the package name and version.
 After correcting the file:
 
 ```bash
-git add .
+# git add .   ==> If we add "-a" option with commit sub command than no need to run this command.
 
-git commit -m "Fix package.json syntax"
+git commit -am "Fix package.json syntax"
 
 git push
 ```
