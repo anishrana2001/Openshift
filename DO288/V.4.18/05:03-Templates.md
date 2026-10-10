@@ -979,6 +979,21 @@ To solve Task 5 correctly:
 - Create the route manually only if the deploy template does not create it.
 - Verify all created resources using:
 
+
+
+oc expose deployment cdnweb-ui --port=8080 --target-port=8080
+
+oc expose service cdnweb-ui
+
+oc get svc
+
+oc get route
+
+curl -k https://cdnweb-ui-tiger.apps.ocp4.example.com
+
+
+
+
 ```bash
 oc get all -l app=cdnweb-ui,group=cdnweb
 ```
