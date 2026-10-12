@@ -73,6 +73,10 @@ git config user.email "student@ocp4.example.com"
 git remote add origin https://developer:d3v3lop3r@git.ocp4.example.com/developer/task1-nodejs-helloworld.git
 git add . ; git commit -m "Add EX288 practice files"
 git push -u origin secure-api
+git config --global credential.helper store
+echo "https://developer:d3v3lop3r@git.ocp4.example.com" > ~/.git-credentials
+chmod 600 ~/.git-credentials
+rm -rf apps/
 ````
 
 ---
