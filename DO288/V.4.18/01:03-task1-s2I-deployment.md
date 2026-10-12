@@ -296,13 +296,18 @@ line 12 column 15
 Example:
 
 ```json
+  "name": "nodejs-helloworld",
+  "version": "1.0.0",
+  "description": "Hello World!"
+  "main": "devopswala.js",
+
 {
   "dependencies": {
     "express" "^4.20.0"
   }
 }
 ```
-
+"description": "Hello World!"   ==> comma is missing at the end of line.
 The problem is the missing `:` between the package name and version.
 
 ---
