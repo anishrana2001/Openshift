@@ -24,59 +24,11 @@ Git server.
 > application files before attempting the task.
 
 ```bash
-
-lab start deploy-introduction
-oc login -u developer -p developer https://api.ocp4.example.com:6443
-mkdir -p /home/student/ex288/task1/
-cd /home/student/ex288/task1/
-
-mkdir -p apps/task1/helloworld
-cd apps/task1/helloworld
-
-
-cat <<EOF > package.json
-{
-  "name": "nodejs-helloworld",
-  "version": "1.0.0",
-  "description": "Hello World!"
-  "main": "devopswala.js",
-  "scripts": {
-    "start": "node devopswala.js"
-  },
-  "author": "Red Hat Training from Devopswala",
-  "license": "ASL",
-  "dependencies": {
-    "express" "^4.20.0"
-  }
-}
-EOF
-
-cat <<EOF > devopswala.js
-const express = require('express');
-const app = express();
-
-app.get('/', function (req, res) {
-  res.send('Hello World!\n');
-});
-
-app.listen(3000,()=>{
- console.log("Devopswala app listening on port 8080");
-});
-EOF
-
-cd /home/student/ex288/task1/
-
-git init -b main
-git checkout -b secure-api
-git config user.name "Student"
-git config user.email "student@ocp4.example.com"
-git remote add origin https://developer:d3v3lop3r@git.ocp4.example.com/developer/task1-nodejs-helloworld.git
-git add . ; git commit -m "Add EX288 practice files"
-git push -u origin secure-api
-git config --global credential.helper store
-echo "https://developer:d3v3lop3r@git.ocp4.example.com" > ~/.git-credentials
-chmod 600 ~/.git-credentials
-rm -rf apps/
+mkdir -p /home/student/ex288/
+cd /home/student/ex288/
+wget https://raw.githubusercontent.com/anishrana2001/Openshift/refs/heads/main/DO288/V.4.18/999-EX288-Task-1-lab.sh
+chmod 775 999-EX288-Task-1-lab.sh
+sh 999-EX288-Task-1-lab.sh
 ````
 
 ---
@@ -445,11 +397,20 @@ Test HTTP:
 curl http://todo-ssr-production1.apps.ocp4.example.com
 ```
 
+
+
+Modify the service's port to 3000.
+
+```
+oc edit service/todo-ssr
+```
+
 Expected output:
 
 ```text
 Hello World!
 ```
+
 
 ---
 
@@ -519,6 +480,10 @@ oc create route edge \
 --insecure-policy=Allow
 ```
 
+| Your current working flow | The traffic flow is |
+|---------------------------|---------------------|
+| **Service:**<br><br>Port: 8080<br>TargetPort: 3000<br><br>**Pod:**<br><br>IP: 10.8.0.123<br>Application: Node.js Express<br>Port: 3000 | **1. curl request**<br><br>Command:<br>`curl http://todo-ssr-production1.apps.ocp4.example.com`<br><br>↓<br><br>**2. OpenShift Router**<br><br>• Entry point for external traffic<br>• Receives hostname from request<br><br>Host:<br>`todo-ssr-production1.apps.ocp4.example.com`<br><br>↓<br><br>**3. Route**<br><br>Route:<br>`todo-ssr-production1.apps.ocp4.example.com`<br><br>Router finds matching Route and forwards traffic to Service:<br>`todo-ssr`<br><br>↓<br><br>**4. Service**<br><br>Service:<br>`todo-ssr`<br><br>Port: `8080`<br><br>ClusterIP:<br>`172.30.86.59`<br><br>↓<br><br>**5. Service NAT Translation**<br><br>Service Port&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Pod Port<br><br>`8080` ------------> `3000`<br><br>Service receives traffic on 8080 and forwards it to application port 3000<br><br>↓<br><br>**6. Pod**<br><br>Pod IP:<br>`10.8.0.123`<br><br>Endpoint:<br>`10.8.0.123:3000`<br><br>Service selector:<br>`deployment=todo-ssr`<br><br>↓<br><br>**7. Node.js Express Application**<br><br>Application listens:<br>`app.listen(3000)`<br><br>Request:<br>`GET /`<br><br>Response:<br>`Hello World!` |
+
 ---
 
 # 🧹 Lab Cleanup
@@ -555,6 +520,7 @@ git add . ; git commit -m "hi" ; git push
 oc start-build bc/todo-ssr --follow 
 oc get all
 oc create route edge --service=todo-ssr --hostname=todo-ssr-production1.apps.ocp4.example.com --insecure-policy=Allow
+oc edit service/todo-ssr
 curl https://todo-ssr-production1.apps.ocp4.example.com
 curl http://todo-ssr-production1.apps.ocp4.example.com
 ```
