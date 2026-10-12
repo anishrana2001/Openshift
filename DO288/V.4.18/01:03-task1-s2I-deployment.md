@@ -38,7 +38,7 @@ cat <<EOF > package.json
 {
   "name": "nodejs-helloworld",
   "version": "1.0.0",
-  "description": "Hello World!",
+  "description": "Hello World!"
   "main": "devopswala.js",
   "scripts": {
     "start": "node devopswala.js"
