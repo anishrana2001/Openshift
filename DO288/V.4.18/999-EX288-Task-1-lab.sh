@@ -12,14 +12,14 @@ cat <<EOF > package.json
 {
   "name": "nodejs-helloworld",
   "version": "1.0.0",
-  "description": "Hello World!",
+  "description": "Hello World!"
   "main": "devopswala.js",
   "scripts": {
     "start": "node devopswala.js"
   },
   "author": "Red Hat Training from Devopswala",
   "license": "ASL",
-  "dependencies": {
+  "dependencies" {
     "express": "^4.20.0"
   }
 }
