@@ -56,4 +56,5 @@ oc get events
 
 ### Once you set the environment variable and after that application is not working than you can see the logs and events for further reasons. May be on worker node taint is applied. if it is than remove the taint from worker node only.
 ### If this is an issue with taint then, go to this page 
-https://github.com/anishrana2001/Openshift/blob/main/DO280/05.%20taint%20and%20toleration.md
+
+**`https://github.com/anishrana2001/Openshift/blob/main/DO280-v4.14/05-01%20Taint%20%26%20Toleration.md`**
