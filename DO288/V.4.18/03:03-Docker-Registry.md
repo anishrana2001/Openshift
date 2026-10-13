@@ -24,34 +24,9 @@ Git server.
 > application files before attempting the task.
 
 ```bash
-lab start deploy-introduction
-oc login -u developer -p developer https://api.ocp4.example.com:6443
-mkdir -p /home/student/ex288
-cd /home/student/ex288
-
-curl --fail --location \
-  "https://raw.githubusercontent.com/anishrana2001/Openshift/main/DO288/V.4.18/devops-wala.tar" \
-  --output /home/student/ex288/devops-wala.tar
-
-tar -xf /home/student/ex288/devops-wala.tar
-cd /home/student/ex288/devops-wala
-
-git init -b main
-git config user.name "Student"
-git config user.email "student@ocp4.example.com"
-git remote add origin \
-  https://developer:d3v3lop3r@git.ocp4.example.com/developer/devops-wala.git
-
-git add .
-git commit -m "Add EX288 practice files"
-git push -u origin main
-rm -rf /home/student/ex288/devops-wala.tar
-rm -rf /home/student/ex288/devops-wala/
-oc new-project task77
-oc create secret generic devops-git-secret --type=kubernetes.io/basic-auth --from-literal=username=developer --from-literal=password=d3v3lop3r
-oc annotate secret devops-git-secret "build.openshift.io/source-secret-match-uri-1=https://git.ocp4.example.com/*"
-oc secrets link builder devops-git-secret
-
+mkdir -p /home/student/ex288 ; cd /home/student/ex288
+wget https://raw.githubusercontent.com/anishrana2001/Openshift/refs/heads/main/DO288/V.4.18/999-EX288-Task-3-lab.sh
+chmod +x 999-EX288-Task-3-lab.sh ; sh 999-EX288-Task-3-lab.sh
 ```
 
 Verify the repository:
