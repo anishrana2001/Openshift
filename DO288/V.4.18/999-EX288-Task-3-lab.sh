@@ -22,4 +22,6 @@ git push -u origin main
 rm -rf /home/student/ex288/devops-wala.tar
 rm -rf /home/student/ex288/devops-wala/
 oc new-project task77
-
+git config --global credential.helper store
+echo "https://developer:d3v3lop3r@git.ocp4.example.com" > ~/.git-credentials
+chmod 600 ~/.git-credentials
