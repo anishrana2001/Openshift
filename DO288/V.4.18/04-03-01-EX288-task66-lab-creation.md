@@ -81,23 +81,23 @@ git push -u origin main
 
 mkdir -p /home/student/ex288/task66
 
-cat <<EOF > /home/student/ex288/task66/code66.py
+cat <<EOF > /home/student/ex288/task66/app.py
 #!/usr/bin/env python3
 
 print("================================")
-print("code66.py executed successfully")
+print("app.py executed successfully")
 print("Post build task completed")
 print("================================")
 EOF
 
 ### Make executable:
-chmod +x /home/student/ex288/task66/code66.py
+chmod +x /home/student/ex288/task66/app.py
 
 # 8. Create ConfigMap for Build Script
 
 ## Since Git is read-only, store the script externally.
 
-oc create configmap code66-script --from-file=/home/student/ex288/task66/code66.py
+oc create configmap code66-script --from-file=/home/student/ex288/task66/app.py
 
 oc get configmap
 
@@ -117,12 +117,12 @@ oc get all
 ```
 
 ## Task : A Python3 application named `python-webserver` is running under project `task66`.
-A predefined script named `code66.py` under `/home/student/ex288/task66/` is available for you.
+A predefined script named `app.py` under `/home/student/ex288/task66/` is available for you.
 
 Your tasks are to 
 
 - The application is running and available at http://python-webserver-task66.apps.ocp4.example.com
-- After a build finished, script `code66` executed at the end.
+- After a build finished, script `app.py` executed at the end.
 - This script must be available for future build.
 - User has Readonly privileges on GIT repo. 
 
