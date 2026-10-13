@@ -65,6 +65,9 @@ git checkout -b lab-pythonv3
 git config user.name "Student"
 git config user.email "student@ocp4.example.com"
 git remote add origin https://developer:d3v3lop3r@git.ocp4.example.com/developer/task2-build.git
+git config --global credential.helper store
+echo "https://developer:d3v3lop3r@git.ocp4.example.com" > ~/.git-credentials
+chmod 600 ~/.git-credentials
 
 git add .
 git commit -m "Add EX288 practice files for Task2"
