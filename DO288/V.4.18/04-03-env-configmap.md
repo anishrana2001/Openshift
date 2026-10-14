@@ -29,6 +29,7 @@ oc get all
 2. Expose the `env-config` Pod name as the `POD_NAME` environment variable.
 3. Modify the deployment to eliminate the need for future reconfigurations when adding resource variables.
 4. Once deployed, the application is running and available at http://env-config-deploy-config.apps.ocp4.example.com and displays the following text:
+5. **'Welcome to devopswala.com Website!'**
 ---
 
 ## 📘 Understanding the Question
