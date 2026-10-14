@@ -103,7 +103,8 @@ oc set probe deployment/todo-ssr \
   --startup \
   --open-tcp=8080 \
   --initial-delay-seconds=10 \
-  --timeout-seconds=21
+  --timeout-seconds=21 \
+  --failure-threshold=5
 ```
 
 ### Command explanation
@@ -115,6 +116,7 @@ oc set probe deployment/todo-ssr \
 | `--open-tcp=8080` | Attempts to open a TCP connection to port `8080`. |
 | `--initial-delay-seconds=10` | Waits 10 seconds after container startup before initiating the probe. |
 | `--timeout-seconds=18` | Allows one probe attempt up to 18 seconds before timing out. |
+| `----failure-threshold=5` | After this it will consider to be failed. |
 
 Because `periodSeconds`, `failureThreshold`, and `successThreshold` are not specified, their platform defaults are retained.
 
@@ -130,7 +132,8 @@ oc set probe deployment/todo-ssr \
   --open-tcp=8080 \
   --period-seconds=10 \
   --timeout-seconds=5 \
-  --failure-threshold=5
+  --failure-threshold=5 
+  
 ```
 
 ### Command explanation
