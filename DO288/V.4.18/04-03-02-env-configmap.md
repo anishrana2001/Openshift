@@ -6,7 +6,7 @@
 
 ### How to create a lab.
 ```
-oc login -u admin -p redhatocp https://api.ocp4.example.com:6443
+oc login -u developer -p developer https://api.ocp4.example.com:6443
 oc new-project deploy-config
 oc new-app --name=env-config --image openshift/hello-openshift
 oc expose service env-config
