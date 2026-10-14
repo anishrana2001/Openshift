@@ -1133,6 +1133,21 @@ SERVER_PORT=8081
 
 This checks the environment of the application's main process.
 
+```
+student@workstation bin]$ oc rsh pod/todo-app2-dfd86698-l8shz
+sh-5.1$ cat /tmp/scripts/run
+#!/bin/bash
+
+source ${HTTPD_CONTAINER_SCRIPTS_PATH}/common.sh
+
+export HTTPD_RUN_BY_S2I=1
+export SERVER_PORT=8081
+
+# Make Apache show 'debug' level logs during start up
+exec run-httpd -e debug $@
+sh-5.1$ 
+```
+
 ---
 
 # 💡 About the `npm_config_registry` Hint
