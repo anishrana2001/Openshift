@@ -23,7 +23,7 @@ chmod 600 ~/.git-credentials
 ######
 
 ### Remove the directory.
-rm -rf static-webserver/
+rm -rf /home/student/ex288/helm-task/
 cd /home/student/
 ### Storing password
 git config --global credential.helper store
