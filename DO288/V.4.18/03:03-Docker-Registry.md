@@ -57,9 +57,10 @@ Build and deploy the HTTPS application with the following requirements:
 - The service must be publicly available on the default hostname.
 - User **`student`** has only readonly privileges on Git.
 
-> [!TIP]
-> Attempt the task and inspect the build or runtime errors before opening the
-> solution. The troubleshooting process is part of the exercise.
+> Application must run and produce the output.
+> curl ex288-docker-app-task77.apps.ocp4.example.com
+> 
+Welcome to Devops-wala
 
 ---
 
