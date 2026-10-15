@@ -4,7 +4,7 @@ oc login -u developer -p developer https://api.ocp4.example.com:6443
 mkdir -p  /home/student/ex288/helm-task/
 cd /home/student/ex288/helm-task/
 wget https://github.com/anishrana2001/Openshift/raw/refs/heads/main/DO288/V.4.18/static-webserver.tar.gz
-tar zxvf static-webserver.tar.gz ; rm -rf static-webserver.tar.gz
+tar xvf static-webserver.tar.gz ; rm -rf static-webserver.tar.gz
 
 
 git init -b main
