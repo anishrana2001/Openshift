@@ -19,3 +19,4 @@ rm -rf /home/student/ex288/template/
 git config --global credential.helper store
 echo "https://developer:d3v3lop3r@git.ocp4.example.com" > ~/.git-credentials
 chmod 600 ~/.git-credentials
+
