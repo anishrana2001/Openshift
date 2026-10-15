@@ -13,7 +13,7 @@ git add .
 git commit -m "Add EX288 practice files"
 git push -u origin cdn-v4
 ## cleaning the files.
-cd /home/student/ex288/template/
+cd /home/student/ex288/
 rm -rf /home/student/ex288/template/
 ### Storing password
 git config --global credential.helper store
