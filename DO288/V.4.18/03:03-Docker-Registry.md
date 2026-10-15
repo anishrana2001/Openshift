@@ -58,6 +58,7 @@ Build and deploy the HTTPS application with the following requirements:
 - User **`student`** has only readonly privileges on Git.
 
 > Application must run and produce the output.
+> 
 > curl ex288-docker-app-task77.apps.ocp4.example.com
 > 
 Welcome to Devops-wala
