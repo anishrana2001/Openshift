@@ -49,4 +49,4 @@ git add . ; git commit -m "Add EX288 practice files" ; git push -u origin secure
 git config --global credential.helper store
 echo "https://developer:d3v3lop3r@git.ocp4.example.com" > ~/.git-credentials
 chmod 600 ~/.git-credentials
-rm -f /home/student/ex288/task1/
+rm -rf /home/student/ex288/task1/
