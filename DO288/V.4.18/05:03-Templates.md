@@ -26,7 +26,7 @@ and push the templates to the lab GitLab repository.
 ```bash
 mkdir -p /home/student/ex288/template
 cd /home/student/ex288/template
-https://raw.githubusercontent.com/anishrana2001/Openshift/refs/heads/main/DO288/V.4.18/999-EX288-Task-5-template-lab.sh
+curl https://raw.githubusercontent.com/anishrana2001/Openshift/refs/heads/main/DO288/V.4.18/999-EX288-Task-5-template-lab.sh
 chmod +x 999-EX288-Task-5-template-lab.sh 
 sh 999-EX288-Task-5-template-lab.sh
 ```
