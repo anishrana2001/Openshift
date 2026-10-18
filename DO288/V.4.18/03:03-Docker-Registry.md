@@ -46,13 +46,12 @@ Expected result: the current branch is `main`, the working tree is clean, and
 
 Build and deploy the HTTPS application with the following requirements:
 
-- The application must be built and deployed to the project `task77`.
-- The deployed application and its resources must be named
-  `ex288-docker-app`.
-- The source code is available at `https://git.ocp4.example.com/developer/devops-wala/`
-- The application source code directory is `apps/task77/`
+- The application must be built and deployed to the project **`task77`**
+- The deployed application and its resources must be named **`ex288-docker-app`**
+- The source code is available at **`https://git.ocp4.example.com/developer/devops-wala/`**
+- The application source code directory is **`apps/task77/`**
 - The Git reference is `main`.
-- The `httpd:2.4-ubi9` base image stream must be used from the **`openshift`** namespace.
+- The build must extent the tag **latest** of the `httpd:2.4-ubi9` base Imagestream from the **`openshift`** namespace.
 - The application binary is available at `https://raw.githubusercontent.com/anishrana2001/Openshift/refs/heads/main/DO288/V.4.18/Download-dir`
 - The service must be publicly available on the default hostname.
 - User **`student`** has only readonly privileges on Git.
@@ -115,15 +114,17 @@ connection.
 
 ### Step 2: Create and select the project
 
-```bash
-oc new-project task77
-```
-
 If the project already exists and belongs to you, select it instead:
 
 ```bash
 oc project task77
+``` 
+
+If not there then create a new project.
+```bash
+oc new-project task77
 ```
+
 
 Confirm the active project:
 
