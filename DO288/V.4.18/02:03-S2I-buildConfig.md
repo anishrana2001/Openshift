@@ -47,12 +47,11 @@ echo "This is the First Page" > /tmp/devopswala.html
 - The application must be deployed to the project `deploy-si`
 - The deployed application and its resources must be named `todo-app2`
 - The build **must modify the existing S2I scripts** of the `httpd:2.4-ubi9` builder image to set the `SERVER_PORT` **environment variable** with the value `8081`
-- During the **build of the image**, as part of the assemble script, /tmp/*.html files are copied into ./
 
 - The application must be accessible using both:
     - http://todo-app2.apps.ocp4.example.com
     - https://todo-app2.apps.ocp4.example.com
-- When web page open, it should displays date when the application was built (YYYY-mm-dd format) as well as the text `You have completed this task`
+
 ---
 
 <details>
