@@ -45,6 +45,7 @@ sh 999-EX288-Task-5-template-lab.sh
 		- The application's dependencies NPM repository to the corporate is **`http://nexus-infra.apps.ocp4.example.com/repository/npm`**
 		- Set the container image registry as **`registry.ocp4.example.com`**
 		- Set the **`BACKEND_SERVICE`** to the public exposed backend URL **`https://cdnweb-be-tiger.apps.ocp4.example.com/`**
+  		- All resources created from the template must be selectable using the selector app=cdnweb-ui,group=cdnweb 
 
 	- To deploy the **`cdnweb`** **frontend application**, use the OpenShift deployment template located at **`05-00-cdnweb-frontend-deploy.template.yaml`** with the following modification:
 		- All created resources should use the name **`cdnweb-ui`**
