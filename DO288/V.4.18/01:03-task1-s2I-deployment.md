@@ -29,6 +29,7 @@ cd /home/student/ex288/
 wget https://raw.githubusercontent.com/anishrana2001/Openshift/refs/heads/main/DO288/V.4.18/999-EX288-Task-1-lab.sh
 chmod 775 999-EX288-Task-1-lab.sh
 sh 999-EX288-Task-1-lab.sh
+rm -rf 999-EX288-Task-1-lab.sh
 ````
 
 ---
